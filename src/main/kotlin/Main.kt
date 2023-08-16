@@ -1,3 +1,5 @@
+package main.kotlin
+
 const val version: Double = 1.0
 
 val emptyList = BoardPosition(
@@ -35,7 +37,7 @@ val emptyFull = PositionWithPlaceAble(Pair(0, 0), emptyList)
 
 fun main() {
     println("Starting engine, version - $version")
-    val data = interpritate()
+    val data = interpretation()
     val currentPos = data.first
 
     println("NOTE: if advantage is positive - blue are winning")
@@ -46,7 +48,7 @@ fun main() {
     //miniMax.second.print2()
 }
 
-fun interpritate(): Triple<PositionWithPlaceAble, piece, Int> {
+fun interpretation(): Triple<PositionWithPlaceAble, piece, Int> {
     println("Enter search depth (4 takes a lot of time)")
     val depth = getDepth()
     println("Depth is $depth now")

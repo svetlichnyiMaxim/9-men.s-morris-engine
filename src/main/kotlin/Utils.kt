@@ -1,3 +1,5 @@
+package main.kotlin
+
 import kotlin.math.abs
 
 fun PositionWithPlaceAble.staticCopy(): PositionWithPlaceAble {
@@ -36,8 +38,6 @@ fun minimax(
     originalDepth: Int
 ): Triple<Int, Node, PositionWithPlaceAble?> {
     if (depth == 0 || position.value.gameEnded().first) {
-        //println(position.value.advantage())
-        //position.value.display()
         return Triple(position.value.advantage(), position, null)
     }
 
@@ -179,7 +179,6 @@ fun PositionWithPlaceAble.applyEveryMove(
         listOfAll.add(Pair(copy, lastMove))
     }
     return listOfAll
-    //calculate(depth - 1)
 }
 
 fun PositionWithPlaceAble.display() {

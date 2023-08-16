@@ -1,3 +1,5 @@
+package main.kotlin
+
 class Node(var value: PositionWithPlaceAble) {
     var parent: Node? = null
 

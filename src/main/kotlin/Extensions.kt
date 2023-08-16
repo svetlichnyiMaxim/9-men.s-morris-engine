@@ -1,3 +1,5 @@
+package main.kotlin
+
 infix operator fun Triple<Int, Int, Int>.plus(second: Triple<Int, Int, Int>): Triple<Int, Int, Int> {
     return Triple(this.first + second.first, this.second + second.second, this.third + second.third)
 }
