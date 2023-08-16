@@ -43,6 +43,17 @@ fun main() {
     println("NOTE: if advantage is positive - blue are winning")
     val depth = data.third
     val miniMax = minimax(depth, data.second, Node(currentPos), depth)
+    when (miniMax.first) {
+        1000 -> {
+            println("You are winning")
+        }
+        -1000 -> {
+            println("You are loosing")
+        }
+        else -> {
+            println("You have possible advantage in ${miniMax.first} pieces")
+        }
+    }
     println(miniMax.first)
     miniMax.third!!.display()
     //miniMax.second.print2()
@@ -60,10 +71,10 @@ fun interpretation(): Triple<PositionWithPlaceAble, piece, Int> {
     val position = getPosition()
     PositionWithPlaceAble(Pair(0, 0), position).display()
     println("Got position")
-    println("Enter available green pieces")
-    val placeAbleGreen = getPlaceAble()
     println("Enter available blue pieces")
     val placeAbleBlue = getPlaceAble()
+    println("Enter available green pieces")
+    val placeAbleGreen = getPlaceAble()
     println("Got available pieces (green - $placeAbleGreen, blue - $placeAbleBlue)")
     return Triple(PositionWithPlaceAble(Pair(placeAbleBlue, placeAbleGreen), position), color, depth)
 }

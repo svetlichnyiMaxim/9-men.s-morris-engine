@@ -259,7 +259,6 @@ fun PositionWithPlaceAble.display1() {
         }
         println()
     }
-    println("\u001b[90m list of available - (${this.placeAble.first}, ${this.placeAble.second})")
     println()
 }
 
