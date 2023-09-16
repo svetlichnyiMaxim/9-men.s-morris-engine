@@ -10,6 +10,7 @@ class Node(var value: PositionWithPlaceAble) {
         node.parent = this
     }
 
+    // it might be used for displaying a winning move sequence
     fun print2() {
         fun print1(node: Node, index: Int) {
             println("printedContent $index")
