@@ -7,31 +7,31 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
         )
     }
 
-    fun gameEnded(): Pair<Boolean, piece> {
-        if (countPieces(piece.BLUE) + placeAble.first < 3 || listOfPossibleMoves(
-                piece.BLUE
+    fun gameEnded(): Pair<Boolean, Piece> {
+        if (countPieces(Piece.BLUE) + placeAble.first < 3 || listOfPossibleMoves(
+                Piece.BLUE
             ).isEmpty()
-        ) return Pair(true, piece.BLUE)
-        if (countPieces(piece.GREEN) + placeAble.second < 3 || listOfPossibleMoves(
-                piece.GREEN
+        ) return Pair(true, Piece.BLUE)
+        if (countPieces(Piece.GREEN) + placeAble.second < 3 || listOfPossibleMoves(
+                Piece.GREEN
             ).isEmpty()
-        ) return Pair(true, piece.GREEN)
-        return Pair(false, piece.EMPTY)
+        ) return Pair(true, Piece.GREEN)
+        return Pair(false, Piece.EMPTY)
     }
 
     fun advantage(): Int {
         if (gameEnded().first) {
-            if (gameEnded().second == piece.GREEN) {
+            if (gameEnded().second == Piece.GREEN) {
                 return 1000
             } else {
                 return -1000
             }
         }
-        return (countPieces(piece.BLUE) + placeAble.first) - (countPieces(piece.GREEN) + placeAble.second)
+        return (countPieces(Piece.BLUE) + placeAble.first) - (countPieces(Piece.GREEN) + placeAble.second)
     }
 
     fun listOfPossibleMovesWithRemoval(
-        color: piece
+        color: Piece
     ): MutableList<PositionWithPlaceAble> {
         val list = mutableListOf<PositionWithPlaceAble>()
         applyEveryMove(color).forEach {
@@ -63,21 +63,21 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
         list.forEach {
             val copy = staticCopy()
             val index = copy.findPosIndex(it.first.xyz)
-            copy.pos.collection[index] = Position(it.first.xyz, piece.EMPTY)
+            copy.pos.collection[index] = Position(it.first.xyz, Piece.EMPTY)
             list1.add(copy)
         }
         return list1
     }
 
-    private fun listOfPossibleMoves(color: piece): MutableList<Pair<Position?, Position>> {
+    private fun listOfPossibleMoves(color: Piece): MutableList<Pair<Position?, Position>> {
         val placeAble = placeAble
 
         val available = when (color) {
-            piece.BLUE -> {
+            Piece.BLUE -> {
                 placeAble.first
             }
 
-            piece.GREEN -> {
+            Piece.GREEN -> {
                 placeAble.second
             }
 
@@ -105,7 +105,7 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
     }
 
     private fun applyEveryMove(
-        pieceColor: piece
+        pieceColor: Piece
     ): MutableList<Pair<PositionWithPlaceAble, Triple<Int, Int, Int>>> {
         val listOfAll: MutableList<Pair<PositionWithPlaceAble, Triple<Int, Int, Int>>> = mutableListOf()
         listOfPossibleMoves(pieceColor).forEach {
@@ -115,11 +115,11 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
                 val index = findPosIndex(it.second.xyz)
                 copy.pos.collection[index] = Position(it.second.xyz, pieceColor)
                 when (pieceColor) {
-                    piece.BLUE -> {
+                    Piece.BLUE -> {
                         copy.placeAble = Pair(copy.placeAble.first - 1, copy.placeAble.second)
                     }
 
-                    piece.GREEN -> {
+                    Piece.GREEN -> {
                         copy.placeAble = Pair(copy.placeAble.first, copy.placeAble.second - 1)
                     }
 
@@ -129,7 +129,7 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
                 }
             } else {
                 val index = findPosIndex(it.first!!.xyz)
-                copy.pos.collection[index] = Position(it.first!!.xyz, piece.EMPTY)
+                copy.pos.collection[index] = Position(it.first!!.xyz, Piece.EMPTY)
                 val index1 = findPosIndex(it.second.xyz)
                 copy.pos.collection[index1] = Position(it.second.xyz, pieceColor)
             }
@@ -178,7 +178,7 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
 
 
     /**
-     * tries to display position in a proper way
+     * tries to display hint in a proper way
      * green - \u001b[32m
      * blue - \u001b[34m
      */
@@ -215,10 +215,10 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
     }
 
 
-    private fun getFlyPoses(color: piece): MutableList<Pair<Position?, Position>> {
+    private fun getFlyPoses(color: Piece): MutableList<Pair<Position?, Position>> {
         val flyingMoves = mutableListOf<Pair<Position?, Position>>()
         listOfPieces(color).forEach { currPiece ->
-            listOfPieces(piece.EMPTY).forEach { newPos ->
+            listOfPieces(Piece.EMPTY).forEach { newPos ->
                 flyingMoves.add(Pair(currPiece, newPos))
             }
         }
@@ -229,13 +229,13 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
      * @return possible moves if the game is in the start stage
      */
     private fun getGameStartMoves(): MutableList<Pair<Position?, Position>> {
-        return listOfPieces(piece.EMPTY).map { Pair(null, it) }.toMutableList()
+        return listOfPieces(Piece.EMPTY).map { Pair(null, it) }.toMutableList()
     }
 
     /**
      * @return possible positions if game is in the normal stage
      */
-    private fun getNormalMoves(color: piece): MutableList<Pair<Position?, Position>> {
+    private fun getNormalMoves(color: Piece): MutableList<Pair<Position?, Position>> {
         val normalMoves = mutableListOf<Pair<Position?, Position>>()
         // piece we move
         listOfPieces(color).forEach { piece ->
@@ -247,7 +247,7 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
         return normalMoves
     }
 
-    private fun getPossibleRemoveMoves(color: piece): MutableList<Pair<Position, Position?>> {
+    private fun getPossibleRemoveMoves(color: Piece): MutableList<Pair<Position, Position?>> {
         val removeMoves = mutableListOf<Pair<Position, Position?>>()
         val list = listOfPieces(color.oppositeColor()).filter {
             removalsAfterTheMove(
@@ -272,7 +272,7 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
      * @return if there are any 3 in line
      */
     private fun removalsAfterTheMove(
-        lastMove: Triple<Int, Int, Int>, color: piece
+        lastMove: Triple<Int, Int, Int>, color: Piece
     ): Int {
         var removeCount = 0
         if (lastMove.first == 1 || lastMove.third == 1) {
@@ -292,14 +292,14 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
         return removeCount
     }
 
-    private fun checkLineX(lastMove: Triple<Int, Int, Int>, color: piece): Boolean {
+    private fun checkLineX(lastMove: Triple<Int, Int, Int>, color: Piece): Boolean {
         for (i in 0..2) {
             if (findPiece(Triple(i, lastMove.second, lastMove.third)) != color) return false
         }
         return true
     }
 
-    private fun checkLineY(lastMove: Triple<Int, Int, Int>, color: piece): Boolean {
+    private fun checkLineY(lastMove: Triple<Int, Int, Int>, color: Piece): Boolean {
         for (i in 0..2) {
             if (findPiece(Triple(lastMove.first, lastMove.second, i)) != color) {
                 return false
@@ -309,7 +309,7 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
     }
 
     private fun hasValidVerticalLine(
-        pos: Triple<Int, Int, Int>, color: piece
+        pos: Triple<Int, Int, Int>, color: Piece
     ): Boolean {
         for (i in 0..2) {
             if (findPiece(Triple(pos.first, i, pos.third)) != color) return false
@@ -317,7 +317,7 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
         return true
     }
 
-    private fun findPiece(xyz: Triple<Int, Int, Int>): piece {
+    private fun findPiece(xyz: Triple<Int, Int, Int>): Piece {
         return getPos(xyz).piece
     }
 
@@ -336,20 +336,20 @@ class PositionWithPlaceAble(private var placeAble: Pair<Int, Int>, private val p
     /**
      * @return number of pieces with provided color
      */
-    private fun countPieces(type: piece): Int {
+    private fun countPieces(type: Piece): Int {
         return pos.collection.count { it.piece == type }
     }
 
     /**
      * @return list of pieces matching criteria
      */
-    private fun listOfPieces(type: piece): List<Position> {
+    private fun listOfPieces(type: Piece): List<Position> {
         return pos.collection.filter { it.piece == type }
     }
 
     private fun possibleMoves(piecePos: Position): List<Position> {
         return pos.collection.filter {
-            it.piece == piece.EMPTY &&
+            it.piece == Piece.EMPTY &&
                     // horizontal
                     ((abs(it.xyz.first - piecePos.xyz.first) + abs(
                         it.xyz.third - piecePos.xyz.third

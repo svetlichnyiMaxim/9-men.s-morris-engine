@@ -6,18 +6,18 @@ infix operator fun Triple<Int, Int, Int>.minus(second: Triple<Int, Int, Int>): T
     return Triple(this.first - second.first, this.second - second.second, this.third - second.third)
 }
 
-fun piece.oppositeColor(): piece {
+fun Piece.oppositeColor(): Piece {
     return when (this) {
-        piece.GREEN -> {
-            piece.BLUE
+        Piece.GREEN -> {
+            Piece.BLUE
         }
 
-        piece.BLUE -> {
-            piece.GREEN
+        Piece.BLUE -> {
+            Piece.GREEN
         }
 
         else -> {
-            piece.EMPTY
+            Piece.EMPTY
         }
     }
 }

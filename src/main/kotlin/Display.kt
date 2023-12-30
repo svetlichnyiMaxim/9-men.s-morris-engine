@@ -2,7 +2,7 @@
  * This file contains every function, connected with player-computer interactions
  */
 
-fun interpretation(): Triple<PositionWithPlaceAble, piece, Int> {
+fun startingHint(): Triple<PositionWithPlaceAble, Piece, Int> {
     println("Enter search depth (4 takes a lot of time)")
     val depth = getSearchDepth()
     println("Depth is $depth now")
@@ -40,15 +40,15 @@ fun getPlaceAblePieces(): Int {
     }
 }
 
-fun getStartColor(): piece {
+fun getStartColor(): Piece {
     try {
         return when (readln().lowercase()) {
             "blue" -> {
-                piece.BLUE
+                Piece.BLUE
             }
 
             "green" -> {
-                piece.GREEN
+                Piece.GREEN
             }
 
             else -> {
@@ -61,20 +61,20 @@ fun getStartColor(): piece {
     }
 }
 
-fun getPieceColor(): piece {
+fun getPieceColor(): Piece {
     val depthString = readln()
     try {
         when (depthString.lowercase()) {
             "blue" -> {
-                return piece.BLUE
+                return Piece.BLUE
             }
 
             "green" -> {
-                return piece.GREEN
+                return Piece.GREEN
             }
 
             "empty" -> {
-                return piece.EMPTY
+                return Piece.EMPTY
             }
 
             else -> {
@@ -90,7 +90,7 @@ fun getPieceColor(): piece {
 fun getPosition(): BoardPosition {
     try {
         var list: BoardPosition = BoardPosition(mutableListOf<Position>())
-        val listOfColors = mutableListOf<piece>()
+        val listOfColors = mutableListOf<Piece>()
         for (i in 1..24) {
             listOfColors.add(getPieceColor())
         }
@@ -102,7 +102,7 @@ fun getPosition(): BoardPosition {
                         list.collection.add(Position(Triple(x, y, z), listOfColors[lastUsedPiece]))
                         lastUsedPiece++
                     } else {
-                        list.collection.add(Position(Triple(x, y, z), piece.NOT))
+                        list.collection.add(Position(Triple(x, y, z), Piece.NOT))
                     }
                 }
             }
@@ -125,17 +125,17 @@ fun processLength(piece1: Int) {
 /**
  * selects color for a piece
  */
-fun processColor(piece1: piece) {
+fun processColor(piece1: Piece) {
     val blue = "\u001b[34m"
     val nothing = "\u001b[90m"
     val green = "\u001b[32m"
     var else1 = ""
     else1 += when (piece1) {
-        piece.BLUE -> {
+        Piece.BLUE -> {
             blue
         }
 
-        piece.GREEN -> {
+        Piece.GREEN -> {
             green
         }
 
@@ -143,6 +143,6 @@ fun processColor(piece1: piece) {
             nothing
         }
     }
-    val postfix = if (piece1 == piece.BLUE) " " else ""
+    val postfix = if (piece1 == Piece.BLUE) " " else ""
     print("$else1${piece1.name}$postfix ")
 }

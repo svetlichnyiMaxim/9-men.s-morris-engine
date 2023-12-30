@@ -2,45 +2,79 @@ const val version: Double = 1.0
 
 val emptyList = BoardPosition(
     mutableListOf(
-        Position(Triple(0, 0, 0), piece.EMPTY),
-        Position(Triple(0, 0, 1), piece.EMPTY),
-        Position(Triple(0, 0, 2), piece.EMPTY),
-        Position(Triple(0, 1, 0), piece.EMPTY),
-        Position(Triple(0, 1, 1), piece.EMPTY),
-        Position(Triple(0, 1, 2), piece.EMPTY),
-        Position(Triple(0, 2, 0), piece.EMPTY),
-        Position(Triple(0, 2, 1), piece.EMPTY),
-        Position(Triple(0, 2, 2), piece.EMPTY),
-        Position(Triple(1, 0, 0), piece.EMPTY),
-        Position(Triple(1, 0, 1), piece.NOT),
-        Position(Triple(1, 0, 2), piece.EMPTY),
-        Position(Triple(1, 1, 0), piece.EMPTY),
-        Position(Triple(1, 1, 1), piece.NOT),
-        Position(Triple(1, 1, 2), piece.EMPTY),
-        Position(Triple(1, 2, 0), piece.EMPTY),
-        Position(Triple(1, 2, 1), piece.NOT),
-        Position(Triple(1, 2, 2), piece.EMPTY),
-        Position(Triple(2, 0, 0), piece.EMPTY),
-        Position(Triple(2, 0, 1), piece.EMPTY),
-        Position(Triple(2, 0, 2), piece.EMPTY),
-        Position(Triple(2, 1, 0), piece.EMPTY),
-        Position(Triple(2, 1, 1), piece.EMPTY),
-        Position(Triple(2, 1, 2), piece.EMPTY),
-        Position(Triple(2, 2, 0), piece.EMPTY),
-        Position(Triple(2, 2, 1), piece.EMPTY),
-        Position(Triple(2, 2, 2), piece.EMPTY)
+        Position(Triple(0, 0, 0), Piece.EMPTY),
+        Position(Triple(0, 0, 1), Piece.EMPTY),
+        Position(Triple(0, 0, 2), Piece.EMPTY),
+        Position(Triple(0, 1, 0), Piece.EMPTY),
+        Position(Triple(0, 1, 1), Piece.EMPTY),
+        Position(Triple(0, 1, 2), Piece.EMPTY),
+        Position(Triple(0, 2, 0), Piece.EMPTY),
+        Position(Triple(0, 2, 1), Piece.EMPTY),
+        Position(Triple(0, 2, 2), Piece.EMPTY),
+        Position(Triple(1, 0, 0), Piece.EMPTY),
+        Position(Triple(1, 0, 1), Piece.NOT),
+        Position(Triple(1, 0, 2), Piece.EMPTY),
+        Position(Triple(1, 1, 0), Piece.EMPTY),
+        Position(Triple(1, 1, 1), Piece.NOT),
+        Position(Triple(1, 1, 2), Piece.EMPTY),
+        Position(Triple(1, 2, 0), Piece.EMPTY),
+        Position(Triple(1, 2, 1), Piece.NOT),
+        Position(Triple(1, 2, 2), Piece.EMPTY),
+        Position(Triple(2, 0, 0), Piece.EMPTY),
+        Position(Triple(2, 0, 1), Piece.EMPTY),
+        Position(Triple(2, 0, 2), Piece.EMPTY),
+        Position(Triple(2, 1, 0), Piece.EMPTY),
+        Position(Triple(2, 1, 1), Piece.EMPTY),
+        Position(Triple(2, 1, 2), Piece.EMPTY),
+        Position(Triple(2, 2, 0), Piece.EMPTY),
+        Position(Triple(2, 2, 1), Piece.EMPTY),
+        Position(Triple(2, 2, 2), Piece.EMPTY)
+    )
+)
+
+val examplePosition = PositionWithPlaceAble(
+    Pair(0, 0), BoardPosition(
+        mutableListOf(
+            Position(Triple(0, 0, 0), Piece.GREEN),
+            Position(Triple(0, 0, 1), Piece.GREEN),
+            Position(Triple(0, 0, 2), Piece.BLUE),
+            Position(Triple(0, 1, 0), Piece.BLUE),
+            Position(Triple(0, 1, 1), Piece.GREEN),
+            Position(Triple(0, 1, 2), Piece.BLUE),
+            Position(Triple(0, 2, 0), Piece.EMPTY),
+            Position(Triple(0, 2, 1), Piece.EMPTY),
+            Position(Triple(0, 2, 2), Piece.EMPTY),
+            Position(Triple(1, 0, 0), Piece.EMPTY),
+            Position(Triple(1, 0, 1), Piece.NOT),
+            Position(Triple(1, 0, 2), Piece.EMPTY),
+            Position(Triple(1, 1, 0), Piece.EMPTY),
+            Position(Triple(1, 1, 1), Piece.NOT),
+            Position(Triple(1, 1, 2), Piece.EMPTY),
+            Position(Triple(1, 2, 0), Piece.EMPTY),
+            Position(Triple(1, 2, 1), Piece.NOT),
+            Position(Triple(1, 2, 2), Piece.EMPTY),
+            Position(Triple(2, 0, 0), Piece.EMPTY),
+            Position(Triple(2, 0, 1), Piece.EMPTY),
+            Position(Triple(2, 0, 2), Piece.EMPTY),
+            Position(Triple(2, 1, 0), Piece.EMPTY),
+            Position(Triple(2, 1, 1), Piece.EMPTY),
+            Position(Triple(2, 1, 2), Piece.EMPTY),
+            Position(Triple(2, 2, 0), Piece.EMPTY),
+            Position(Triple(2, 2, 1), Piece.EMPTY),
+            Position(Triple(2, 2, 2), Piece.EMPTY)
+        )
     )
 )
 val emptyFull = PositionWithPlaceAble(Pair(0, 0), emptyList)
 
 fun main() {
     println("Starting engine, version - $version")
-    val data = interpretation()
-    val currentPos = data.first
+    //val data = startingHint()
+    //val currentPos = data.first
 
+    examplePosition.display()
     println("NOTE: if advantage is positive - blue are winning")
-    val depth = data.third
-    val miniMax = minimax(depth, data.second, Node(currentPos), depth)
+    val miniMax = solve(3, Piece.BLUE, Node(examplePosition), 3)
     when (miniMax.first) {
         1000 -> {
             println("You are winning")
@@ -55,41 +89,47 @@ fun main() {
         }
     }
     println(miniMax.first)
-    miniMax.third!!.display()
+    miniMax.third?.display()
 }
 
 
-fun minimax(
+/**
+ * @param depth current depth
+ * @color color of the piece we are finding a move for
+ */
+fun solve(
     depth: Int,
-    color: piece,
+    color: Piece,
     position: Node,
     originalDepth: Int
 ): Triple<Int, Node, PositionWithPlaceAble?> {
+    // if left depth is 0
     if (depth == 0 || position.value.gameEnded().first) {
         return Triple(position.value.advantage(), position, null)
     }
-    val maximizingPlayer = color == piece.BLUE
+    // decides if we are minimizing or maximizing value
+    val maximizing = color == Piece.BLUE
     val lastPosition: Node = position
-    if (maximizingPlayer) {
+    if (maximizing) {
         var maxEval = Int.MIN_VALUE
         var newWinningLine: PositionWithPlaceAble? = null
         position.value.listOfPossibleMovesWithRemoval(color).forEach {
-            val eval = minimax(depth - 1, color.oppositeColor(), Node(it), originalDepth)
-            lastPosition.add(eval.second)
-            if (eval.first > maxEval) {
+            val evaluation = solve(depth - 1, color.oppositeColor(), Node(it), originalDepth)
+            lastPosition.add(evaluation.second)
+            if (evaluation.first > maxEval) {
                 if (originalDepth == depth)
                     newWinningLine = it
-                maxEval = eval.first
+                maxEval = evaluation.first
             }
         }
         return Triple(maxEval, lastPosition, newWinningLine)
     } else {
-        var minEval = Int.MIN_VALUE
+        var minEval = Int.MAX_VALUE
         var newWinningLine: PositionWithPlaceAble? = null
         position.value.listOfPossibleMovesWithRemoval(color).forEach {
-            val eval = minimax(depth - 1, color.oppositeColor(), Node(it), originalDepth)
+            val eval = solve(depth - 1, color.oppositeColor(), Node(it), originalDepth)
             lastPosition.add(eval.second)
-            if (eval.first > minEval) {
+            if (eval.first < minEval) {
                 if (originalDepth == depth)
                     newWinningLine = it
                 minEval = eval.first
@@ -99,6 +139,6 @@ fun minimax(
     }
 }
 
-enum class piece {
+enum class Piece {
     GREEN, BLUE, EMPTY, NOT
 }
