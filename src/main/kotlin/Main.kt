@@ -1,5 +1,3 @@
-package main.kotlin
-
 const val version: Double = 1.0
 
 val emptyList = BoardPosition(
@@ -70,7 +68,6 @@ fun minimax(
     if (depth == 0 || position.value.gameEnded().first) {
         return Triple(position.value.advantage(), position, null)
     }
-
     val maximizingPlayer = color == piece.BLUE
     val lastPosition: Node = position
     if (maximizingPlayer) {

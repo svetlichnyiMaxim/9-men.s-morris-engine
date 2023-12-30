@@ -1,5 +1,3 @@
-package main.kotlin
-
 /**
  * This file contains every function, connected with player-computer interactions
  */
@@ -11,8 +9,8 @@ fun interpretation(): Triple<PositionWithPlaceAble, piece, Int> {
     println("Choose current move piece color (blue or green)")
     val color = getStartColor()
     println("Color is $color now")
-    println("Enter position (24 ints (empty - empty, green - green, blue - blue), use the following wierd pattern, to lazy to fix it")
-    emptyFull.display1()
+    println("Enter position (24 inputs (empty/green/blue), use the following wierd pattern, to lazy to fix it")
+    emptyFull.hint()
     val position = getPosition()
     PositionWithPlaceAble(Pair(0, 0), position).display()
     println("Got position")
