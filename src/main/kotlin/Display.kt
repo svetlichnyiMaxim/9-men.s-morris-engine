@@ -1,7 +1,7 @@
 package main.kotlin
 
-/*
-    This file contains every function, connected with player-computer interactions
+/**
+ * This file contains every function, connected with player-computer interactions
  */
 
 fun interpretation(): Triple<PositionWithPlaceAble, piece, Int> {
@@ -84,7 +84,7 @@ fun getPieceColor(): piece {
             }
         }
     } catch (test: IllegalArgumentException) {
-        println("error, it isn't a walid string")
+        println("error, it isn't a valid string")
         return getPieceColor()
     }
 }
@@ -116,13 +116,17 @@ fun getPosition(): BoardPosition {
     }
 }
 
-// it is used for displayed board look better
+/**
+ * it is used to make displayed board look better
+ */
 fun processLength(piece1: Int) {
     val dif = 5 - piece1.toString().length
     print("${piece1}${" ".repeat(dif)} ")
 }
 
-// selects color for a piece
+/**
+ * selects color for a piece
+ */
 fun processColor(piece1: piece) {
     val blue = "\u001b[34m"
     val nothing = "\u001b[90m"
