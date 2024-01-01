@@ -7,4 +7,3 @@ Preview:
 ![unable to load](previews/img.png)
 ![unable to load](previews/img_1.png)
 
-I use arch btw.
