@@ -18,9 +18,7 @@ class Movement(private val startIndex: Int?, val endIndex: Int?, val piece: Piec
         } else {
             copy.positions[startIndex] = Piece.EMPTY
         }
-        if (endIndex == null) {
-            TODO()
-        } else {
+        if (endIndex != null) {
             copy.positions[endIndex] = piece
         }
         return copy

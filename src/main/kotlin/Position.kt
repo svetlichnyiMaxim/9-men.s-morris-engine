@@ -6,6 +6,8 @@
 data class Position(
     val positions: MutableList<Piece>, var freePieces: Pair<Int, Int> = Pair(0, 0)
 ) {
+    fun copy() = Position(positions.toMutableList(), freePieces)
+
     private fun countPiece(color: Piece): Int {
         return positions.count { it == color }
     }
@@ -39,17 +41,27 @@ data class Position(
     }
 
     private fun generatePositionsAfterRemoval(removalAmount: Int, color: Piece): MutableList<Position> {
-        //this.countPiece()
-        TODO("Not yet implemented")
+        return this.generateRemovalMove(removalAmount, color)
     }
 
     private fun removalAmount(move: Movement): Int {
         val positionsToCheck = removeChecker[move.endIndex]!!.toList().map { it.toList() }
-        // we firstly create pair cause otherwise we will lose indexes
+        // we firstly create a pair cause otherwise we will lose indexes
         val currentPosition =
             this.positions.mapIndexed { index, piece -> Pair(index, piece == move.piece) }.filter { it.second }
                 .map { it.first }
         return positionsToCheck.count { currentPosition.containsAll(it) }
+    }
+
+    fun generateRemovalMove(amount: Int, color: Piece): MutableList<Position> {
+        var positions = mutableListOf(this)
+        repeat(amount) {
+            positions = positions.flatMap { position ->
+                position.indexes(color.opposite())
+                    .map { Movement(it, null, color.opposite()).producePosition(position) }
+            }.toMutableList()
+        }
+        return positions
     }
 
     private fun generateMoves(color: Piece): MutableList<Movement> {
@@ -76,7 +88,8 @@ data class Position(
         val movements: MutableList<Movement> = mutableListOf()
         indexes(color).forEach { startIndex ->
             moveProvider[startIndex]!!.forEach { endIndex ->
-                movements.add(Movement(startIndex, endIndex, color))
+                if (positions[endIndex] == Piece.EMPTY)
+                    movements.add(Movement(startIndex, endIndex, color))
             }
         }
         return movements
@@ -107,16 +120,56 @@ data class Position(
     }
 
     private fun gameState(color: Piece): GameState {
-        when {
+        return when {
             (gameEnded()) -> {
-                return GameState.End
+                GameState.End
             }
 
             (freePieces[color.index] > 0) -> {
-                return GameState.Placement
+                GameState.Placement
             }
 
-            else -> return GameState.Normal
+            (indexes(color).size == 3) -> {
+                GameState.Flying
+            }
+
+            else -> GameState.Normal
         }
+    }
+
+    fun display() {
+        val c = this.positions.map {
+            when (it) {
+                Piece.BLUE -> {
+                    blue + CIRCLE
+                }
+
+                Piece.GREEN -> {
+                    green + CIRCLE
+                }
+
+                Piece.EMPTY -> {
+                    none + CIRCLE
+                }
+            } + none
+        }
+        println(
+            """
+            ${c[0]}-----------------${c[1]}-----------------${c[2]}
+            |                  |                  |                  
+            |     ${c[3]}-----------${c[4]}-----------${c[5]}     |
+            |     |            |            |     |
+            |     |     ${c[6]}-----${c[7]}-----${c[8]}     |     |
+            |     |     |             |     |     |
+            ${c[9]}----${c[10]}----${c[11]}             ${c[12]}----${c[13]}----${c[14]}
+            |     |     |             |     |     |
+            |     |     ${c[15]}-----${c[16]}-----${c[17]}     |     |
+            |     |            |            |     |
+            |     ${c[18]}-----------${c[19]}-----------${c[20]}     |
+            |                  |                  |                  
+            ${c[21]}-----------------${c[22]}-----------------${c[23]}
+        """.trimIndent()
+        )
+        println()
     }
 }
