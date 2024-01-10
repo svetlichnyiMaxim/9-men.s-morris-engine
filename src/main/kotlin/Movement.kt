@@ -1,4 +1,8 @@
 class Movement(private val startIndex: Int?, val endIndex: Int?, val piece: Piece) {
+    /**
+     * @param pos position we have a more for
+     * @return position after specified move
+     */
     fun producePosition(pos: Position): Position {
         val copy = pos.copy()
         if (startIndex == null) {
@@ -73,6 +77,10 @@ val moveProvider: Map<Int, List<Int>> = mapOf(
     23 to listOf(14, 22)
 )
 
+/**
+ * in fact, there are other ways to get possible triples without mapping them.
+ * I just think this is the easiest and the fastest one
+ */
 val removeChecker: Map<Int, Pair<Pair<Int, Int>, Pair<Int, Int>>> = mapOf(
     0 to Pair(Pair(1, 2), Pair(9, 21)),
     1 to Pair(Pair(0, 2), Pair(4, 7)),

@@ -1,16 +1,24 @@
 const val CIRCLE = "\uD83D\uDD35"
 const val blue = "\u001B[34m"
 const val green = "\u001B[32m"
-const val none = "\u001B[30m"
+const val none = "\u001B[90m"
+const val BLUE_CIRCLE = "\uD83D\uDD35"
+const val GREEN_CIRCLE = "\uD83D\uDFE2"
+const val GRAY_CIRCLE = "⚪"
 
 val examplePosition = Position(
     mutableListOf(
         Piece.BLUE,
         Piece.BLUE,
         Piece.EMPTY,
+        Piece.EMPTY,
+        Piece.GREEN,
+        Piece.GREEN,
+        Piece.EMPTY,
+        Piece.EMPTY,
+        Piece.EMPTY,
         Piece.BLUE,
         Piece.GREEN,
-        Piece.GREEN,
         Piece.EMPTY,
         Piece.EMPTY,
         Piece.EMPTY,
@@ -20,23 +28,17 @@ val examplePosition = Position(
         Piece.EMPTY,
         Piece.EMPTY,
         Piece.EMPTY,
-        Piece.GREEN,
         Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
+        Piece.BLUE,
         Piece.EMPTY,
         Piece.EMPTY
     )
 )
 
 fun main() {
-    // [34m - blue
-    // [31m - red
-/*    examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }*/
-    solve(2, Piece.BLUE, examplePosition).second.forEach {
+    //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
+    examplePosition.display()
+    solve(3, Piece.BLUE, examplePosition).second.forEach {
         it.display()
         println(it.advantage(Piece.BLUE))
     }
@@ -52,13 +54,13 @@ fun solve(
     depth: Int, color: Piece, position: Position
 ): Pair<Int, MutableList<Position>> {
     // if left depth is 0
-    if (depth == 0 || position.gameEnded()) {
-        return Pair(position.advantage(Piece.BLUE), mutableListOf(position))
+    if (depth == 0 || position.gameEnded() != null) {
+        return Pair(position.advantage(color), mutableListOf(position))
     }
     // for all possible positions we try to solve them
-    val b = position.generatePositions(color).map { solve(depth - 1, color.opposite(), it) }.maxBy { it.first }
-        .apply { this.second.add(position) }
-    return b
+    return position.generatePositions(color).map { solve(depth - 1, color.opposite(), it) }
+        .maxBy { it.second.first().advantage(color) }
+        .apply { second.add(position) }
 }
 
 /**
