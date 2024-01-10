@@ -2,9 +2,8 @@
  * used to store movement
  * @param startIndex index of place a piece moves from
  * @param endIndex index of place a piece moves to
- * @param color color of the piece
  */
-class Movement(private val startIndex: Int?, val endIndex: Int?, val color: Piece) {
+class Movement(private val startIndex: Int?, val endIndex: Int?) {
     /**
      * @param pos position we have a more for
      * @return position after specified move
@@ -12,7 +11,7 @@ class Movement(private val startIndex: Int?, val endIndex: Int?, val color: Piec
     fun producePosition(pos: Position): Position {
         val copy = pos.copy()
         if (startIndex == null) {
-            when (color) {
+            when (pos.pieceToMove) {
                 Piece.GREEN -> {
                     pos.freePieces = Pair(pos.freePieces.first - 1, pos.freePieces.second)
                 }
@@ -29,7 +28,7 @@ class Movement(private val startIndex: Int?, val endIndex: Int?, val color: Piec
             copy.positions[startIndex] = Piece.EMPTY
         }
         if (endIndex != null) {
-            copy.positions[endIndex] = color
+            copy.positions[endIndex] = pos.pieceToMove
         }
         return copy
     }

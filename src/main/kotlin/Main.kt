@@ -46,7 +46,7 @@ val examplePosition = Position(
  */
 fun main() {
     //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
-    solve(5, examplePosition).second.forEach {
+    solve(6, examplePosition).second.forEach {
         it.display()
         println(it.advantage(Piece.BLUE_))
     }
@@ -65,9 +65,13 @@ fun solve(
         return Pair(position.advantage(position.pieceToMove), mutableListOf(position))
     }
     // for all possible positions, we try to solve them
-    return position.generatePositions(position.pieceToMove, depth)
+    return (position.generatePositions(position.pieceToMove, depth)
         .map { solve(depth - 1, it.apply { it.pieceToMove = it.pieceToMove.opposite() }) }
-        .maxBy { it.second.first().advantage(position.pieceToMove) }.apply { second.add(position) }
+        .filter { it.second.isNotEmpty() }
+        .maxByOrNull { it.second.first().advantage(position.pieceToMove) } ?: return Pair(
+        Int.MIN_VALUE,
+        mutableListOf()
+    )).apply { second.add(position) }
 }
 
 /**

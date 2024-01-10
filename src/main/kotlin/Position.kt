@@ -7,7 +7,7 @@ data class Position(
     var positions: MutableList<Piece>, var freePieces: Pair<Int, Int> = Pair(0, 0), var pieceToMove: Piece
 ) {
     override fun toString(): String {
-        return positions.joinToString { it.index.toString() } + " " + freePieces.first + freePieces.second
+        return positions.joinToString { it.index.toString() } + " " + freePieces.first + freePieces.second + pieceToMove.index
     }
 
     /**
@@ -64,7 +64,7 @@ data class Position(
      * @return possible positions we can achieve in 1 move
      */
     fun generatePositions(color: Piece, currentDepth: Int): List<Position> {
-        /*val str = this.toString()
+        val str = this.toString()
         occurredPositions[str]?.let {
             return it.first
             if (it.second >= currentDepth) {
@@ -73,33 +73,43 @@ data class Position(
                 occurredPositions[str] = Pair(it.first, currentDepth)
                 return it.first
             }
-        }*/
+        }
         val generatedList = generateMoves(color).map { Pair(it, it.producePosition(this)) }.map {
             val removalAmount = it.second.removalAmount(it.first)
             if (removalAmount == 0) listOf(it.second) else it.second.generatePositionsAfterRemoval(
                 removalAmount,
-                it.first.color
+                it.second.pieceToMove
             )
         }.flatten()
-        /*occurredPositions[str] = Pair(generatedList, currentDepth)*/
+        occurredPositions[str] = Pair(generatedList, currentDepth)
         return generatedList
     }
 
+    private fun checkLine(list: List<Int>): Int {
+        list.forEach {
+            if (this.positions[it] != this.pieceToMove) {
+                return 0
+            }
+        }
+        return 1
+    }
+
     /**
-     * @param move last move we have performed
+     * @param move the last move we have performed
      * @return the amount of removes we need to perform
      */
     private fun removalAmount(move: Movement): Int {
         val positionsToCheck = removeChecker[move.endIndex]!!.toList().map { it.toList() }
+        var removalAmount = 0
         // we firstly create a pair cause otherwise we will lose indexes
-        val currentPosition =
-            this.positions.mapIndexed { index, piece -> Pair(index, piece == move.color) }.filter { it.second }
-                .map { it.first }
-        return positionsToCheck.count { currentPosition.containsAll(it) }
+        positionsToCheck.forEach {
+            removalAmount += checkLine(it)
+        }
+        return removalAmount
     }
 
     /**
-     * @param amount amount of removals
+     * @param amount number of removals
      * @param color color of the piece
      * @return generated positions after removal
      */
@@ -108,7 +118,7 @@ data class Position(
         repeat(amount) {
             positions = positions.flatMap { position ->
                 position.indexes(color.opposite())
-                    .map { Movement(it, null, color.opposite()).producePosition(position) }
+                    .map { Movement(it, null).producePosition(position) }
             }.toList()
         }
         return positions
@@ -147,7 +157,7 @@ data class Position(
         indexes(color).forEach { startIndex ->
             moveProvider[startIndex]!!.forEach { endIndex ->
                 if (positions[endIndex] == Piece.EMPTY)
-                    movements.add(Movement(startIndex, endIndex, color))
+                    movements.add(Movement(startIndex, endIndex))
             }
         }
         return movements
@@ -161,7 +171,7 @@ data class Position(
         val movements: MutableList<Movement> = mutableListOf()
         indexes(color).forEach { start ->
             indexes(Piece.EMPTY).forEach { end ->
-                movements.add(Movement(start, end, color))
+                movements.add(Movement(start, end))
             }
         }
         return movements
@@ -177,7 +187,7 @@ data class Position(
         }
         val movements: MutableList<Movement> = mutableListOf()
         indexes(Piece.EMPTY).forEach {
-            movements.add(Movement(null, it, color))
+            movements.add(Movement(null, it))
         }
         return movements
     }
