@@ -4,18 +4,22 @@
  * @param freePieces pieces we can still place: first - green, second - blue
  */
 data class Position(
-    var positions: MutableList<Piece>, var freePieces: Pair<Int, Int> = Pair(0, 0)
+    var positions: MutableList<Piece>, var freePieces: Pair<Int, Int> = Pair(0, 0), var pieceToMove: Piece
 ) {
+    override fun toString(): String {
+        return positions.joinToString { it.index.toString() } + " " + freePieces.first + freePieces.second
+    }
+
     /**
      * @return a copy of the current position
      */
     fun copy(): Position {
-        return Position(positions.toMutableList(), freePieces)
+        return Position(positions.toMutableList(), freePieces, pieceToMove)
     }
 
     /**
      * @param color color of the piece
-     * @return amount of pieces with specified color
+     * @return number of pieces with specified color
      */
     private fun countPieces(color: Piece): Int {
         return positions.count { it == color }
@@ -27,8 +31,8 @@ data class Position(
     fun gameEnded(): Piece? {
         if (countPieces(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3)
             return Piece.GREEN
-        if (countPieces(Piece.BLUE) + freePieces[Piece.BLUE.index] < 3)
-            return Piece.BLUE
+        if (countPieces(Piece.BLUE_) + freePieces[Piece.BLUE_.index] < 3)
+            return Piece.BLUE_
         return null
     }
 
@@ -56,16 +60,29 @@ data class Position(
 
     /**
      * @param color color of the piece
+     * @param currentDepth the current depth we are at
      * @return possible positions we can achieve in 1 move
      */
-    fun generatePositions(color: Piece): List<Position> {
-        return generateMoves(color).map { Pair(it, it.producePosition(this)) }.map {
+    fun generatePositions(color: Piece, currentDepth: Int): List<Position> {
+        /*val str = this.toString()
+        occurredPositions[str]?.let {
+            return it.first
+            if (it.second >= currentDepth) {
+                return listOf()
+            } else {
+                occurredPositions[str] = Pair(it.first, currentDepth)
+                return it.first
+            }
+        }*/
+        val generatedList = generateMoves(color).map { Pair(it, it.producePosition(this)) }.map {
             val removalAmount = it.second.removalAmount(it.first)
             if (removalAmount == 0) listOf(it.second) else it.second.generatePositionsAfterRemoval(
                 removalAmount,
                 it.first.color
             )
         }.flatten()
+        /*occurredPositions[str] = Pair(generatedList, currentDepth)*/
+        return generatedList
     }
 
     /**
@@ -193,19 +210,19 @@ data class Position(
     fun display() {
         val c = this.positions.map {
             when (it) {
-                Piece.BLUE -> {
-                    BLUE_CIRCLE
-                    //blue + CIRCLE + none
+                Piece.BLUE_ -> {
+                    //BLUE_CIRCLE
+                    blue + CIRCLE + none
                 }
 
                 Piece.GREEN -> {
-                    GREEN_CIRCLE
-                    //green + CIRCLE + none
+                    //GREEN_CIRCLE
+                    green + CIRCLE + none
                 }
 
                 Piece.EMPTY -> {
-                    GRAY_CIRCLE
-                    //CIRCLE
+                    //GRAY_CIRCLE
+                    CIRCLE
                 }
             }
         }

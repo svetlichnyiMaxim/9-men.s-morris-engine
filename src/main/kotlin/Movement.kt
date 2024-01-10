@@ -17,7 +17,7 @@ class Movement(private val startIndex: Int?, val endIndex: Int?, val color: Piec
                     pos.freePieces = Pair(pos.freePieces.first - 1, pos.freePieces.second)
                 }
 
-                Piece.BLUE -> {
+                Piece.BLUE_ -> {
                     pos.freePieces = Pair(pos.freePieces.first, pos.freePieces.second - 1)
                 }
 

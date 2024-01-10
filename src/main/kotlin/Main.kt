@@ -6,41 +6,49 @@ const val BLUE_CIRCLE = "\uD83D\uDD35"
 const val GREEN_CIRCLE = "\uD83D\uDFE2"
 const val GRAY_CIRCLE = "⚪"
 
+/**
+ * we store occurred positions here which massively increases speed
+ */
+val occurredPositions: HashMap<String, Pair<List<Position>, Int>> = hashMapOf()
+
+@Suppress("IncorrectFormatting")
 val examplePosition = Position(
     mutableListOf(
-        Piece.BLUE,
-        Piece.BLUE,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.GREEN,
-        Piece.GREEN,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.BLUE,
-        Piece.GREEN,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.GREEN,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.BLUE,
-        Piece.EMPTY,
-        Piece.EMPTY
-    )
+        Piece.BLUE_, Piece.BLUE_, Piece.EMPTY,
+        Piece.EMPTY, Piece.GREEN, Piece.GREEN,
+        Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
+        Piece.BLUE_, Piece.GREEN, Piece.GREEN, Piece.EMPTY, Piece.EMPTY, Piece.BLUE_,
+        Piece.EMPTY, Piece.GREEN, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.BLUE_, Piece.EMPTY
+    ),
+    pieceToMove = Piece.BLUE_
 )
 
+/*
+0-----------------1-----------------2
+|                 |                 |
+|     3-----------4-----------5     |
+|     |           |           |     |
+|     |     6-----7-----8     |     |
+|     |     |           |     |     |
+9-----10----11          12----13----14
+|     |     |           |     |     |
+|     |     15----16----17    |     |
+|     |           |           |     |
+|     18----------19----------20    |
+|                 |                 |
+21----------------22----------------23
+ */
+
+/**
+ * part of the program it starts from
+ */
 fun main() {
     //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
-    examplePosition.display()
-    solve(3, Piece.BLUE, examplePosition).second.forEach {
+    solve(5, examplePosition).second.forEach {
         it.display()
-        println(it.advantage(Piece.BLUE))
+        println(it.advantage(Piece.BLUE_))
     }
 }
 
@@ -51,23 +59,36 @@ fun main() {
  * @return possible positions and there evaluation
  */
 fun solve(
-    depth: Int, color: Piece, position: Position
+    depth: Int, position: Position
 ): Pair<Int, MutableList<Position>> {
-    // if left depth is 0
     if (depth == 0 || position.gameEnded() != null) {
-        return Pair(position.advantage(color), mutableListOf(position))
+        return Pair(position.advantage(position.pieceToMove), mutableListOf(position))
     }
-    // for all possible positions we try to solve them
-    return position.generatePositions(color).map { solve(depth - 1, color.opposite(), it) }
-        .maxBy { it.second.first().advantage(color) }.apply { second.add(position) }
+    // for all possible positions, we try to solve them
+    return position.generatePositions(position.pieceToMove, depth)
+        .map { solve(depth - 1, it.apply { it.pieceToMove = it.pieceToMove.opposite() }) }
+        .maxBy { it.second.first().advantage(position.pieceToMove) }.apply { second.add(position) }
 }
 
 /**
  * used for storing piece color
- * index is index of free pieces in Position class
+ * @param index index of free pieces in Position class
  */
 enum class Piece(val index: Int) {
-    GREEN(0), BLUE(1), EMPTY(-1)
+    /**
+     * green color
+     */
+    GREEN(0),
+
+    /**
+     * blue color
+     */
+    BLUE_(1),
+
+    /**
+     * no piece is placed
+     */
+    EMPTY(-1)
 }
 
 /**
@@ -76,10 +97,10 @@ enum class Piece(val index: Int) {
 fun Piece.opposite(): Piece {
     return when (this) {
         Piece.GREEN -> {
-            Piece.BLUE
+            Piece.BLUE_
         }
 
-        Piece.BLUE -> {
+        Piece.BLUE_ -> {
             Piece.GREEN
         }
 
