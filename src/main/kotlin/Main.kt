@@ -59,8 +59,7 @@ fun solve(
     }
     // for all possible positions we try to solve them
     return position.generatePositions(color).map { solve(depth - 1, color.opposite(), it) }
-        .maxBy { it.second.first().advantage(color) }
-        .apply { second.add(position) }
+        .maxBy { it.second.first().advantage(color) }.apply { second.add(position) }
 }
 
 /**
@@ -90,6 +89,27 @@ fun Piece.opposite(): Piece {
     }
 }
 
+/**
+ * used for storing game state
+ */
 enum class GameState {
-    Placement, Normal, Flying, End
+    /**
+     * game starting part, we simply place pieces
+     */
+    Placement,
+
+    /**
+     * normal part of the game
+     */
+    Normal,
+
+    /**
+     * part of the game where pieces can fly
+     */
+    Flying,
+
+    /**
+     * if game has ended xd
+     */
+    End
 }

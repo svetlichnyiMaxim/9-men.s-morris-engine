@@ -1,4 +1,10 @@
-class Movement(private val startIndex: Int?, val endIndex: Int?, val piece: Piece) {
+/**
+ * used to store movement
+ * @param startIndex index of place a piece moves from
+ * @param endIndex index of place a piece moves to
+ * @param color color of the piece
+ */
+class Movement(private val startIndex: Int?, val endIndex: Int?, val color: Piece) {
     /**
      * @param pos position we have a more for
      * @return position after specified move
@@ -6,7 +12,7 @@ class Movement(private val startIndex: Int?, val endIndex: Int?, val piece: Piec
     fun producePosition(pos: Position): Position {
         val copy = pos.copy()
         if (startIndex == null) {
-            when (piece) {
+            when (color) {
                 Piece.GREEN -> {
                     pos.freePieces = Pair(pos.freePieces.first - 1, pos.freePieces.second)
                 }
@@ -23,13 +29,18 @@ class Movement(private val startIndex: Int?, val endIndex: Int?, val piece: Piec
             copy.positions[startIndex] = Piece.EMPTY
         }
         if (endIndex != null) {
-            copy.positions[endIndex] = piece
+            copy.positions[endIndex] = color
         }
         return copy
     }
 }
 
 
+/**
+ * provides a way to get an element from pair
+ * fancy way
+ * @param index index of the required element
+ */
 operator fun Pair<Int, Int>.get(index: Int): Int {
     return when (index) {
         0 -> {
@@ -108,7 +119,6 @@ val removeChecker: Map<Int, Pair<Pair<Int, Int>, Pair<Int, Int>>> = mapOf(
     23 to Pair(Pair(21, 22), Pair(2, 14))
 )
 /*
-
 0-----------------1-----------------2
 |                 |                 |
 |     3-----------4-----------5     |
@@ -122,5 +132,4 @@ val removeChecker: Map<Int, Pair<Pair<Int, Int>, Pair<Int, Int>>> = mapOf(
 |     18----------19----------20    |
 |                 |                 |
 21----------------22----------------23
-
  */

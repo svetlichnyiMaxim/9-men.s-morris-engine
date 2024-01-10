@@ -14,10 +14,10 @@ data class Position(
     }
 
     /**
-     * @param color color of pieces we search for
-     * @return amount of pieces of specified color
+     * @param color color of the piece
+     * @return amount of pieces with specified color
      */
-    private fun countPiece(color: Piece): Int {
+    private fun countPieces(color: Piece): Int {
         return positions.count { it == color }
     }
 
@@ -25,57 +25,68 @@ data class Position(
      * @return if the game has ended
      */
     fun gameEnded(): Piece? {
-        if (countPiece(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3)
+        if (countPieces(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3)
             return Piece.GREEN
-        if (countPiece(Piece.BLUE) + freePieces[Piece.BLUE.index] < 3)
+        if (countPieces(Piece.BLUE) + freePieces[Piece.BLUE.index] < 3)
             return Piece.BLUE
         return null
     }
 
     /**
-     * @return advantage of pieces of current color
+     * @param color color of the piece
+     * @return advantage of pieces with current color
      */
     fun advantage(color: Piece): Int {
         return when (gameEnded()) {
             color.opposite() -> Int.MAX_VALUE
             color -> Int.MIN_VALUE
-            else -> (countPiece(color) + freePieces[color.index]) - (countPiece(color.opposite()) + freePieces[color.opposite().index])
+            else -> (countPieces(color) + freePieces[color.index]) - (countPieces(color.opposite()) + freePieces[color.opposite().index])
         }
     }
 
     /**
+     * @param color color of the piece
      * @return indexes with pieces of the needed color
      */
-    private fun indexes(piece: Piece): List<Int> {
-        return positions.mapIndexed { index: Int, pieceColor -> if (pieceColor == piece) index else null }
+    private fun indexes(color: Piece): List<Int> {
+        return positions.mapIndexed { index: Int, pieceColor -> if (pieceColor == color) index else null }
             .filterNotNull()
             .toList()
     }
 
     /**
+     * @param color color of the piece
      * @return possible positions we can achieve in 1 move
      */
     fun generatePositions(color: Piece): List<Position> {
         return generateMoves(color).map { Pair(it, it.producePosition(this)) }.map {
             val removalAmount = it.second.removalAmount(it.first)
-            if (removalAmount == 0) listOf(it.second) else it.second.generatePositionsAfterRemoval(removalAmount, it.first.piece)
+            if (removalAmount == 0) listOf(it.second) else it.second.generatePositionsAfterRemoval(
+                removalAmount,
+                it.first.color
+            )
         }.flatten()
     }
 
-    private fun generatePositionsAfterRemoval(removalAmount: Int, color: Piece): List<Position> {
-        return this.generateRemovalMove(removalAmount, color)
-    }
-
+    /**
+     * @param move last move we have performed
+     * @return the amount of removes we need to perform
+     */
     private fun removalAmount(move: Movement): Int {
         val positionsToCheck = removeChecker[move.endIndex]!!.toList().map { it.toList() }
         // we firstly create a pair cause otherwise we will lose indexes
         val currentPosition =
-            this.positions.mapIndexed { index, piece -> Pair(index, piece == move.piece) }.filter { it.second }
+            this.positions.mapIndexed { index, piece -> Pair(index, piece == move.color) }.filter { it.second }
                 .map { it.first }
         return positionsToCheck.count { currentPosition.containsAll(it) }
     }
 
-    private fun generateRemovalMove(amount: Int, color: Piece): List<Position> {
+    /**
+     * @param amount amount of removals
+     * @param color color of the piece
+     * @return generated positions after removal
+     */
+    private fun generatePositionsAfterRemoval(amount: Int, color: Piece): List<Position> {
         var positions = listOf(this)
         repeat(amount) {
             positions = positions.flatMap { position ->
@@ -86,6 +97,10 @@ data class Position(
         return positions
     }
 
+    /**
+     * @param color color of the piece
+     * @return possible movements
+     */
     private fun generateMoves(color: Piece): MutableList<Movement> {
         when (gameState(color)) {
             GameState.Placement -> {
@@ -106,6 +121,10 @@ data class Position(
         }
     }
 
+    /**
+     * @param color color of the piece
+     * @return all possible normal movements
+     */
     private fun generateNormalMovements(color: Piece): MutableList<Movement> {
         val movements: MutableList<Movement> = mutableListOf()
         indexes(color).forEach { startIndex ->
@@ -117,6 +136,10 @@ data class Position(
         return movements
     }
 
+    /**
+     * @param color color of the piece
+     * @return all possible flying movements
+     */
     private fun generateFlyingMovements(color: Piece): MutableList<Movement> {
         val movements: MutableList<Movement> = mutableListOf()
         indexes(color).forEach { start ->
@@ -128,6 +151,7 @@ data class Position(
     }
 
     /**
+     * @param color color of the piece
      * @return possible piece placements
      */
     private fun generatePlacementMovements(color: Piece): MutableList<Movement> {
@@ -141,6 +165,10 @@ data class Position(
         return movements
     }
 
+    /**
+     * @param color color of the piece
+     * @return state of the game
+     */
     private fun gameState(color: Piece): GameState {
         return when {
             (gameEnded() != null) -> {
@@ -151,7 +179,7 @@ data class Position(
                 GameState.Placement
             }
 
-            (countPiece(color) == 3) -> {
+            (countPieces(color) == 3) -> {
                 GameState.Flying
             }
 
@@ -159,6 +187,9 @@ data class Position(
         }
     }
 
+    /**
+     * displays position in a human-readable form
+     */
     fun display() {
         val c = this.positions.map {
             when (it) {
