@@ -46,32 +46,10 @@ val examplePosition = Position(
  */
 fun main() {
     //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
-    solve(6, examplePosition).second.forEach {
+    examplePosition.solve(6).second.forEach {
         it.display()
         println(it.advantage(Piece.BLUE_))
     }
-}
-
-
-/**
- * @param depth current depth
- * @color color of the piece we are finding a move for
- * @return possible positions and there evaluation
- */
-fun solve(
-    depth: Int, position: Position
-): Pair<Int, MutableList<Position>> {
-    if (depth == 0 || position.gameEnded() != null) {
-        return Pair(position.advantage(position.pieceToMove), mutableListOf(position))
-    }
-    // for all possible positions, we try to solve them
-    return (position.generatePositions(position.pieceToMove, depth)
-        .map { solve(depth - 1, it.apply { it.pieceToMove = it.pieceToMove.opposite() }) }
-        .filter { it.second.isNotEmpty() }
-        .maxByOrNull { it.second.first().advantage(position.pieceToMove) } ?: return Pair(
-        Int.MIN_VALUE,
-        mutableListOf()
-    )).apply { second.add(position) }
 }
 
 /**
@@ -92,7 +70,7 @@ enum class Piece(val index: Int) {
     /**
      * no piece is placed
      */
-    EMPTY(-1)
+    EMPTY(2)
 }
 
 /**

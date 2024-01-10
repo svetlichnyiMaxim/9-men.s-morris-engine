@@ -25,15 +25,62 @@ class Movement(private val startIndex: Int?, val endIndex: Int?) {
                 }
             }
         } else {
-            copy.positions[startIndex] = Piece.EMPTY
+            copy.positions[2].add(startIndex)
+            copy.positions[0].remove(startIndex) || copy.positions[1].remove(startIndex)
         }
         if (endIndex != null) {
-            copy.positions[endIndex] = pos.pieceToMove
+            copy.positions[2].remove(endIndex)
+            copy.positions[pos.pieceToMove.index].add(endIndex)
         }
         return copy
     }
 }
 
+/**
+ * provides a way to get an element from pair
+ * fancy way
+ * @param index index of the required element
+ */
+operator fun <T> Triple<T, T, T>.get(index: Int): T {
+    return when (index) {
+        0 -> {
+            first
+        }
+
+        1 -> {
+            second
+        }
+
+        2 -> {
+            third
+        }
+
+        else -> {
+            throw IllegalArgumentException()
+        }
+    }
+}
+
+/**
+ * provides a way to get an element from pair
+ * fancy way
+ * @param index index of the required element
+ */
+operator fun <T> Pair<T, T>.get(index: Int): T {
+    return when (index) {
+        0 -> {
+            first
+        }
+
+        1 -> {
+            second
+        }
+
+        else -> {
+            throw IllegalArgumentException()
+        }
+    }
+}
 
 /**
  * provides a way to get an element from pair
@@ -43,11 +90,11 @@ class Movement(private val startIndex: Int?, val endIndex: Int?) {
 operator fun Pair<Int, Int>.get(index: Int): Int {
     return when (index) {
         0 -> {
-            this.first
+            first
         }
 
         1 -> {
-            this.second
+            second
         }
 
         else -> {
