@@ -79,7 +79,7 @@ data class Position(
     /**
      * @return if the game has ended
      */
-    fun gameEnded(): Piece? {
+    private fun gameEnded(): Piece? {
         if (countPieces(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3) return Piece.GREEN
         if (countPieces(Piece.BLUE_) + freePieces[Piece.BLUE_.index] < 3) return Piece.BLUE_
         return null
