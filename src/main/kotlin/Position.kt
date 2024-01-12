@@ -10,25 +10,21 @@ private val <E> List<E>.toTriple: Triple<E, E, E>
  * @param freePieces pieces we can still place: first - green, second - blue
  */
 data class Position(
-    var positions: Triple<MutableCollection<Int>, MutableCollection<Int>, MutableCollection<Int>>,
+    var positions: Triple<MutableCollection<UByte>, MutableCollection<UByte>, MutableCollection<UByte>>,
     var freePieces: Pair<Int, Int> = Pair(0, 0),
     var pieceToMove: Piece
 ) {
     constructor(
         positions: MutableList<Piece>, freePieces: Pair<Int, Int> = Pair(0, 0), pieceToMove: Piece
-    ) : this(positions.mapIndexed { index, piece -> Pair(index, piece) }.groupBy { it.second }.toList()
-        .sortedBy { it.first.index }.map { it.second }.map { it.map { it.first }.toMutableList() }.toTriple,
+    ) : this(positions.mapIndexed { index, piece -> Pair(index.toUByte(), piece) }.groupBy { it.second }.toList()
+        .sortedBy { it.first.index }.map { it.second }.map { it1 -> it1.map { it.first }.toMutableList() }.toTriple,
         freePieces,
         pieceToMove
     )
 
     override fun equals(other: Any?): Boolean {
         if (other is Position) {
-            if (positions.first == other.positions.first && positions.second == other.positions.second && positions.third == other.positions.third && freePieces == other.freePieces && pieceToMove == other.pieceToMove) {
-                return true
-            } else {
-                return false
-            }
+            return positions.first == other.positions.first && positions.second == other.positions.second && positions.third == other.positions.third && freePieces == other.freePieces && pieceToMove == other.pieceToMove
         }
         return super.equals(other)
     }
@@ -101,8 +97,8 @@ data class Position(
      * @param color color of the piece
      * @return indexes with pieces of the needed color
      */
-    fun indexes(color: Piece): MutableCollection<Int> {
-        return positions[color.index]
+    private fun indexes(color: Piece): MutableCollection<UByte> {
+        return positions.get(color.index)
     }
 
     /**
@@ -110,10 +106,9 @@ data class Position(
      * @param currentDepth the current depth we are at
      * @return possible positions we can achieve in 1 move
      */
-    fun generatePositions(color: Piece, currentDepth: Int): List<Position> {
+    private fun generatePositions(color: Piece, currentDepth: Int): List<Position> {
         val str = this.toString()
         occurredPositions[str]?.let {
-            return it.first
             if (it.second >= currentDepth) {
                 return listOf()
             } else {
@@ -131,7 +126,7 @@ data class Position(
         return generatedList
     }
 
-    private fun checkLine(list: List<Int>): Int {
+    private fun checkLine(list: List<UByte>): Int {
         return if (positions[pieceToMove.index].containsAll(list)) 1 else 0
     }
 
@@ -195,7 +190,7 @@ data class Position(
     private fun generateNormalMovements(color: Piece): List<Movement> {
         return indexes(color).flatMap { startIndex ->
             moveProvider[startIndex]!!.filter { endIndex ->
-                positions[2].contains(endIndex)
+                positions[2U].contains(endIndex)
             }.map { endIndex -> Movement(startIndex, endIndex) }
         }
     }
@@ -252,18 +247,18 @@ data class Position(
         val c = allElementsPieces.map {
             when (it) {
                 Piece.BLUE_ -> {
-                    //BLUE_CIRCLE
-                    blue + CIRCLE + none
+                    BLUE_CIRCLE
+                    //blue + CIRCLE + none
                 }
 
                 Piece.GREEN -> {
-                    //GREEN_CIRCLE
-                    green + CIRCLE + none
+                    GREEN_CIRCLE
+                    //green + CIRCLE + none
                 }
 
                 Piece.EMPTY -> {
-                    //GRAY_CIRCLE
-                    CIRCLE
+                    GRAY_CIRCLE
+                    //CIRCLE
                 }
             }
         }

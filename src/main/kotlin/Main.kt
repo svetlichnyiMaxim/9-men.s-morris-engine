@@ -14,13 +14,13 @@ val occurredPositions: HashMap<String, Pair<List<Position>, Int>> = hashMapOf()
 @Suppress("IncorrectFormatting")
 val examplePosition = Position(
     mutableListOf(
-        Piece.BLUE_, Piece.BLUE_, Piece.EMPTY,
-        Piece.EMPTY, Piece.GREEN, Piece.GREEN,
-        Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
-        Piece.BLUE_, Piece.GREEN, Piece.GREEN, Piece.EMPTY, Piece.EMPTY, Piece.BLUE_,
-        Piece.EMPTY, Piece.GREEN, Piece.EMPTY,
-        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.BLUE_, Piece.EMPTY
+        Piece.BLUE_,                           Piece.EMPTY,                           Piece.EMPTY,
+                     Piece.EMPTY,              Piece.GREEN,              Piece.EMPTY,
+                                  Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,              Piece.EMPTY, Piece.BLUE_, Piece.EMPTY,
+                                  Piece.BLUE_, Piece.GREEN, Piece.EMPTY,
+                     Piece.EMPTY,              Piece.EMPTY,              Piece.EMPTY,
+        Piece.EMPTY,                           Piece.EMPTY,                           Piece.EMPTY
     ),
     pieceToMove = Piece.BLUE_
 )
@@ -46,7 +46,7 @@ val examplePosition = Position(
  */
 fun main() {
     //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
-    examplePosition.solve(6).second.forEach {
+    examplePosition.solve(4).second.forEach {
         it.display()
         println(it.advantage(Piece.BLUE_))
     }
@@ -56,21 +56,21 @@ fun main() {
  * used for storing piece color
  * @param index index of free pieces in Position class
  */
-enum class Piece(val index: Int) {
+enum class Piece(val index: UByte) {
     /**
      * green color
      */
-    GREEN(0),
+    GREEN(0U),
 
     /**
      * blue color
      */
-    BLUE_(1),
+    BLUE_(1U),
 
     /**
      * no piece is placed
      */
-    EMPTY(2)
+    EMPTY(2U)
 }
 
 /**
