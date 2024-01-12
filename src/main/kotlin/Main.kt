@@ -50,7 +50,7 @@ fun main() {
     //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
     examplePosition.solve(4).second.forEach {
         it.display()
-        println(it.advantage(Piece.BLUE_))
+        println(it.advantage()[examplePosition.pieceToMove.index])
     }
 }
 

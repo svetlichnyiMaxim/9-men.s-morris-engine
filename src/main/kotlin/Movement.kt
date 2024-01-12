@@ -11,13 +11,13 @@ class Movement(private val startIndex: UByte?, val endIndex: UByte?) {
     fun producePosition(pos: Position): Position {
         val copy = pos.copy()
         if (startIndex == null) {
-            when (pos.pieceToMove) {
+            when (copy.pieceToMove) {
                 Piece.GREEN -> {
-                    pos.freePieces = Pair(pos.freePieces.first - 1, pos.freePieces.second)
+                    copy.freePieces = Pair(copy.freePieces.first - 1, copy.freePieces.second)
                 }
 
                 Piece.BLUE_ -> {
-                    pos.freePieces = Pair(pos.freePieces.first, pos.freePieces.second - 1)
+                    copy.freePieces = Pair(copy.freePieces.first, copy.freePieces.second - 1)
                 }
 
                 else -> {
@@ -30,7 +30,7 @@ class Movement(private val startIndex: UByte?, val endIndex: UByte?) {
         }
         if (endIndex != null) {
             copy.positions[2U].remove(endIndex)
-            copy.positions[pos.pieceToMove.index].add(endIndex)
+            copy.positions[copy.pieceToMove.index].add(endIndex)
         }
         return copy
     }

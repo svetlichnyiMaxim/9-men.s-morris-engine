@@ -33,7 +33,7 @@ class MainTest {
     fun test1() {
         //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
         val result = examplePosition1_0.solve(1)
-        assertEquals(result.first, Int.MIN_VALUE)
+        assertEquals(result.first, Pair(Int.MIN_VALUE, Int.MAX_VALUE))
         assertEquals(result.second.size, 2)
         assertEquals(result.second[1], examplePosition1_0)
         assertEquals(result.second[0].positions[1U].sortedBy { it }, examplePosition1_1.positions[1U].sortedBy { it })
@@ -71,7 +71,7 @@ class MainTest {
     @Test
     fun test2() {
         val result = examplePosition2_0.solve(1)
-        assertEquals(result.first, Int.MIN_VALUE)
+        assertEquals(result.first, Pair(Int.MAX_VALUE, Int.MIN_VALUE))
         assertEquals(result.second.size, 2)
         assertEquals(result.second[1], examplePosition2_0)
         assertEquals(result.second[0].positions[0U].sortedBy { it }, examplePosition2_1.positions[0U].sortedBy { it })
@@ -109,7 +109,7 @@ class MainTest {
     @Test
     fun test3() {
         val result = examplePosition3_0.solve(2)
-        assertEquals(result.first, -1)
+        assertEquals(result.first, Pair(1, -1))
         assertEquals(result.second.size, 3)
         assertEquals(result.second[2], examplePosition3_0)
         assertEquals(result.second[1].positions[1U].sortedBy { it }, examplePosition3_1.positions[1U].sortedBy { it })

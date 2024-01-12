@@ -43,17 +43,24 @@ data class Position(
      */
     fun solve(
         depth: Int
-    ): Pair<Int, MutableList<Position>> {
+    ): Pair<Pair<Int, Int>, MutableList<Position>> {
         if (depth == 0 || gameEnded() != null) {
-            return Pair(advantage(pieceToMove), mutableListOf(this))
+            return Pair(advantage(), mutableListOf(this))
         }
         // for all possible positions, we try to solve them
         return (generatePositions(pieceToMove, depth)
-            .map { it.apply { it.pieceToMove = it.pieceToMove.opposite() }.solve(depth - 1) }
-            .filter { it.second.isNotEmpty() }.maxByOrNull { it.second.first().advantage(pieceToMove) }
+            .map {
+                it.apply { it.pieceToMove = it.pieceToMove.opposite() }
+                    .solve(depth - 1)
+            }
+            .filter { it.second.isNotEmpty() }.maxByOrNull { it.first[pieceToMove.index] }
         // if we can't make a move, we lose
             ?: return Pair(
-                Int.MIN_VALUE, mutableListOf()
+                if (pieceToMove == Piece.GREEN) {
+                    Pair(Int.MIN_VALUE, Int.MAX_VALUE)
+                } else {
+                    Pair(Int.MAX_VALUE, Int.MIN_VALUE)
+                }, mutableListOf()
             )).apply { second.add(this@Position) }
     }
 
@@ -81,20 +88,24 @@ data class Position(
      */
     private fun gameEnded(): Piece? {
         for (i in 0..1) {
-            if (countPieces(colorMap[i]!!) + freePieces[i.toUByte()] < 3) return colorMap[i]!!
+            if (countPieces(colorMap[i]!!) + freePieces[i.toUByte()] < 3)
+                return colorMap[i]!!
         }
         return null
     }
 
     /**
-     * @param color color of the piece
      * @return advantage of pieces with current color
      */
-    fun advantage(color: Piece): Int {
+    fun advantage(): Pair<Int, Int> {
         return when (gameEnded()) {
-            color.opposite() -> Int.MAX_VALUE
-            color -> Int.MIN_VALUE
-            else -> (countPieces(color) + freePieces[color.index]) - (countPieces(color.opposite()) + freePieces[color.opposite().index])
+            Piece.GREEN -> Pair(Int.MIN_VALUE, Int.MAX_VALUE)
+            Piece.BLUE_ -> Pair(Int.MAX_VALUE, Int.MIN_VALUE)
+            else -> {
+                ((countPieces(Piece.GREEN).toInt() + freePieces[0U]) - (countPieces(Piece.BLUE_).toInt() + freePieces[1U])).let {
+                    Pair(it, -it)
+                }
+            }
         }
     }
 
@@ -103,7 +114,7 @@ data class Position(
      * @return indexes with pieces of the needed color
      */
     private fun indexes(color: Piece): MutableCollection<UByte> {
-        return positions.get(color.index)
+        return positions[color.index]
     }
 
     /**
