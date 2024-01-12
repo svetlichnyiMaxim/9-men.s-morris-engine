@@ -1,6 +1,6 @@
 private val <E> List<E>.toTriple: Triple<E, E, E>
     get() {
-        require(this.size == 3)
+        require(size == 3)
         return Triple(this[0], this[1], this[2])
     }
 
@@ -8,6 +8,7 @@ private val <E> List<E>.toTriple: Triple<E, E, E>
  * used for storing position data
  * @param positions all pieces
  * @param freePieces pieces we can still place: first - green, second - blue
+ * @param pieceToMove piece going to move next
  */
 data class Position(
     var positions: Triple<MutableCollection<UByte>, MutableCollection<UByte>, MutableCollection<UByte>>,
@@ -17,16 +18,18 @@ data class Position(
     constructor(
         positions: MutableList<Piece>, freePieces: Pair<Int, Int> = Pair(0, 0), pieceToMove: Piece
     ) : this(positions.mapIndexed { index, piece -> Pair(index.toUByte(), piece) }.groupBy { it.second }.toList()
-        .sortedBy { it.first.index }.map { it.second }.map { it1 -> it1.map { it.first }.toMutableList() }.toTriple,
+        .sortedBy { it.first.index }.map { it1 -> it1.second.map { it.first }.toMutableList() }.toTriple,
         freePieces,
         pieceToMove
     )
 
     override fun equals(other: Any?): Boolean {
-        if (other is Position) {
-            return positions.first == other.positions.first && positions.second == other.positions.second && positions.third == other.positions.third && freePieces == other.freePieces && pieceToMove == other.pieceToMove
+        if (other !is Position) {
+            return super.equals(other)
         }
-        return super.equals(other)
+        other.positions.let {
+            return positions == it && freePieces == other.freePieces && pieceToMove == other.pieceToMove
+        }
     }
 
     override fun toString(): String {
@@ -41,13 +44,14 @@ data class Position(
     fun solve(
         depth: Int
     ): Pair<Int, MutableList<Position>> {
-        if (depth == 0 || this.gameEnded() != null) {
-            return Pair(this.advantage(this.pieceToMove), mutableListOf(this))
+        if (depth == 0 || gameEnded() != null) {
+            return Pair(advantage(pieceToMove), mutableListOf(this))
         }
         // for all possible positions, we try to solve them
-        return (this.generatePositions(this.pieceToMove, depth)
+        return (generatePositions(pieceToMove, depth)
             .map { it.apply { it.pieceToMove = it.pieceToMove.opposite() }.solve(depth - 1) }
-            .filter { it.second.isNotEmpty() }.maxByOrNull { it.second.first().advantage(this.pieceToMove) }
+            .filter { it.second.isNotEmpty() }.maxByOrNull { it.second.first().advantage(pieceToMove) }
+        // if we can't make a move, we lose
             ?: return Pair(
                 Int.MIN_VALUE, mutableListOf()
             )).apply { second.add(this@Position) }
@@ -76,8 +80,9 @@ data class Position(
      * @return if the game has ended
      */
     private fun gameEnded(): Piece? {
-        if (countPieces(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3) return Piece.GREEN
-        if (countPieces(Piece.BLUE_) + freePieces[Piece.BLUE_.index] < 3) return Piece.BLUE_
+        for (i in 0..1) {
+            if (countPieces(colorMap[i]!!) + freePieces[i.toUByte()] < 3) return colorMap[i]!!
+        }
         return null
     }
 
@@ -107,7 +112,7 @@ data class Position(
      * @return possible positions we can achieve in 1 move
      */
     private fun generatePositions(color: Piece, currentDepth: Int): List<Position> {
-        val str = this.toString()
+        val str = toString()
         occurredPositions[str]?.let {
             if (it.second >= currentDepth) {
                 return listOf()
@@ -116,18 +121,19 @@ data class Position(
                 return it.first
             }
         }
-        val generatedList = generateMoves(color).map { Pair(it, it.producePosition(this)) }.map {
-            val removalAmount = it.second.removalAmount(it.first)
-            if (removalAmount == 0) listOf(it.second) else it.second.generatePositionsAfterRemoval(
-                removalAmount, it.second.pieceToMove
+        val generatedList = generateMoves(color).flatMap {
+            val position = it.producePosition(this)
+            val removalAmount = position.removalAmount(it)
+            if (removalAmount == 0) listOf(position) else position.generatePositionsAfterRemoval(
+                removalAmount, position.pieceToMove
             )
-        }.flatten()
+        }
         occurredPositions[str] = Pair(generatedList, currentDepth)
         return generatedList
     }
 
-    private fun checkLine(list: List<UByte>): Int {
-        return if (positions[pieceToMove.index].containsAll(list)) 1 else 0
+    private fun checkLine(list: List<UByte>): Boolean {
+        return positions[pieceToMove.index].containsAll(list)
     }
 
     /**
@@ -135,13 +141,7 @@ data class Position(
      * @return the amount of removes we need to perform
      */
     private fun removalAmount(move: Movement): Int {
-        val positionsToCheck = removeChecker[move.endIndex]!!.toList().map { it.toList() }
-        var removalAmount = 0
-        // we firstly create a pair cause otherwise we will lose indexes
-        positionsToCheck.forEach {
-            removalAmount += checkLine(it)
-        }
-        return removalAmount
+        return removeChecker[move.endIndex]!!.count { checkLine(it) }
     }
 
     /**
@@ -154,7 +154,7 @@ data class Position(
         repeat(amount) {
             positions = positions.flatMap { position ->
                 position.indexes(color.opposite()).map { Movement(it, null).producePosition(position) }
-            }.toList()
+            }
         }
         return positions
     }
@@ -208,9 +208,6 @@ data class Position(
      * @return possible piece placements
      */
     private fun generatePlacementMovements(color: Piece): List<Movement> {
-        if (freePieces[color.index] == 0) {
-            return mutableListOf()
-        }
         return indexes(Piece.EMPTY).map { Movement(null, it) }
     }
 
@@ -240,25 +237,27 @@ data class Position(
      * displays position in a human-readable form
      */
     fun display() {
-        val allElements = this.positions.toList()
-        val allElementsPieces = (allElements[0].map { Pair(it, Piece.GREEN) } + allElements[1].map {
-            Pair(it, Piece.BLUE_)
-        } + allElements[2].map { Pair(it, Piece.EMPTY) }).sortedBy { it.first }.map { it.second }
-        val c = allElementsPieces.map {
-            when (it) {
+        val c = positions.toList().flatMapIndexed { index: Int, uBytes: MutableCollection<UByte> ->
+            uBytes.map {
+                Pair(
+                    it, colorMap[index]!!
+                )
+            }
+        }.sortedBy { it.first }.map {
+            when (it.second) {
                 Piece.BLUE_ -> {
-                    BLUE_CIRCLE
-                    //blue + CIRCLE + none
+                    //BLUE_CIRCLE
+                    blue + CIRCLE + none
                 }
 
                 Piece.GREEN -> {
-                    GREEN_CIRCLE
-                    //green + CIRCLE + none
+                    //GREEN_CIRCLE
+                    green + CIRCLE + none
                 }
 
                 Piece.EMPTY -> {
-                    GRAY_CIRCLE
-                    //CIRCLE
+                    //GRAY_CIRCLE
+                    CIRCLE
                 }
             }
         }

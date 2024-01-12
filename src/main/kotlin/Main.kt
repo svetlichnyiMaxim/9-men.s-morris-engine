@@ -1,3 +1,5 @@
+import kotlin.math.abs
+
 const val CIRCLE = "\uD83D\uDD35"
 const val blue = "\u001B[34m"
 const val green = "\u001B[32m"
@@ -77,19 +79,7 @@ enum class Piece(val index: UByte) {
  * @return opposite color
  */
 fun Piece.opposite(): Piece {
-    return when (this) {
-        Piece.GREEN -> {
-            Piece.BLUE_
-        }
-
-        Piece.BLUE_ -> {
-            Piece.GREEN
-        }
-
-        else -> {
-            throw IllegalStateException()
-        }
-    }
+    return colorMap[abs(1 - this.index.toInt())]!!
 }
 
 /**
