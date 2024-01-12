@@ -1,28 +1,65 @@
 import kotlin.math.abs
 
-const val CIRCLE = "\uD83D\uDD35"
-const val blue = "\u001B[34m"
-const val green = "\u001B[32m"
-const val none = "\u001B[90m"
-const val BLUE_CIRCLE = "\uD83D\uDD35"
-const val GREEN_CIRCLE = "\uD83D\uDFE2"
-const val GRAY_CIRCLE = "⚪"
+/**
+ * circle unicode symbol
+ * linux only
+ */
+const val CIRCLE: String = "\uD83D\uDD35"
+
+/**
+ * blue color
+ * linux only
+ */
+const val BLUE: String = "\u001B[34m"
+
+/**
+ * green color
+ * linux only
+ */
+const val GREEN: String = "\u001B[32m"
+
+/**
+ * resets to default color
+ * linux only
+ */
+const val NONE: String = "\u001B[90m"
+
+/**
+ * blue circle unicode symbol
+ * windows only
+ */
+const val BLUE_CIRCLE: String = "\uD83D\uDD35"
+
+/**
+ * green circle unicode symbol
+ * windows only
+ */
+const val GREEN_CIRCLE: String = "\uD83D\uDFE2"
+
+/**
+ * gray circle unicode symbol
+ * windows only
+ */
+const val GRAY_CIRCLE: String = "⚪"
 
 /**
  * we store occurred positions here which massively increases speed
  */
 val occurredPositions: HashMap<String, Pair<List<Position>, Int>> = hashMapOf()
 
+/**
+ * an example position for test purposes
+ */
 @Suppress("IncorrectFormatting")
 val examplePosition = Position(
     mutableListOf(
-        Piece.BLUE_,                           Piece.EMPTY,                           Piece.EMPTY,
-                     Piece.EMPTY,              Piece.GREEN,              Piece.EMPTY,
-                                  Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,              Piece.EMPTY, Piece.BLUE_, Piece.EMPTY,
-                                  Piece.BLUE_, Piece.GREEN, Piece.EMPTY,
-                     Piece.EMPTY,              Piece.EMPTY,              Piece.EMPTY,
-        Piece.EMPTY,                           Piece.EMPTY,                           Piece.EMPTY
+        Piece.BLUE_, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.GREEN, Piece.EMPTY,
+        Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.BLUE_, Piece.EMPTY,
+        Piece.BLUE_, Piece.GREEN, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY
     ),
     pieceToMove = Piece.BLUE_
 )

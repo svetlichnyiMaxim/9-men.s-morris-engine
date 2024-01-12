@@ -21,7 +21,7 @@ class Movement(private val startIndex: UByte?, val endIndex: UByte?) {
                 }
 
                 else -> {
-                    throw IllegalStateException()
+                    error("piece to move can't be EMPTY")
                 }
             }
         } else {
@@ -39,6 +39,7 @@ class Movement(private val startIndex: UByte?, val endIndex: UByte?) {
 /**
  * provides a way to get an element from pair
  * fancy way
+ * @param T any type
  * @param index index of the required element
  */
 operator fun <T> Triple<T, T, T>.get(index: UByte): T {
@@ -56,7 +57,7 @@ operator fun <T> Triple<T, T, T>.get(index: UByte): T {
         }
 
         else -> {
-            throw IllegalArgumentException()
+            throw IllegalArgumentException("Illegal index when getting triple element")
         }
     }
 }
@@ -64,6 +65,7 @@ operator fun <T> Triple<T, T, T>.get(index: UByte): T {
 /**
  * provides a way to get an element from pair
  * fancy way
+ * @param T any type
  * @param index index of the required element
  */
 operator fun <T> Pair<T, T>.get(index: UByte): T {
@@ -77,28 +79,7 @@ operator fun <T> Pair<T, T>.get(index: UByte): T {
         }
 
         else -> {
-            throw IllegalArgumentException()
-        }
-    }
-}
-
-/**
- * provides a way to get an element from pair
- * fancy way
- * @param index index of the required element
- */
-operator fun Pair<UByte, UByte>.get(index: UByte): UByte {
-    return when (index) {
-        0.toUByte() -> {
-            first
-        }
-
-        1.toUByte() -> {
-            second
-        }
-
-        else -> {
-            throw IllegalArgumentException()
+            throw IllegalArgumentException("Illegal index when getting pair element")
         }
     }
 }
@@ -165,7 +146,12 @@ val removeChecker: Map<UByte, List<List<UByte>>> = mapOf(
     23.toUByte() to listOf(listOf(21U, 22U), listOf(2U, 14U))
 )
 
-val colorMap = mapOf(
+/**
+ * a quick way to get piece color based on it's index
+ * @see Piece
+ * @returm piece
+ */
+val colorMap: Map<Int, Piece> = mapOf(
     0 to Piece.GREEN,
     1 to Piece.BLUE_,
     2 to Piece.EMPTY

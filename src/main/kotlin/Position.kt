@@ -10,7 +10,7 @@ private val <E> List<E>.toTriple: Triple<E, E, E>
  * @param freePieces pieces we can still place: first - green, second - blue
  * @param pieceToMove piece going to move next
  */
-data class Position(
+class Position(
     var positions: Triple<MutableCollection<UByte>, MutableCollection<UByte>, MutableCollection<UByte>>,
     var freePieces: Pair<Int, Int> = Pair(0, 0),
     var pieceToMove: Piece
@@ -33,7 +33,9 @@ data class Position(
     }
 
     override fun toString(): String {
-        return pieceToMove.index.toString() + positions.first.joinToString { it.toString() } + "/" + positions.second.joinToString { it.toString() } + "|" + freePieces.first + "|" + freePieces.second
+        return pieceToMove.index.toString() +
+                positions.first.joinToString { it.toString() } + "/" + positions.second.joinToString { it.toString() } +
+                "|" + freePieces.first + "|" + freePieces.second
     }
 
     /**
@@ -48,12 +50,9 @@ data class Position(
             return Pair(advantage(), mutableListOf(this))
         }
         // for all possible positions, we try to solve them
-        return (generatePositions(pieceToMove, depth)
-            .map {
-                it.apply { it.pieceToMove = it.pieceToMove.opposite() }
-                    .solve(depth - 1)
-            }
-            .filter { it.second.isNotEmpty() }.maxByOrNull { it.first[pieceToMove.index] }
+        return (generatePositions(pieceToMove, depth).map {
+            it.apply { it.pieceToMove = it.pieceToMove.opposite() }.solve(depth - 1)
+        }.filter { it.second.isNotEmpty() }.maxByOrNull { it.first[pieceToMove.index] }
         // if we can't make a move, we lose
             ?: return Pair(
                 if (pieceToMove == Piece.GREEN) {
@@ -88,8 +87,7 @@ data class Position(
      */
     private fun gameEnded(): Piece? {
         for (i in 0..1) {
-            if (countPieces(colorMap[i]!!) + freePieces[i.toUByte()] < 3)
-                return colorMap[i]!!
+            if (countPieces(colorMap[i]!!) + freePieces[i.toUByte()] < 3) return colorMap[i]!!
         }
         return null
     }
@@ -102,7 +100,7 @@ data class Position(
             Piece.GREEN -> Pair(Int.MIN_VALUE, Int.MAX_VALUE)
             Piece.BLUE_ -> Pair(Int.MAX_VALUE, Int.MIN_VALUE)
             else -> {
-                ((countPieces(Piece.GREEN).toInt() + freePieces[0U]) - (countPieces(Piece.BLUE_).toInt() + freePieces[1U])).let {
+                ((countPieces(Piece.GREEN) - countPieces(Piece.BLUE_)) + (freePieces[0U] - freePieces[1U])).let {
                     Pair(it, -it)
                 }
             }
@@ -124,6 +122,7 @@ data class Position(
      */
     private fun generatePositions(color: Piece, currentDepth: Int): List<Position> {
         val str = toString()
+        // check if we can abort calculation / use our previous result
         occurredPositions[str]?.let {
             if (it.second >= currentDepth) {
                 return listOf()
@@ -135,24 +134,14 @@ data class Position(
         val generatedList = generateMoves(color).flatMap {
             val position = it.producePosition(this)
             val removalAmount = position.removalAmount(it)
+            // if we doesn't remove anything - skip
             if (removalAmount == 0) listOf(position) else position.generatePositionsAfterRemoval(
                 removalAmount, position.pieceToMove
             )
         }
+        // store our work into our hashMap
         occurredPositions[str] = Pair(generatedList, currentDepth)
         return generatedList
-    }
-
-    private fun checkLine(list: List<UByte>): Boolean {
-        return positions[pieceToMove.index].containsAll(list)
-    }
-
-    /**
-     * @param move the last move we have performed
-     * @return the amount of removes we need to perform
-     */
-    private fun removalAmount(move: Movement): Int {
-        return removeChecker[move.endIndex]!!.count { checkLine(it) }
     }
 
     /**
@@ -170,6 +159,18 @@ data class Position(
         return positions
     }
 
+    private fun checkLine(list: List<UByte>): Boolean {
+        return positions[pieceToMove.index].containsAll(list)
+    }
+
+    /**
+     * @param move the last move we have performed
+     * @return the amount of removes we need to perform
+     */
+    private fun removalAmount(move: Movement): Int {
+        return removeChecker[move.endIndex]!!.count { checkLine(it) }
+    }
+
     /**
      * @param color color of the piece
      * @return possible movements
@@ -177,7 +178,7 @@ data class Position(
     private fun generateMoves(color: Piece): List<Movement> {
         when (gameState(color)) {
             GameState.Placement -> {
-                return generatePlacementMovements(color)
+                return generatePlacementMovements()
             }
 
             GameState.End -> {
@@ -193,6 +194,7 @@ data class Position(
             }
         }
     }
+
 
     /**
      * @param color color of the piece
@@ -215,10 +217,9 @@ data class Position(
     }
 
     /**
-     * @param color color of the piece
      * @return possible piece placements
      */
-    private fun generatePlacementMovements(color: Piece): List<Movement> {
+    private fun generatePlacementMovements(): List<Movement> {
         return indexes(Piece.EMPTY).map { Movement(null, it) }
     }
 
@@ -258,12 +259,12 @@ data class Position(
             when (it.second) {
                 Piece.BLUE_ -> {
                     //BLUE_CIRCLE
-                    blue + CIRCLE + none
+                    BLUE + CIRCLE + NONE
                 }
 
                 Piece.GREEN -> {
                     //GREEN_CIRCLE
-                    green + CIRCLE + none
+                    GREEN + CIRCLE + NONE
                 }
 
                 Piece.EMPTY -> {
@@ -273,7 +274,7 @@ data class Position(
             }
         }
         println(
-            """
+            """$NONE
             ${c[0]}-----------------${c[1]}-----------------${c[2]}
             |                  |                  |                  
             |     ${c[3]}-----------${c[4]}-----------${c[5]}     |
