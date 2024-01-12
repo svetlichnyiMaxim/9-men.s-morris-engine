@@ -1,6 +1,6 @@
 This project is engine for "nine men's morris" game, written in kotlin.
 It has no ui yet, so you console.
-Max depth with okay speed is 4 (prob. week pc), so I am going to omptimise it (in case I continue working on this)
+Max depth with okay speed is 5 (prob. week pc), so I am going to optimise it (in case I continue working on this)
 
 Preview:
 

@@ -88,7 +88,7 @@ operator fun <T> Pair<T, T>.get(index: UByte): T {
  * in fact, there are other ways to get possible move without mapping them.
  * I just think this is the easiest and the fastest one
  */
-val moveProvider: Map<UByte, List<UByte>> = mapOf(
+val moveProvider: HashMap<UByte, List<UByte>> = hashMapOf(
     0.toUByte() to listOf(1U, 9U),
     1.toUByte() to listOf(0U, 2U, 4U),
     2.toUByte() to listOf(1U, 14U),
@@ -119,7 +119,7 @@ val moveProvider: Map<UByte, List<UByte>> = mapOf(
  * in fact, there are other ways to get possible triples without mapping them.
  * I just think this is the easiest and the fastest one
  */
-val removeChecker: Map<UByte, List<List<UByte>>> = mapOf(
+val removeChecker: HashMap<UByte, List<List<UByte>>> = hashMapOf(
     0.toUByte() to listOf(listOf(1U, 2U), listOf(9U, 21U)),
     1.toUByte() to listOf(listOf(0U, 2U), listOf(4U, 7U)),
     2.toUByte() to listOf(listOf(0U, 1U), listOf(14U, 23U)),
@@ -149,9 +149,9 @@ val removeChecker: Map<UByte, List<List<UByte>>> = mapOf(
 /**
  * a quick way to get piece color based on it's index
  * @see Piece
- * @returm piece
+ * @return piece
  */
-val colorMap: Map<Int, Piece> = mapOf(
+val colorMap: HashMap<Int, Piece> = hashMapOf(
     0 to Piece.GREEN,
     1 to Piece.BLUE_,
     2 to Piece.EMPTY

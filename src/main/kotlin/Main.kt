@@ -28,18 +28,21 @@ const val NONE: String = "\u001B[90m"
  * blue circle unicode symbol
  * windows only
  */
+@Suppress("unused")
 const val BLUE_CIRCLE: String = "\uD83D\uDD35"
 
 /**
  * green circle unicode symbol
  * windows only
  */
+@Suppress("unused")
 const val GREEN_CIRCLE: String = "\uD83D\uDFE2"
 
 /**
  * gray circle unicode symbol
  * windows only
  */
+@Suppress("unused")
 const val GRAY_CIRCLE: String = "⚪"
 
 /**

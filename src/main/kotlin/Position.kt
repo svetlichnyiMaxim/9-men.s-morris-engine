@@ -1,9 +1,3 @@
-private val <E> List<E>.toTriple: Triple<E, E, E>
-    get() {
-        require(size == 3)
-        return Triple(this[0], this[1], this[2])
-    }
-
 /**
  * used for storing position data
  * @param positions all pieces
@@ -23,21 +17,6 @@ class Position(
         pieceToMove
     )
 
-    override fun equals(other: Any?): Boolean {
-        if (other !is Position) {
-            return super.equals(other)
-        }
-        other.positions.let {
-            return positions == it && freePieces == other.freePieces && pieceToMove == other.pieceToMove
-        }
-    }
-
-    override fun toString(): String {
-        return pieceToMove.index.toString() +
-                positions.first.joinToString { it.toString() } + "/" + positions.second.joinToString { it.toString() } +
-                "|" + freePieces.first + "|" + freePieces.second
-    }
-
     /**
      * @param depth current depth
      * @color color of the piece we are finding a move for
@@ -51,7 +30,8 @@ class Position(
         }
         // for all possible positions, we try to solve them
         return (generatePositions(pieceToMove, depth).map {
-            it.apply { it.pieceToMove = it.pieceToMove.opposite() }.solve(depth - 1)
+            it.pieceToMove = it.pieceToMove.opposite()
+            it.solve(depth - 1)
         }.filter { it.second.isNotEmpty() }.maxByOrNull { it.first[pieceToMove.index] }
         // if we can't make a move, we lose
             ?: return Pair(
@@ -86,9 +66,8 @@ class Position(
      * @return if the game has ended
      */
     private fun gameEnded(): Piece? {
-        for (i in 0..1) {
-            if (countPieces(colorMap[i]!!) + freePieces[i.toUByte()] < 3) return colorMap[i]!!
-        }
+        if (countPieces(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3) return Piece.GREEN
+        if (countPieces(Piece.BLUE_) + freePieces[Piece.BLUE_.index] < 3) return Piece.BLUE_
         return null
     }
 
@@ -134,7 +113,7 @@ class Position(
         val generatedList = generateMoves(color).flatMap {
             val position = it.producePosition(this)
             val removalAmount = position.removalAmount(it)
-            // if we doesn't remove anything - skip
+            // if we don't remove anything - skip
             if (removalAmount == 0) listOf(position) else position.generatePositionsAfterRemoval(
                 removalAmount, position.pieceToMove
             )
@@ -159,16 +138,14 @@ class Position(
         return positions
     }
 
-    private fun checkLine(list: List<UByte>): Boolean {
-        return positions[pieceToMove.index].containsAll(list)
-    }
-
     /**
      * @param move the last move we have performed
      * @return the amount of removes we need to perform
      */
     private fun removalAmount(move: Movement): Int {
-        return removeChecker[move.endIndex]!!.count { checkLine(it) }
+        return removeChecker[move.endIndex]!!.count {
+            positions[pieceToMove.index].containsAll(it)
+        }
     }
 
     /**
@@ -194,7 +171,6 @@ class Position(
             }
         }
     }
-
 
     /**
      * @param color color of the piece
@@ -292,4 +268,25 @@ class Position(
         )
         println()
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is Position) {
+            return super.equals(other)
+        }
+        other.positions.let {
+            return positions == it && freePieces == other.freePieces && pieceToMove == other.pieceToMove
+        }
+    }
+
+    override fun toString(): String {
+        return pieceToMove.index.toString() +
+                positions.first.joinToString { it.toString() } + "/" + positions.second.joinToString { it.toString() } +
+                "|" + freePieces.first + "|" + freePieces.second
+    }
 }
+
+private val <E> List<E>.toTriple: Triple<E, E, E>
+    get() {
+        require(size == 3)
+        return Triple(this[0], this[1], this[2])
+    }
