@@ -56,13 +56,13 @@ val occurredPositions: HashMap<String, Pair<List<Position>, Int>> = hashMapOf()
 @Suppress("IncorrectFormatting")
 val examplePosition = Position(
     mutableListOf(
-        Piece.BLUE_, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.GREEN, Piece.EMPTY,
-        Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.BLUE_, Piece.EMPTY,
-        Piece.BLUE_, Piece.GREEN, Piece.EMPTY,
-        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY
+        Piece.BLUE_,                           Piece.EMPTY,                           Piece.EMPTY,
+                     Piece.EMPTY,              Piece.GREEN,              Piece.EMPTY,
+                                  Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,              Piece.EMPTY, Piece.BLUE_, Piece.EMPTY,
+                                  Piece.BLUE_, Piece.GREEN, Piece.EMPTY,
+                     Piece.EMPTY,              Piece.EMPTY,              Piece.EMPTY,
+        Piece.EMPTY,                           Piece.EMPTY,                           Piece.EMPTY
     ),
     pieceToMove = Piece.BLUE_
 )
