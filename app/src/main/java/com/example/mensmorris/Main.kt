@@ -59,15 +59,16 @@ val occurredPositions: HashMap<String, Pair<List<Position>, UByte>> = hashMapOf(
 @Suppress("IncorrectFormatting")
 val examplePosition = Position(
     mutableListOf(
-        Piece.BLUE_, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.GREEN, Piece.EMPTY,
-        Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
-        Piece.BLUE_, Piece.EMPTY, Piece.EMPTY,
         Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.BLUE_, Piece.GREEN
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.BLUE_, Piece.BLUE_,
+        Piece.GREEN, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
+        Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY
     ),
-    pieceToMove = Piece.GREEN,
+    freePieces = Pair(3u, 3u),
+    pieceToMove = Piece.BLUE_,
     removalCount = 0u
 )
 
@@ -91,9 +92,9 @@ val examplePosition = Position(
  * part of the program it starts from
  */
 fun main() {
-    val b = examplePosition.solve(4u)
+    val b = examplePosition.solve(1u).second
     //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
-    b.second.forEach {
+    b.forEach {
         it.display()
         println("${it.evaluate()} and move - ${it.pieceToMove} removals - ${it.removalCount}")
     }

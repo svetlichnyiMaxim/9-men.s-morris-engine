@@ -17,11 +17,13 @@ class Movement(private val startIndex: UByte?, val endIndex: UByte?) {
         if (startIndex == null) {
             when (copy.pieceToMove) {
                 Piece.GREEN -> {
-                    copy.freePieces = Pair((copy.freePieces.first - 1u).toUByte(), copy.freePieces.second)
+                    copy.freePieces =
+                        Pair((copy.freePieces.first - 1u).toUByte(), copy.freePieces.second)
                 }
 
                 Piece.BLUE_ -> {
-                    copy.freePieces = Pair(copy.freePieces.first, (copy.freePieces.second - 1u).toUByte())
+                    copy.freePieces =
+                        Pair(copy.freePieces.first, (copy.freePieces.second - 1u).toUByte())
                 }
 
                 else -> {
@@ -29,15 +31,17 @@ class Movement(private val startIndex: UByte?, val endIndex: UByte?) {
                 }
             }
         } else {
-            // placement
+            // removed
             copy.positions[2U].add(startIndex)
             copy.positions[0U].remove(startIndex) || copy.positions[1U].remove(startIndex)
+            copy.removalCount--
         }
         if (endIndex != null) {
             copy.positions[2U].remove(endIndex)
             copy.positions[copy.pieceToMove.index].add(endIndex)
         }
-        copy.removalCount = copy.removalAmount(this)
+        if (endIndex != null)
+            copy.removalCount = copy.removalAmount(this)
 
         if (copy.removalCount == 0.toUByte()) {
             copy.pieceToMove = copy.pieceToMove.opposite()
@@ -118,7 +122,7 @@ val moveProvider: HashMap<UByte, List<UByte>> = hashMapOf(
     16.toUByte() to listOf(15U, 17U, 19U),
     17.toUByte() to listOf(12U, 16U),
     18.toUByte() to listOf(10U, 19U),
-    19.toUByte() to listOf(16U, 18U, 20U),
+    19.toUByte() to listOf(16U, 18U, 20U, 22U),
     20.toUByte() to listOf(13U, 19U),
     21.toUByte() to listOf(9U, 22U),
     22.toUByte() to listOf(19U, 21U, 23U),

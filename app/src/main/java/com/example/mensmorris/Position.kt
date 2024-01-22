@@ -47,8 +47,8 @@ class Position(
             (countPieces(Piece.BLUE_) + freePieces[1U]).toByte() + if (pieceToMove == Piece.BLUE_) removalCount.toByte() else 0
         val greenPieces =
             (countPieces(Piece.GREEN) + freePieces[0U]).toByte() + if (pieceToMove == Piece.GREEN) removalCount.toByte() else 0
-        val greenEvaluation = (bluePieces - greenPieces).toByte()
-        val blueEvaluation = (greenPieces - bluePieces).toByte()
+        val greenEvaluation = (greenPieces - bluePieces).toByte()
+        val blueEvaluation = (bluePieces - greenPieces).toByte()
         return Pair(greenEvaluation, blueEvaluation)
     }
     /**
@@ -77,7 +77,7 @@ class Position(
             )
         }
         val bestPosition = positions.maxBy {
-            it.second.first().evaluate()[pieceToMove.index]
+            it.first[pieceToMove.index]
         }
         bestPosition.second.add(this)
         return bestPosition
@@ -92,7 +92,7 @@ class Position(
                 positions.first.toMutableList(),
                 positions.second.toMutableList(),
                 positions.third.toMutableList()
-            ), freePieces, pieceToMove
+            ), freePieces, pieceToMove, removalCount
         )
     }
 
@@ -116,7 +116,7 @@ class Position(
      * @param currentDepth the current depth we are at
      * @return possible positions we can achieve in 1 move
      */
-    private fun generatePositions(currentDepth: UByte): List<Position> {
+    fun generatePositions(currentDepth: UByte): List<Position> {
         val str = toString()
         // check if we can abort calculation / use our previous result
         occurredPositions[str]?.let {
