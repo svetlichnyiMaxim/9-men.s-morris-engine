@@ -21,6 +21,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,8 +30,12 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlin.math.max
 
 
 val BUTTON_WIDTH = 35.dp
@@ -52,6 +57,8 @@ class MainActivity : ComponentActivity() {
     private var gamePosition = mutableStateOf<Position?>(null)
     private var gameStateRender = mutableStateOf<Boolean?>(null)
     private var selectedButton = mutableStateOf<UByte?>(null)
+    private var depth = mutableIntStateOf(3)
+    private var solving: Job? = null
 
     @Composable
     fun GameEnd() {
@@ -204,7 +211,7 @@ class MainActivity : ComponentActivity() {
         }
         producedMove?.let {
             gamePosition.value = it.producePosition(pos)
-            solveResult.value = mutableListOf()
+            reset()
             if (pos.gameState() == GameState.End) {
                 gameStateRender.value = true
             }
@@ -266,14 +273,52 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier
                 // BUTTON_WIDTH * 12
                 .padding(0.dp, BUTTON_WIDTH * 10.5f, 0.dp, 0.dp)
-                .fillMaxSize(),
-            Alignment.TopCenter
+                .fillMaxSize()
         )
         {
-            Button(onClick = {
-                solveResult.value = pos.solve(3u).second
-            }) {
-                Text("Solve")
+            Locate(Alignment.TopStart) {
+                Button(
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.5f), CircleShape),
+                    onClick = {
+                        depth.intValue = max(0, depth.intValue - 1)
+                        reset()
+                    }) {
+                    Text("-")
+                }
+            }
+            Locate(Alignment.TopCenter) {
+                Button(onClick = {
+                    solving = CoroutineScope(Dispatchers.Default).launch {
+                        solveResult.value = pos.solve(depth.intValue.toUByte()).second
+                    }
+                }) {
+                    Text("Solve (depth - ${depth.intValue})")
+                }
+            }
+            Locate(Alignment.TopEnd) {
+                Button(
+                    modifier = Modifier
+                        .background(Color.Black.copy(alpha = 0.5f), CircleShape),
+                    onClick = {
+                        depth.intValue++
+                        reset()
+                    }) {
+                    Text("+")
+                }
+            }
+        }
+    }
+
+    private fun reset() {
+        solveResult.value = mutableListOf()
+        occurredPositions.forEach {
+            occurredPositions[it.key] = Pair(it.value.first, 0u)
+        }
+        if (solving != null) {
+            try {
+                solving!!.cancel()
+            } catch (_: CancellationException) {
             }
         }
     }

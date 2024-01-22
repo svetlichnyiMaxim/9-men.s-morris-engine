@@ -63,9 +63,9 @@ val examplePosition = Position(
         Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
         Piece.EMPTY, Piece.BLUE_, Piece.BLUE_,
         Piece.GREEN, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
-        Piece.GREEN, Piece.EMPTY, Piece.EMPTY,
         Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
-        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY
+        Piece.EMPTY, Piece.EMPTY, Piece.EMPTY,
+        Piece.GREEN, Piece.EMPTY, Piece.EMPTY
     ),
     freePieces = Pair(3u, 3u),
     pieceToMove = Piece.BLUE_,
@@ -92,7 +92,7 @@ val examplePosition = Position(
  * part of the program it starts from
  */
 fun main() {
-    val b = examplePosition.solve(1u).second
+    val b = examplePosition.solve(3u).second
     //examplePosition.generatePositions(Piece.GREEN).forEach { it.display() }
     b.forEach {
         it.display()
