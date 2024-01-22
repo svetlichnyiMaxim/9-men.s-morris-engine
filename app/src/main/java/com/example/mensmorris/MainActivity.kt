@@ -251,7 +251,7 @@ class MainActivity : ComponentActivity() {
             Box(
                 modifier = Modifier
                     .padding(0.dp, BUTTON_WIDTH * 12, 0.dp, 0.dp)
-                    .background(Color.DarkGray, RoundedCornerShape(15))
+                    .background(Color.DarkGray, RoundedCornerShape(5))
             ) {
                 Column {
                     Column(
