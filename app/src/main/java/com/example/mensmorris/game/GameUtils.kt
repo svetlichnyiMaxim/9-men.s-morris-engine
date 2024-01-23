@@ -10,6 +10,38 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 
 val gameStartPosition = Position(
+    Triple(
+        (mutableListOf<UByte>() as MutableCollection<UByte>),
+        mutableListOf(),
+        mutableListOf(
+            0u,
+            1u,
+            2u,
+            3u,
+            4u,
+            5u,
+            6u,
+            7u,
+            8u,
+            9u,
+            10u,
+            11u,
+            12u,
+            13u,
+            14u,
+            15u,
+            16u,
+            17u,
+            18u,
+            19u,
+            20u,
+            21u,
+            22u,
+            23u
+        )
+    ), Pair(8u, 8u), pieceToMove = Piece.BLUE_
+)
+val testPosition = Position(
     mutableListOf(
         Piece.EMPTY,
         Piece.EMPTY,
@@ -178,7 +210,9 @@ fun handleClick(elementIndex: UByte) {
                 if (selectedButton.value == null) {
                     moveHints.value = moves.map { it.startIndex!! }.toMutableList()
                 } else {
-                    moveHints.value = moves.filter { it.startIndex == selectedButton.value }.map { it.endIndex!! }.toMutableList()
+                    moveHints.value =
+                        moves.filter { it.startIndex == selectedButton.value }.map { it.endIndex!! }
+                            .toMutableList()
                 }
             }
 

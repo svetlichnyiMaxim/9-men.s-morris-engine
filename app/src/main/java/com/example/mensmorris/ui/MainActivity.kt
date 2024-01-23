@@ -5,6 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import com.example.mensmorris.game.gamePosition
+import com.example.mensmorris.game.gameStartPosition
+import com.example.mensmorris.game.occurredPositions
 import com.example.mensmorris.ui.screens.GameEnd
 import com.example.mensmorris.ui.screens.MainPage
 
@@ -36,6 +39,8 @@ fun ScreenSwitcher() {
         Screen.MainGame -> {
             render {
                 AppTheme {
+                    gamePosition.value = gameStartPosition
+                    occurredPositions.clear()
                     MainPage()
                 }
             }
