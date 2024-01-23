@@ -5,7 +5,7 @@ package com.example.mensmorris.game
  * @param startIndex index of place a piece moves from
  * @param endIndex index of place a piece moves to
  */
-class Movement(private val startIndex: UByte?, val endIndex: UByte?) {
+class Movement(val startIndex: UByte?, val endIndex: UByte?) {
     /**
      * @param pos position we have a more for
      * @return position after specified move

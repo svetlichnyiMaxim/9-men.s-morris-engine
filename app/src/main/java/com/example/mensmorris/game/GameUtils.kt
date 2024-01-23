@@ -3,6 +3,8 @@ package com.example.mensmorris.game
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import com.example.mensmorris.ui.Screen
+import com.example.mensmorris.ui.currentScreen
 import kotlinx.coroutines.Job
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
@@ -33,7 +35,7 @@ val gameStartPosition = Position(
         Piece.EMPTY,
         Piece.EMPTY,
         Piece.EMPTY
-    ), Pair(6u, 6u), pieceToMove = Piece.BLUE_
+    ), Pair(3u, 3u), pieceToMove = Piece.BLUE_
 )
 
 /**
@@ -146,14 +148,46 @@ fun handleClick(elementIndex: UByte) {
         }
 
         GameState.End -> {
-            gameStateRender.value = true
+            currentScreen = Screen.EndGame
         }
     }
     producedMove?.let {
         gamePosition.value = it.producePosition(pos)
         reset()
         if (pos.gameState() == GameState.End) {
-            gameStateRender.value = true
+            currentScreen = Screen.EndGame
+        }
+    }
+    pos.generateMoves().let { moves ->
+        when (pos.gameState()) {
+            GameState.Placement -> {
+                moveHints.value = moves.map { it.endIndex!! }.toMutableList()
+            }
+
+            GameState.Normal -> {
+                if (selectedButton.value == null) {
+                    moveHints.value = moves.map { it.startIndex!! }.toMutableList()
+                } else {
+                    moveHints.value =
+                        moves.filter { it.startIndex == selectedButton.value }.map { it.endIndex!! }
+                            .toMutableList()
+                }
+            }
+
+            GameState.Flying -> {
+                if (selectedButton.value == null) {
+                    moveHints.value = moves.map { it.startIndex!! }.toMutableList()
+                } else {
+                    moveHints.value = moves.filter { it.startIndex == selectedButton.value }.map { it.endIndex!! }.toMutableList()
+                }
+            }
+
+            GameState.Removing -> {
+                moveHints.value = moves.map { it.startIndex!! }.toMutableList()
+            }
+
+            GameState.End -> {
+            }
         }
     }
 }
@@ -181,10 +215,10 @@ fun reset() {
 
 
 val pos
-    inline get() = gamePosition.value!!
+    inline get() = gamePosition.value
 var solveResult = mutableStateOf<MutableList<Position>>(mutableListOf())
-var gamePosition = mutableStateOf<Position?>(null)
-var gameStateRender = mutableStateOf<Boolean?>(null)
+var gamePosition = mutableStateOf(gameStartPosition)
+var moveHints = mutableStateOf(mutableListOf<UByte>())
 var selectedButton = mutableStateOf<UByte?>(null)
 var depth = mutableIntStateOf(3)
 var solving: Job? = null

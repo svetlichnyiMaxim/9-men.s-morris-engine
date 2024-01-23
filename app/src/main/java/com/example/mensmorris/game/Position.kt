@@ -118,7 +118,7 @@ class Position(
      * @param currentDepth the current depth we are at
      * @return possible positions we can achieve in 1 move
      */
-    fun generatePositions(currentDepth: UByte): List<Position> {
+    private fun generatePositions(currentDepth: UByte): List<Position> {
         val str = toString()
         // check if we can abort calculation / use our previous result
         occurredPositions[str]?.let {
@@ -152,7 +152,7 @@ class Position(
     /**
      * @return possible movements
      */
-    private fun generateMoves(): List<Movement> {
+    fun generateMoves(): List<Movement> {
         when (gameState()) {
             GameState.Placement -> {
                 return generatePlacementMovements()

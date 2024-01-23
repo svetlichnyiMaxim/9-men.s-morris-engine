@@ -27,7 +27,6 @@ import com.example.mensmorris.game.solving
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard
 import com.example.mensmorris.ui.Locate
-import com.example.mensmorris.ui.RenderMainBoard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,7 +34,7 @@ import kotlin.math.max
 
 @Composable
 fun MainPage() {
-    RenderMainBoard()
+    DrawBoard(pos)
     Locate(Alignment.TopStart) {
         Box(
             modifier = Modifier
@@ -54,64 +53,73 @@ fun MainPage() {
             Text(color = Color.Green, text = pos.freePieces.second.toString())
         }
     }
-    if (solveResult.value.isNotEmpty()) {
-        Box(
-            modifier = Modifier
-                .padding(0.dp, BUTTON_WIDTH * 12, 0.dp, 0.dp)
-                .background(Color.DarkGray, RoundedCornerShape(5))
-        ) {
-            Column {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .weight(1f, false)
-                ) {
-                    for (i in 0..<solveResult.value.size) {
-                        Row {
-                            DrawBoard(solveResult.value[i])
-                        }
-                    }
-                }
-            }
-        }
-    }
     Box(
         modifier = Modifier
-            // BUTTON_WIDTH * 12
             .padding(0.dp, BUTTON_WIDTH * 10.5f, 0.dp, 0.dp)
             .fillMaxSize()
     )
     {
-        Locate(Alignment.TopStart) {
-            Button(
-                modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.5f), CircleShape),
-                onClick = {
-                    depth.intValue = max(0, depth.intValue - 1)
-                    reset()
-                }) {
-                Text("-")
-            }
-        }
-        Locate(Alignment.TopCenter) {
-            Button(onClick = {
-                solving = CoroutineScope(Dispatchers.Default).launch {
-                    solveResult.value = pos.solve(depth.intValue.toUByte()).second
-                }
+        DrawGameAnalyze()
+    }
+}
+
+@Composable
+fun DrawGameAnalyze() {
+    if (solveResult.value.isNotEmpty()) {
+        DrawBestLine()
+    }
+    Locate(Alignment.TopStart) {
+        Button(
+            modifier = Modifier
+                .background(Color.Black.copy(alpha = 0.5f), CircleShape),
+            onClick = {
+                depth.intValue = max(0, depth.intValue - 1)
+                reset()
             }) {
-                Text("Solve (depth - ${depth.intValue})")
-            }
+            Text("-")
         }
-        Locate(Alignment.TopEnd) {
-            Button(
+    }
+    Locate(Alignment.TopCenter) {
+        Button(onClick = {
+            solving = CoroutineScope(Dispatchers.Default).launch {
+                solveResult.value = pos.solve(depth.intValue.toUByte()).second
+            }
+        }) {
+            Text("Analyze (depth - ${depth.intValue})")
+        }
+    }
+    Locate(Alignment.TopEnd) {
+        Button(
+            modifier = Modifier
+                .background(Color.Black.copy(alpha = 0.5f), CircleShape),
+            onClick = {
+                depth.intValue++
+                reset()
+            }) {
+            Text("+")
+        }
+    }
+}
+
+@Composable
+fun DrawBestLine() {
+    Box(
+        modifier = Modifier
+            .padding(0.dp, BUTTON_WIDTH * 1.5f, 0.dp, 0.dp)
+            .background(Color.DarkGray, RoundedCornerShape(5))
+    ) {
+        Column {
+            Column(
                 modifier = Modifier
-                    .background(Color.Black.copy(alpha = 0.5f), CircleShape),
-                onClick = {
-                    depth.intValue++
-                    reset()
-                }) {
-                Text("+")
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .weight(1f, false)
+            ) {
+                for (i in 0..<solveResult.value.size) {
+                    Row {
+                        DrawBoard(solveResult.value[i])
+                    }
+                }
             }
         }
     }
