@@ -1,6 +1,10 @@
 package com.example.mensmorris.game
 
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
+import kotlinx.coroutines.Job
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 
 val gameStartPosition = Position(
@@ -94,3 +98,93 @@ enum class GameState {
      */
     Removing
 }
+
+
+fun handleClick(elementIndex: UByte) {
+    var producedMove: Movement? = null
+    when (pos.gameState()) {
+        GameState.Placement -> {
+            if (pos.getIndexColor(elementIndex) == Piece.EMPTY) {
+                producedMove = Movement(null, elementIndex)
+            }
+        }
+
+        GameState.Normal -> {
+            if (selectedButton.value == null) {
+                if (pos.getIndexColor(elementIndex) == pos.pieceToMove) selectedButton.value =
+                    elementIndex
+            } else {
+                if (moveProvider[selectedButton.value!!]!!.filter { endIndex ->
+                        pos.positions[2U].contains(endIndex)
+                    }.contains(elementIndex)) {
+                    producedMove = Movement(selectedButton.value, elementIndex)
+                    selectedButton.value = null
+                } else {
+                    pieceToMoveSelector(elementIndex)
+                }
+            }
+        }
+
+        GameState.Flying -> {
+            if (selectedButton.value == null) {
+                if (pos.getIndexColor(elementIndex) == pos.pieceToMove) selectedButton.value =
+                    elementIndex
+            } else {
+                if (pos.getIndexColor(elementIndex) == Piece.EMPTY) {
+                    producedMove = Movement(selectedButton.value, elementIndex)
+                    selectedButton.value = null
+                } else {
+                    pieceToMoveSelector(elementIndex)
+                }
+            }
+        }
+
+        GameState.Removing -> {
+            if (pos.getIndexColor(elementIndex) == pos.pieceToMove.opposite()) {
+                producedMove = Movement(elementIndex, null)
+            }
+        }
+
+        GameState.End -> {
+            gameStateRender.value = true
+        }
+    }
+    producedMove?.let {
+        gamePosition.value = it.producePosition(pos)
+        reset()
+        if (pos.gameState() == GameState.End) {
+            gameStateRender.value = true
+        }
+    }
+}
+
+fun pieceToMoveSelector(elementIndex: UByte) {
+    if (pos.getIndexColor(elementIndex) != Piece.EMPTY) {
+        selectedButton.value = elementIndex
+    } else {
+        selectedButton.value = null
+    }
+}
+
+fun reset() {
+    solveResult.value = mutableListOf()
+    occurredPositions.forEach {
+        occurredPositions[it.key] = Pair(it.value.first, 0u)
+    }
+    if (solving != null) {
+        try {
+            solving!!.cancel()
+        } catch (_: CancellationException) {
+        }
+    }
+}
+
+
+val pos
+    inline get() = gamePosition.value!!
+var solveResult = mutableStateOf<MutableList<Position>>(mutableListOf())
+var gamePosition = mutableStateOf<Position?>(null)
+var gameStateRender = mutableStateOf<Boolean?>(null)
+var selectedButton = mutableStateOf<UByte?>(null)
+var depth = mutableIntStateOf(3)
+var solving: Job? = null
