@@ -1,6 +1,4 @@
-package com.example.mensmorris
-
-import android.graphics.Color
+package com.example.mensmorris.game
 
 /**
  * used to store movement

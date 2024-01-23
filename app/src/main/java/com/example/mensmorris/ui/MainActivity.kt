@@ -1,4 +1,4 @@
-package com.example.mensmorris
+package com.example.mensmorris.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,6 +30,15 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.mensmorris.game.GameState
+import com.example.mensmorris.game.Movement
+import com.example.mensmorris.game.Piece
+import com.example.mensmorris.game.Position
+import com.example.mensmorris.game.gameStartPosition
+import com.example.mensmorris.game.get
+import com.example.mensmorris.game.moveProvider
+import com.example.mensmorris.game.occurredPositions
+import com.example.mensmorris.game.opposite
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

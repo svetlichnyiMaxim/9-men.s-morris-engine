@@ -1,5 +1,7 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.game.Piece
+import com.example.mensmorris.game.Position
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

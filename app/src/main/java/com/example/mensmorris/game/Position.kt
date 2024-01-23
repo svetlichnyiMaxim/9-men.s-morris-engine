@@ -1,4 +1,6 @@
-package com.example.mensmorris
+package com.example.mensmorris.game
+
+import com.example.mensmorris.toTriple
 
 /**
  * used for storing position data
@@ -234,54 +236,6 @@ class Position(
         }
     }
 
-    /**
-     * displays position in a human-readable form
-     */
-    fun display() {
-        val c = positions.toList().flatMapIndexed { index: Int, uBytes: MutableCollection<UByte> ->
-            uBytes.map {
-                Pair(
-                    it, colorMap[index]!!
-                )
-            }
-        }.sortedBy { it.first }.map {
-            when (it.second) {
-                Piece.BLUE_ -> {
-                    //BLUE_CIRCLE
-                    BLUE + CIRCLE + NONE
-                }
-
-                Piece.GREEN -> {
-                    //GREEN_CIRCLE
-                    GREEN + CIRCLE + NONE
-                }
-
-                Piece.EMPTY -> {
-                    //GRAY_CIRCLE
-                    CIRCLE
-                }
-            }
-        }
-        println(
-            """$NONE
-            ${c[0]}-----------------${c[1]}-----------------${c[2]}
-            |                  |                  |                  
-            |     ${c[3]}-----------${c[4]}-----------${c[5]}     |
-            |     |            |            |     |
-            |     |     ${c[6]}-----${c[7]}-----${c[8]}     |     |
-            |     |     |             |     |     |
-            ${c[9]}----${c[10]}----${c[11]}             ${c[12]}----${c[13]}----${c[14]}
-            |     |     |             |     |     |
-            |     |     ${c[15]}-----${c[16]}-----${c[17]}     |     |
-            |     |            |            |     |
-            |     ${c[18]}-----------${c[19]}-----------${c[20]}     |
-            |                  |                  |                  
-            ${c[21]}-----------------${c[22]}-----------------${c[23]}
-        """.trimIndent()
-        )
-        println()
-    }
-
     override fun equals(other: Any?): Boolean {
         if (other !is Position) {
             return super.equals(other)
@@ -295,9 +249,3 @@ class Position(
         return removalCount.toString() + "!" + pieceToMove.index.toString() + "!/" + positions.first.joinToString { it.toString() } + "/" + positions.second.joinToString { it.toString() } + "/" + freePieces.first + "|" + freePieces.second
     }
 }
-
-private val <E> List<E>.toTriple: Triple<E, E, E>
-    get() {
-        require(size == 3)
-        return Triple(this[0], this[1], this[2])
-    }
