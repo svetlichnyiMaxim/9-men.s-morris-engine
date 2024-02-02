@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MensMorris</string>
+    <string name="back_icon"></string>
 </resources>

@@ -27,6 +27,11 @@ import com.example.mensmorris.game.moveHints
 import com.example.mensmorris.game.pos
 import com.example.mensmorris.game.selectedButton
 
+/**
+ * provides a quicker way for setting element position
+ * @param alignment our alignment (pos)
+ * @param function all code we want to run at this function
+ */
 @Composable
 inline fun Locate(alignment: Alignment, function: () -> Unit) {
     Box(
@@ -37,6 +42,10 @@ inline fun Locate(alignment: Alignment, function: () -> Unit) {
 }
 
 
+/**
+ * adds a basic background
+ * @param function everything ui-related that happens inside of the app
+ */
 @Composable
 inline fun AppTheme(function: () -> Unit) {
     Box(
@@ -48,12 +57,22 @@ inline fun AppTheme(function: () -> Unit) {
     }
 }
 
+/**
+ * provides a quicker way for setting current windows
+ * uses mainActivity
+ * @param function our composable function we want to render (usually we set screens)
+ */
 fun render(function: @Composable () -> Unit) {
     mainActivity.setContent {
         function()
     }
 }
 
+/**
+ * draws boards
+ * @param position position we want to render
+ * @param onClick function we call on pressing
+ */
 @Composable
 fun DrawBoard(
     position: Position = pos, onClick: (UByte) -> Unit = { handleClick(it) }
@@ -84,6 +103,14 @@ fun DrawBoard(
     }
 }
 
+/**
+ * draws a raw of circles
+ * @param padding padding
+ * @param gap between elements
+ * @param range range of indexes
+ * @param position position we execute this for
+ * @param onClick function we execute on button click
+ */
 @Composable
 fun RowOfCircles(
     padding: Int,
@@ -105,6 +132,12 @@ fun RowOfCircles(
     }
 }
 
+/**
+ * draws a circles button
+ * @param elementIndex index of this circle
+ * @param position position we are drawing
+ * @param onClick function we execute on click
+ */
 @Composable
 fun CircledButton(elementIndex: Int, position: Position, onClick: (UByte) -> Unit) {
     Box {

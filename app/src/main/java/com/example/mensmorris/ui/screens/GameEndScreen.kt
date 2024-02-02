@@ -24,7 +24,9 @@ import com.example.mensmorris.ui.Locate
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
 
-
+/**
+ * draws screen after the game has ended
+ */
 @Composable
 fun GameEnd() {
     moveHints.value.clear()

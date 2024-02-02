@@ -5,10 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
+import com.example.mensmorris.ui.screens.saveMove
 import kotlinx.coroutines.Job
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.abs
 
+/**
+ * a default game start position
+ */
 val gameStartPosition = Position(
     Triple(
         (mutableListOf<UByte>() as MutableCollection<UByte>),
@@ -41,34 +45,6 @@ val gameStartPosition = Position(
         )
     ), Pair(8u, 8u), pieceToMove = Piece.BLUE_
 )
-val testPosition = Position(
-    mutableListOf(
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.BLUE_,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.GREEN,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY,
-        Piece.EMPTY
-    ), Pair(3u, 3u), pieceToMove = Piece.BLUE_
-)
 
 /**
  * we store occurred positions here which massively increases speed
@@ -78,6 +54,7 @@ val occurredPositions: HashMap<String, Pair<List<Position>, UByte>> = hashMapOf(
 /**
  * used for storing piece color
  * @param index index of free pieces in Position class
+ * @param color of the piece
  */
 enum class Piece(val index: UByte, val color: Color) {
     /**
@@ -134,6 +111,10 @@ enum class GameState {
 }
 
 
+/**
+ * handles click on the pieces
+ * @param elementIndex element that got clicked
+ */
 fun handleClick(elementIndex: UByte) {
     var producedMove: Movement? = null
     when (pos.gameState()) {
@@ -185,11 +166,20 @@ fun handleClick(elementIndex: UByte) {
     }
     producedMove?.let {
         gamePosition.value = it.producePosition(pos)
-        reset()
+        resetAnalyze()
+        saveMove(pos)
+        resetCachedPositions()
         if (pos.gameState() == GameState.End) {
             currentScreen = Screen.EndGame
         }
     }
+    handleHighLighting()
+}
+
+/**
+ * finds pieces we should highlight
+ */
+fun handleHighLighting() {
     pos.generateMoves().let { moves ->
         when (pos.gameState()) {
             GameState.Placement -> {
@@ -226,6 +216,10 @@ fun handleClick(elementIndex: UByte) {
     }
 }
 
+/**
+ * handles selection of the piece to move
+ * @param elementIndex tested candidate
+ */
 fun pieceToMoveSelector(elementIndex: UByte) {
     if (pos.getIndexColor(elementIndex) != Piece.EMPTY) {
         selectedButton.value = elementIndex
@@ -234,11 +228,11 @@ fun pieceToMoveSelector(elementIndex: UByte) {
     }
 }
 
-fun reset() {
+/**
+ * hides analyze gui and delete it's result
+ */
+fun resetAnalyze() {
     solveResult.value = mutableListOf()
-    occurredPositions.forEach {
-        occurredPositions[it.key] = Pair(it.value.first, 0u)
-    }
     if (solving != null) {
         try {
             solving!!.cancel()
@@ -247,12 +241,63 @@ fun reset() {
     }
 }
 
+/**
+ * used to check if need to reset our cache or it already is
+ */
+var hasCache = false
 
-val pos
+/**
+ * resets all cached positions depth, which prevents engine from skipping important moves which have
+ * occurred in previous analyzes
+ */
+fun resetCachedPositions() {
+    if (!hasCache) {
+        return
+    }
+    occurredPositions.forEach {
+        occurredPositions[it.key] = Pair(it.value.first, 0u)
+    }
+    hasCache = false
+}
+
+
+/**
+ * provides a quick access to game position value
+ */
+var pos
     inline get() = gamePosition.value
+    inline set(newPos) {
+        gamePosition.value = newPos
+    }
+
+/**
+ * used for storing our game analyzes result
+ */
 var solveResult = mutableStateOf<MutableList<Position>>(mutableListOf())
+
+/**
+ * stores current game position
+ */
 var gamePosition = mutableStateOf(gameStartPosition)
+
+/**
+ * stores all pieces which can be moved (used for highlighting)
+ */
 var moveHints = mutableStateOf(mutableListOf<UByte>())
+
+/**
+ * used for storing info of the previous (valid one) clicked button
+ */
 var selectedButton = mutableStateOf<UByte?>(null)
+
+/**
+ * depth our engine works at
+ * @note >= 5 causes OOM
+ */
 var depth = mutableIntStateOf(3)
+
+/**
+ * used for storing our analyze coroutine
+ * gets force-stopped when no longer needed
+ */
 var solving: Job? = null

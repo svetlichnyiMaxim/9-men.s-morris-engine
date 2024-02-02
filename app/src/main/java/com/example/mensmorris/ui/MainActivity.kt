@@ -12,9 +12,20 @@ import com.example.mensmorris.ui.screens.GameEnd
 import com.example.mensmorris.ui.screens.MainPage
 
 
+/**
+ * shows how thick our pieces & board will be
+ */
 val BUTTON_WIDTH = 35.dp
 
+/**
+ * stores main activity
+ * used for screen switching
+ */
 lateinit var mainActivity: MainActivity
+
+/**
+ * stores current game screen & updates it on change
+ */
 var currentScreen: Screen = Screen.MainGame
     set(value) {
         mainActivity.setContent {
@@ -23,7 +34,13 @@ var currentScreen: Screen = Screen.MainGame
         field = value
     }
 
+/**
+ * activity our app is launched from
+ */
 class MainActivity : ComponentActivity() {
+    /**
+     * we initialize all important stuff here
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mainActivity = this
@@ -33,6 +50,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * provides a quicker & better way for switching screens than setTheme { }
+ */
 @Composable
 fun ScreenSwitcher() {
     when (currentScreen) {
@@ -56,6 +76,17 @@ fun ScreenSwitcher() {
     }
 }
 
+/**
+ * stores our current screen
+ */
 enum class Screen {
-    MainGame, EndGame
+    /**
+     * just a normal game
+     */
+    MainGame,
+
+    /**
+     * when the game has ended
+     */
+    EndGame
 }
