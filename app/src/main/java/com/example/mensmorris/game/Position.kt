@@ -57,11 +57,10 @@ class Position(
         }
         val bluePieces =
             (countPieces(Piece.BLUE_) + freePieces[1U]).toByte() + if (pieceToMove == Piece.BLUE_) removalCount.toByte() else 0
-        //val twosCount =
         val greenPieces =
             (countPieces(Piece.GREEN) + freePieces[0U]).toByte() + if (pieceToMove == Piece.GREEN) removalCount.toByte() else 0
-        val greenEvaluation = ((greenPieces - bluePieces) * 10000 + findPossibleTriple().first * 100u + depth).toByte()
-        val blueEvaluation = ((bluePieces - greenPieces) * 10000 + findPossibleTriple().second * 100u + depth).toByte()
+        val greenEvaluation = ((greenPieces - bluePieces) * 1000 + findPossibleTriple().first * 15u + depth).toByte()
+        val blueEvaluation = ((bluePieces - greenPieces) * 1000 + findPossibleTriple().second * 15u + depth).toByte()
         return Pair(greenEvaluation, blueEvaluation)
     }
 
@@ -71,14 +70,14 @@ class Position(
     fun findPossibleTriple(): Pair<UByte, UByte> {
         var resultGreen = 0U
         var resultBlue = 0u
-        positions[0u].forEach { element ->
+        positions[1u].forEach { element ->
             resultGreen += removeChecker[element]!!.sumOf { possiblePositions ->
-                positions[0u].count { possiblePositions.contains(it) }
+                positions[1u].count { possiblePositions.contains(it) }
             }.toUByte()
         }
-        positions[1u].forEach { position ->
+        positions[2u].forEach { position ->
             resultBlue += removeChecker[position]!!.sumOf { possiblePositions ->
-                positions[1u].count { possiblePositions.contains(position) }
+                positions[2u].count { possiblePositions.contains(position) }
             }.toUByte()
         }
         return Pair(resultGreen.toUByte(), resultBlue.toUByte())
@@ -92,7 +91,7 @@ class Position(
         depth: UByte
     ): Pair<Pair<Byte, Byte>, MutableList<Position>> {
         if (depth == 0.toUByte()) {
-            return Pair(evaluate(depth), mutableListOf(this))
+            return Pair(evaluate(), mutableListOf(this))
         }
         // for all possible positions, we try to solve them
         val positions = (generatePositions(depth).map {
@@ -282,9 +281,9 @@ class Position(
 }
 
 private operator fun Int.plus(uInt: UInt): UInt {
-    return (this * uInt.toInt()).toUInt()
+    return (this + uInt.toInt()).toUInt()
 }
 
 private operator fun Int.plus(uByte: UByte): UByte {
-    return (this * uByte.toInt()).toUByte()
+    return (this + uByte.toInt()).toUByte()
 }
