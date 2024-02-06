@@ -70,15 +70,21 @@ class Position(
     fun findPossibleTriple(): Pair<UByte, UByte> {
         var resultGreen = 0U
         var resultBlue = 0u
-        positions[1u].forEach { element ->
-            resultGreen += removeChecker[element]!!.sumOf { possiblePositions ->
-                positions[1u].count { possiblePositions.contains(it) }
-            }.toUByte()
+        positions[0u].forEach { element ->
+            removeChecker[element]!!.toList().forEach { possiblePositions ->
+                val piecesAtLine = positions[0u].count { possiblePositions.contains(it) } + if (possiblePositions.contains(element)) 1u else 0u
+                if (piecesAtLine >= 2u) {
+                    resultGreen += piecesAtLine
+                }
+            }
         }
-        positions[2u].forEach { position ->
-            resultBlue += removeChecker[position]!!.sumOf { possiblePositions ->
-                positions[2u].count { possiblePositions.contains(position) }
-            }.toUByte()
+        positions[1u].forEach { element ->
+            removeChecker[element]!!.toList().forEach { possiblePositions ->
+                val piecesAtLine = positions[1u].count { possiblePositions.contains(it) } + if (possiblePositions.contains(element)) 1u else 0u
+                if (piecesAtLine >= 2u) {
+                    resultBlue += piecesAtLine
+                }
+            }
         }
         return Pair(resultGreen.toUByte(), resultBlue.toUByte())
     }

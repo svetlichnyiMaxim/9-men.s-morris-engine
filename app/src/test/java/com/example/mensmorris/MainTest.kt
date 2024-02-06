@@ -48,10 +48,10 @@ class MainTest {
     private val evaluationPosition1 = Position(
         mutableListOf(
             Piece.BLUE_,                                    Piece.EMPTY,                                    Piece.BLUE_,
-            Piece.GREEN,                    Piece.EMPTY,                    Piece.EMPTY,
-            Piece.EMPTY,    Piece.EMPTY,    Piece.EMPTY,
+                            Piece.GREEN,                    Piece.EMPTY,                    Piece.EMPTY,
+                                            Piece.EMPTY,    Piece.EMPTY,    Piece.EMPTY,
             Piece.EMPTY,    Piece.GREEN,    Piece.EMPTY,                    Piece.EMPTY,    Piece.EMPTY,    Piece.EMPTY,
-            Piece.EMPTY,    Piece.GREEN,    Piece.EMPTY,
+                                            Piece.EMPTY,    Piece.GREEN,    Piece.EMPTY,
                             Piece.EMPTY,                    Piece.BLUE_,                    Piece.EMPTY,
             Piece.EMPTY,                                    Piece.EMPTY,                                    Piece.BLUE_
         ),
