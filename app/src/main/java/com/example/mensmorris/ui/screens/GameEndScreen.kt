@@ -44,7 +44,7 @@ fun GameEnd() {
             Locate(Alignment.TopStart) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (pos.pieceToMove == Piece.GREEN) 1.5f else 1f)
+                        .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
                         .background(Color.Green, CircleShape), Alignment.Center
                 ) {
                     Text(color = Color.Blue, text = pos.freePieces.first.toString())
@@ -53,7 +53,7 @@ fun GameEnd() {
             Locate(Alignment.TopEnd) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (pos.pieceToMove == Piece.BLUE_) 1.5f else 1f)
+                        .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
                         .background(Color.Blue, CircleShape), Alignment.Center
                 ) {
                     Text(color = Color.Green, text = pos.freePieces.second.toString())

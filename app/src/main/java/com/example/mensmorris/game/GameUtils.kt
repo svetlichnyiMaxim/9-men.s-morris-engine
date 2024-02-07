@@ -8,42 +8,21 @@ import com.example.mensmorris.ui.currentScreen
 import com.example.mensmorris.ui.screens.saveMove
 import kotlinx.coroutines.Job
 import kotlin.coroutines.cancellation.CancellationException
-import kotlin.math.abs
 
 /**
  * a default game start position
  */
 val gameStartPosition = Position(
-    Triple(
-        (mutableListOf<UByte>() as MutableCollection<UByte>),
-        mutableListOf(),
-        mutableListOf(
-            0u,
-            1u,
-            2u,
-            3u,
-            4u,
-            5u,
-            6u,
-            7u,
-            8u,
-            9u,
-            10u,
-            11u,
-            12u,
-            13u,
-            14u,
-            15u,
-            16u,
-            17u,
-            18u,
-            19u,
-            20u,
-            21u,
-            22u,
-            23u
-        )
-    ), Pair(8u, 8u), pieceToMove = Piece.BLUE_
+    mutableListOf(
+        Empty(),                            Empty(),                            Empty(),
+                    Empty(),                Empty(),                Empty(),
+                                Empty(),    Empty(),    Empty(),
+        Empty(),    Empty(),    Empty(),                Empty(),    Empty(),    Empty(),
+                                Empty(),    Empty(),    Empty(),
+                    Empty(),                Empty(),                Empty(),
+        Empty(),                            Empty(),                            Empty()
+    ),
+    Pair(8u, 8u), pieceToMove = false
 )
 
 /**
@@ -51,34 +30,59 @@ val gameStartPosition = Position(
  */
 val occurredPositions: HashMap<String, Pair<List<Position>, UByte>> = hashMapOf()
 
+class Piece(var isGreen: Boolean?) {
+    fun copy(): Piece {
+        return Piece(isGreen)
+    }
+}
+
+fun Green(): Piece {
+    return Piece(true)
+}
+
+fun Blue(): Piece {
+    return Piece(false)
+}
+fun Empty(): Piece {
+    return Piece(null)
+}
+
+fun colorMap(piece: Piece): Color {
+    return if (piece.isGreen == null)
+        Color.Black
+    else
+        if (piece.isGreen!!) {
+            Color.Green
+        } else {
+            Color.Blue
+        }
+}
+/*
+*/
 /**
  * used for storing piece color
  * @param index index of free pieces in Position class
  * @param color of the piece
- */
+ *//*
 enum class Piece(val index: UByte, val color: Color) {
-    /**
-     * green color
-     */
+    */
+/**
+ * green color
+ *//*
     GREEN(0U, Color.Green),
 
-    /**
-     * blue color
-     */
+    */
+/**
+ * blue color
+ *//*
     BLUE_(1U, Color.Blue),
 
-    /**
-     * no piece is placed
-     */
-    EMPTY(2U, Color.Black)
-}
-
+    */
 /**
- * @return opposite color
- */
-fun Piece.opposite(): Piece {
-    return colorMap[abs(1 - this.index.toInt())]!!
-}
+ * no piece is placed
+ *//*
+    EMPTY(2U, Color.Black)
+}*/
 
 /**
  * used for storing game state
@@ -115,22 +119,22 @@ enum class GameState {
  * handles click on the pieces
  * @param elementIndex element that got clicked
  */
-fun handleClick(elementIndex: UByte) {
+fun handleClick(elementIndex: Int) {
     var producedMove: Movement? = null
     when (pos.gameState()) {
         GameState.Placement -> {
-            if (pos.getIndexColor(elementIndex) == Piece.EMPTY) {
+            if (pos.positions[elementIndex].isGreen == null) {
                 producedMove = Movement(null, elementIndex)
             }
         }
 
         GameState.Normal -> {
             if (selectedButton.value == null) {
-                if (pos.getIndexColor(elementIndex) == pos.pieceToMove) selectedButton.value =
-                    elementIndex
+                if (pos.positions[elementIndex].isGreen == pos.pieceToMove)
+                    selectedButton.value = elementIndex
             } else {
                 if (moveProvider[selectedButton.value!!]!!.filter { endIndex ->
-                        pos.positions[2U].contains(endIndex)
+                        pos.positions[endIndex].isGreen == null
                     }.contains(elementIndex)) {
                     producedMove = Movement(selectedButton.value, elementIndex)
                     selectedButton.value = null
@@ -142,10 +146,10 @@ fun handleClick(elementIndex: UByte) {
 
         GameState.Flying -> {
             if (selectedButton.value == null) {
-                if (pos.getIndexColor(elementIndex) == pos.pieceToMove) selectedButton.value =
+                if (pos.positions[elementIndex].isGreen == pos.pieceToMove) selectedButton.value =
                     elementIndex
             } else {
-                if (pos.getIndexColor(elementIndex) == Piece.EMPTY) {
+                if (pos.positions[elementIndex].isGreen == null) {
                     producedMove = Movement(selectedButton.value, elementIndex)
                     selectedButton.value = null
                 } else {
@@ -155,7 +159,7 @@ fun handleClick(elementIndex: UByte) {
         }
 
         GameState.Removing -> {
-            if (pos.getIndexColor(elementIndex) == pos.pieceToMove.opposite()) {
+            if (pos.positions[elementIndex].isGreen != pos.pieceToMove) {
                 producedMove = Movement(elementIndex, null)
             }
         }
@@ -220,8 +224,8 @@ fun handleHighLighting() {
  * handles selection of the piece to move
  * @param elementIndex tested candidate
  */
-fun pieceToMoveSelector(elementIndex: UByte) {
-    if (pos.getIndexColor(elementIndex) != Piece.EMPTY) {
+fun pieceToMoveSelector(elementIndex: Int) {
+    if (pos.positions[elementIndex].isGreen != null) {
         selectedButton.value = elementIndex
     } else {
         selectedButton.value = null
@@ -283,12 +287,12 @@ var gamePosition = mutableStateOf(gameStartPosition)
 /**
  * stores all pieces which can be moved (used for highlighting)
  */
-var moveHints = mutableStateOf(mutableListOf<UByte>())
+var moveHints = mutableStateOf(mutableListOf<Int>())
 
 /**
  * used for storing info of the previous (valid one) clicked button
  */
-var selectedButton = mutableStateOf<UByte?>(null)
+var selectedButton = mutableStateOf<Int?>(null)
 
 /**
  * depth our engine works at

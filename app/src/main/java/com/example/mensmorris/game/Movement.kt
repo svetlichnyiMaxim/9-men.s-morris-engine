@@ -5,7 +5,7 @@ package com.example.mensmorris.game
  * @param startIndex index of place a piece moves from
  * @param endIndex index of place a piece moves to
  */
-class Movement(val startIndex: UByte?, val endIndex: UByte?) {
+class Movement(val startIndex: Int?, val endIndex: Int?) {
     /**
      * @param pos position we have a more for
      * @return position after specified move
@@ -14,35 +14,34 @@ class Movement(val startIndex: UByte?, val endIndex: UByte?) {
         val copy = pos.copy()
         if (startIndex == null) {
             when (copy.pieceToMove) {
-                Piece.GREEN -> {
+                true -> {
                     copy.freePieces =
                         Pair((copy.freePieces.first - 1u).toUByte(), copy.freePieces.second)
                 }
 
-                Piece.BLUE_ -> {
+                false -> {
                     copy.freePieces =
                         Pair(copy.freePieces.first, (copy.freePieces.second - 1u).toUByte())
-                }
-
-                else -> {
-                    error("piece to move can't be EMPTY")
                 }
             }
         } else {
             // removed
-            copy.positions[2U].add(startIndex)
-            copy.positions[0U].remove(startIndex) || copy.positions[1U].remove(startIndex)
+            if (copy.positions[startIndex].isGreen!!) {
+                copy.greenPiecesAmount--
+            } else {
+                copy.bluePiecesAmount--
+            }
+            copy.positions[startIndex].isGreen = null
             copy.removalCount--
         }
         if (endIndex != null) {
-            copy.positions[2U].remove(endIndex)
-            copy.positions[copy.pieceToMove.index].add(endIndex)
+            copy.positions[endIndex].isGreen = copy.pieceToMove
         }
         if (endIndex != null)
             copy.removalCount = copy.removalAmount(this)
 
         if (copy.removalCount == 0.toUByte()) {
-            copy.pieceToMove = copy.pieceToMove.opposite()
+            copy.pieceToMove = !copy.pieceToMove
         }
         return copy
     }
@@ -54,17 +53,17 @@ class Movement(val startIndex: UByte?, val endIndex: UByte?) {
  * @param T any type
  * @param index index of the required element
  */
-operator fun <T> Triple<T, T, T>.get(index: UByte): T {
+operator fun <T> Triple<T, T, T>.get(index: Int): T {
     return when (index) {
-        0.toUByte() -> {
+        0 -> {
             first
         }
 
-        1.toUByte() -> {
+        1 -> {
             second
         }
 
-        2.toUByte() -> {
+        2 -> {
             third
         }
 
@@ -75,98 +74,65 @@ operator fun <T> Triple<T, T, T>.get(index: UByte): T {
 }
 
 /**
- * provides a way to get an element from pair
- * fancy way
- * @param T any type
- * @param index index of the required element
- */
-operator fun <T> Pair<T, T>.get(index: UByte): T {
-    return when (index) {
-        0.toUByte() -> {
-            first
-        }
-
-        1.toUByte() -> {
-            second
-        }
-
-        else -> {
-            throw IllegalArgumentException("Illegal index when getting pair element")
-        }
-    }
-}
-
-/**
  * in fact, there are other ways to get possible move without mapping them.
  * I just think this is the easiest and the fastest one
  */
-val moveProvider: HashMap<UByte, List<UByte>> = hashMapOf(
-    0.toUByte() to listOf(1U, 9U),
-    1.toUByte() to listOf(0U, 2U, 4U),
-    2.toUByte() to listOf(1U, 14U),
-    3.toUByte() to listOf(10U, 4U),
-    4.toUByte() to listOf(1U, 3U, 5U, 7U),
-    5.toUByte() to listOf(4U, 13U),
-    6.toUByte() to listOf(7U, 11U),
-    7.toUByte() to listOf(6U, 4U, 8U),
-    8.toUByte() to listOf(7U, 12U),
-    9.toUByte() to listOf(0U, 10U, 21U),
-    10.toUByte() to listOf(9U, 3U, 11U, 18U),
-    11.toUByte() to listOf(6U, 10U, 15U),
-    12.toUByte() to listOf(8U, 17U, 13U),
-    13.toUByte() to listOf(5U, 12U, 14U, 20U),
-    14.toUByte() to listOf(2U, 13U, 23U),
-    15.toUByte() to listOf(11U, 16U),
-    16.toUByte() to listOf(15U, 17U, 19U),
-    17.toUByte() to listOf(12U, 16U),
-    18.toUByte() to listOf(10U, 19U),
-    19.toUByte() to listOf(16U, 18U, 20U, 22U),
-    20.toUByte() to listOf(13U, 19U),
-    21.toUByte() to listOf(9U, 22U),
-    22.toUByte() to listOf(19U, 21U, 23U),
-    23.toUByte() to listOf(14U, 22U)
+val moveProvider: HashMap<Int, List<Int>> = hashMapOf(
+    0 to listOf(1, 9),
+    1 to listOf(0, 2, 4),
+    2 to listOf(1, 14),
+    3 to listOf(10, 4),
+    4 to listOf(1, 3, 5, 7),
+    5 to listOf(4, 13),
+    6 to listOf(7, 11),
+    7 to listOf(6, 4, 8),
+    8 to listOf(7, 12),
+    9 to listOf(0, 10, 21),
+    10 to listOf(9, 3, 11, 18),
+    11 to listOf(6, 10, 15),
+    12 to listOf(8, 17, 13),
+    13 to listOf(5, 12, 14, 20),
+    14 to listOf(2, 13, 23),
+    15 to listOf(11, 16),
+    16 to listOf(15, 17, 19),
+    17 to listOf(12, 16),
+    18 to listOf(10, 19),
+    19 to listOf(16, 18, 20, 22),
+    20 to listOf(13, 19),
+    21 to listOf(9, 22),
+    22 to listOf(19, 21, 23),
+    23 to listOf(14, 22)
 )
 
 /**
  * in fact, there are other ways to get possible triples without mapping them.
  * I just think this is the easiest and the fastest one
  */
-val removeChecker: HashMap<UByte, List<List<UByte>>> = hashMapOf(
-    0.toUByte() to listOf(listOf(1U, 2U), listOf(9U, 21U)),
-    1.toUByte() to listOf(listOf(0U, 2U), listOf(4U, 7U)),
-    2.toUByte() to listOf(listOf(0U, 1U), listOf(14U, 23U)),
-    3.toUByte() to listOf(listOf(4U, 5U), listOf(10U, 18U)),
-    4.toUByte() to listOf(listOf(1U, 7U), listOf(3U, 5U)),
-    5.toUByte() to listOf(listOf(3U, 4U), listOf(13U, 20U)),
-    6.toUByte() to listOf(listOf(7U, 8U), listOf(11U, 15U)),
-    7.toUByte() to listOf(listOf(6U, 8U), listOf(4U, 1U)),
-    8.toUByte() to listOf(listOf(6U, 7U), listOf(12U, 17U)),
-    9.toUByte() to listOf(listOf(0U, 21U), listOf(10U, 11U)),
-    10.toUByte() to listOf(listOf(3U, 18U), listOf(9U, 11U)),
-    11.toUByte() to listOf(listOf(9U, 10U), listOf(6U, 15U)),
-    12.toUByte() to listOf(listOf(8U, 17U), listOf(13U, 14U)),
-    13.toUByte() to listOf(listOf(5U, 20U), listOf(12U, 14U)),
-    14.toUByte() to listOf(listOf(12U, 13U), listOf(2U, 23U)),
-    15.toUByte() to listOf(listOf(6U, 11U), listOf(16U, 17U)),
-    16.toUByte() to listOf(listOf(15U, 17U), listOf(19U, 22U)),
-    17.toUByte() to listOf(listOf(15U, 16U), listOf(8U, 12U)),
-    18.toUByte() to listOf(listOf(3U, 10U), listOf(19U, 20U)),
-    19.toUByte() to listOf(listOf(18U, 20U), listOf(16U, 22U)),
-    20.toUByte() to listOf(listOf(18U, 19U), listOf(5U, 13U)),
-    21.toUByte() to listOf(listOf(0U, 9U), listOf(22U, 23U)),
-    22.toUByte() to listOf(listOf(16U, 19U), listOf(21U, 23U)),
-    23.toUByte() to listOf(listOf(21U, 22U), listOf(2U, 14U))
-)
-
-/**
- * a quick way to get piece color based on it's index
- * @see Piece
- * @return piece
- */
-val colorMap: HashMap<Int, Piece> = hashMapOf(
-    0 to Piece.GREEN,
-    1 to Piece.BLUE_,
-    2 to Piece.EMPTY
+val removeChecker: HashMap<Int, List<List<Int>>> = hashMapOf(
+    0 to listOf(listOf(1, 2), listOf(9, 21)),
+    1 to listOf(listOf(0, 2), listOf(4, 7)),
+    2 to listOf(listOf(0, 1), listOf(14, 23)),
+    3 to listOf(listOf(4, 5), listOf(10, 18)),
+    4 to listOf(listOf(1, 7), listOf(3, 5)),
+    5 to listOf(listOf(3, 4), listOf(13, 20)),
+    6 to listOf(listOf(7, 8), listOf(11, 15)),
+    7 to listOf(listOf(6, 8), listOf(4, 1)),
+    8 to listOf(listOf(6, 7), listOf(12, 17)),
+    9 to listOf(listOf(0, 21), listOf(10, 11)),
+    10 to listOf(listOf(3, 18), listOf(9, 11)),
+    11 to listOf(listOf(9, 10), listOf(6, 15)),
+    12 to listOf(listOf(8, 17), listOf(13, 14)),
+    13 to listOf(listOf(5, 20), listOf(12, 14)),
+    14 to listOf(listOf(12, 13), listOf(2, 23)),
+    15 to listOf(listOf(6, 11), listOf(16, 17)),
+    16 to listOf(listOf(15, 17), listOf(19, 22)),
+    17 to listOf(listOf(15, 16), listOf(8, 12)),
+    18 to listOf(listOf(3, 10), listOf(19, 20)),
+    19 to listOf(listOf(18, 20), listOf(16, 22)),
+    20 to listOf(listOf(18, 19), listOf(5, 13)),
+    21 to listOf(listOf(0, 9), listOf(22, 23)),
+    22 to listOf(listOf(16, 19), listOf(21, 23)),
+    23 to listOf(listOf(21, 22), listOf(2, 14))
 )
 
 /*

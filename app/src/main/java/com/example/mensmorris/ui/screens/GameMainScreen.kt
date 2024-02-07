@@ -52,7 +52,7 @@ fun MainPage() {
     Locate(Alignment.TopStart) {
         Box(
             modifier = Modifier
-                .size(BUTTON_WIDTH * if (pos.pieceToMove == Piece.GREEN) 1.5f else 1f)
+                .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
                 .background(Color.Green, CircleShape)
                 .alpha(if (pos.freePieces.first == 0.toUByte()) 0f else 1f), Alignment.Center
         ) {
@@ -62,7 +62,7 @@ fun MainPage() {
     Locate(Alignment.TopEnd) {
         Box(
             modifier = Modifier
-                .size(BUTTON_WIDTH * if (pos.pieceToMove == Piece.BLUE_) 1.5f else 1f)
+                .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
                 .background(Color.Blue, CircleShape)
                 .alpha(if (pos.freePieces.second == 0.toUByte()) 0f else 1f), Alignment.Center
         ) {

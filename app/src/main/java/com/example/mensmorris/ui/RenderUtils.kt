@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.game.Position
+import com.example.mensmorris.game.colorMap
 import com.example.mensmorris.game.handleClick
 import com.example.mensmorris.game.moveHints
 import com.example.mensmorris.game.pos
@@ -75,7 +76,7 @@ fun render(function: @Composable () -> Unit) {
  */
 @Composable
 fun DrawBoard(
-    position: Position = pos, onClick: (UByte) -> Unit = { handleClick(it) }
+    position: Position = pos, onClick: (Int) -> Unit = { handleClick(it) }
 ) {
     Locate(Alignment.TopCenter) {
         Box(
@@ -117,7 +118,7 @@ fun RowOfCircles(
     gap: Int,
     range: IntRange,
     position: Position = pos,
-    onClick: (UByte) -> Unit = { handleClick(it) }
+    onClick: (Int) -> Unit = { handleClick(it) }
 ) {
     Row(
         modifier = Modifier.padding(start = BUTTON_WIDTH * padding),
@@ -139,14 +140,14 @@ fun RowOfCircles(
  * @param onClick function we execute on click
  */
 @Composable
-fun CircledButton(elementIndex: Int, position: Position, onClick: (UByte) -> Unit) {
+fun CircledButton(elementIndex: Int, position: Position, onClick: (Int) -> Unit) {
     Box {
         Button(modifier = Modifier
             .alpha(
-                if (moveHints.value.contains(elementIndex.toUByte())) {
+                if (moveHints.value.contains(elementIndex)) {
                     0.7f
                 } else {
-                    if (selectedButton.value == elementIndex.toUByte()) 0.6f
+                    if (selectedButton.value == elementIndex) 0.6f
                     else {
                         1f
                     }
@@ -155,11 +156,11 @@ fun CircledButton(elementIndex: Int, position: Position, onClick: (UByte) -> Uni
             .size(BUTTON_WIDTH)
             .background(Color.Transparent, CircleShape),
             colors = ButtonDefaults.buttonColors(
-                containerColor = position.getIndexColor(elementIndex.toUByte()).color
+                containerColor = colorMap(position.positions[elementIndex])
             ),
             shape = CircleShape,
             onClick = {
-                onClick(elementIndex.toUByte())
+                onClick(elementIndex)
             }) {}
     }
 }

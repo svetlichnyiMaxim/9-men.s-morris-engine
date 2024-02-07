@@ -1,7 +1,5 @@
 package com.example.mensmorris.game
 
-import com.example.mensmorris.toTriple
-
 /**
  * used for storing position data
  * @param positions all pieces
@@ -10,84 +8,86 @@ import com.example.mensmorris.toTriple
  * @param removalCount amount of pieces to remove
  */
 class Position(
-    var positions: Triple<MutableCollection<UByte>, MutableCollection<UByte>, MutableCollection<UByte>>,
+    var positions: MutableList<Piece>,
     var freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
-    var pieceToMove: Piece,
+    var greenPiecesAmount: UByte,
+    var bluePiecesAmount: UByte,
+    var pieceToMove: Boolean,
     var removalCount: UByte = 0U
 ) {
     constructor(
         positions: MutableList<Piece>,
         freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
-        pieceToMove: Piece,
+        pieceToMove: Boolean,
         removalCount: UByte = 0U
-    ) : this(positions.mapIndexed { index, piece -> Pair(index.toUByte(), piece) }
-        .groupBy { it.second }.toList().sortedBy { it.first.index }
-        .map { it1 -> it1.second.map { it.first }.toMutableList() }.toTriple,
+    ) : this(
+        positions,
         freePieces,
+        (positions.count { it.isGreen != null && it.isGreen!! } + freePieces.first),
+        (positions.count { it.isGreen != null && !it.isGreen!! } + freePieces.second),
         pieceToMove,
         removalCount
     )
 
     /**
-     * @param index index we are trying to get color for
-     * @return piece with provided index
-     * @throws IllegalStateException if we weren't able to find needed index
-     */
-    fun getIndexColor(index: UByte): Piece {
-        positions.toList().forEachIndexed { columnIndex, list ->
-            list.forEach {
-                if (it == index) {
-                    return colorMap[columnIndex]!!
-                }
-            }
-        }
-        error("Some piece index is missing")
-    }
-
-    /**
      * evaluates position
      * @return pair, where first is eval. for green and the second one for blue
      */
-    fun evaluate(depth: UByte = 0u): Pair<Byte, Byte> {
-        if (countPieces(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3U) {
-            return Pair(Byte.MIN_VALUE, Byte.MAX_VALUE)
+    fun evaluate(depth: Int = 0): Pair<Int, Int> {
+        if (greenPiecesAmount < 3U) {
+            return Pair(Int.MIN_VALUE, Int.MAX_VALUE)
         }
-        if (countPieces(Piece.BLUE_) + freePieces[Piece.BLUE_.index] < 3U) {
-            return Pair(Byte.MAX_VALUE, Byte.MIN_VALUE)
+        if (bluePiecesAmount < 3U) {
+            return Pair(Int.MAX_VALUE, Int.MIN_VALUE)
         }
         val bluePieces =
-            (countPieces(Piece.BLUE_) + freePieces[1U]).toByte() + if (pieceToMove == Piece.BLUE_) removalCount.toByte() else 0
+            (bluePiecesAmount.toInt() + if (!pieceToMove) removalCount.toInt() else 0)
         val greenPieces =
-            (countPieces(Piece.GREEN) + freePieces[0U]).toByte() + if (pieceToMove == Piece.GREEN) removalCount.toByte() else 0
-        val greenEvaluation = ((greenPieces - bluePieces) * 1000 + findPossibleTriple().first * 15u + depth).toByte()
-        val blueEvaluation = ((bluePieces - greenPieces) * 1000 + findPossibleTriple().second * 15u + depth).toByte()
+            (greenPiecesAmount.toInt() + if (pieceToMove) removalCount.toInt() else 0)
+        val greenEvaluation =
+            ((greenPieces - bluePieces) * 1000 + (findPossibleTriple().first.toInt() - findPossibleTriple().second.toInt()) * 15 + depth)
+        val blueEvaluation =
+            ((bluePieces - greenPieces) * 1000 + (findPossibleTriple().second.toInt() - findPossibleTriple().first.toInt()) * 15 + depth)
         return Pair(greenEvaluation, blueEvaluation)
     }
 
     /**
      * @return amount of 2-s close to each other
      */
-    fun findPossibleTriple(): Pair<UByte, UByte> {
-        var resultGreen = 0U
-        var resultBlue = 0u
-        positions[0u].forEach { element ->
-            removeChecker[element]!!.toList().forEach { possiblePositions ->
-                val piecesAtLine = positions[0u].count { possiblePositions.contains(it) } + if (possiblePositions.contains(element)) 1u else 0u
-                if (piecesAtLine >= 2u) {
-                    resultGreen += piecesAtLine
+    private fun findPossibleTriple(): Pair<Int, Int> {
+        var greenEvaluation = 0
+        for (element in 0..<positions.size) {
+            removeChecker[element]!!.map { it.toMutableList().also { it1 -> it1.add(element) } }
+                .forEach { it1 ->
+                    it1.forEach {
+                        if (positions[it].isGreen != null) {
+                            if (positions[it].isGreen!!) {
+                                greenEvaluation += 10
+                            } else {
+                                greenEvaluation -= 3
+                            }
+                        }
+                    }
                 }
-            }
         }
-        positions[1u].forEach { element ->
-            removeChecker[element]!!.toList().forEach { possiblePositions ->
-                val piecesAtLine = positions[1u].count { possiblePositions.contains(it) } + if (possiblePositions.contains(element)) 1u else 0u
-                if (piecesAtLine >= 2u) {
-                    resultBlue += piecesAtLine
+        var blueEvaluation = 0
+        for (element in 0..<positions.size) {
+            removeChecker[element]!!.map { it.toMutableList().also { it1 -> it1.add(element) } }
+                .forEach { it1 ->
+                    it1.forEach {
+                        if (positions[it].isGreen != null) {
+                            if (!positions[it].isGreen!!) {
+                                blueEvaluation += 10
+                            } else {
+                                blueEvaluation -= 3
+                            }
+                        }
+                    }
                 }
-            }
         }
-        return Pair(resultGreen.toUByte(), resultBlue.toUByte())
+        return Pair(greenEvaluation, blueEvaluation)
     }
+
     /**
      * @param depth current depth
      * @color color of the piece we are finding a move for
@@ -95,7 +95,7 @@ class Position(
      */
     fun solve(
         depth: UByte
-    ): Pair<Pair<Byte, Byte>, MutableList<Position>> {
+    ): Pair<Pair<Int, Int>, MutableList<Position>> {
         if (depth == 0.toUByte()) {
             return Pair(evaluate(), mutableListOf(this))
         }
@@ -106,15 +106,15 @@ class Position(
         if (positions.isEmpty()) {
             // if we can't make a move, we lose
             return Pair(
-                if (pieceToMove == Piece.GREEN) {
-                    Pair(Byte.MIN_VALUE, Byte.MAX_VALUE)
+                if (pieceToMove) {
+                    Pair(Int.MIN_VALUE, Int.MAX_VALUE)
                 } else {
-                    Pair(Byte.MAX_VALUE, Byte.MIN_VALUE)
+                    Pair(Int.MAX_VALUE, Int.MIN_VALUE)
                 }, mutableListOf(this)
             )
         }
         val bestPosition = positions.maxBy {
-            it.first[pieceToMove.index]
+            it.first[pieceToMove]
         }
         bestPosition.second.add(this)
         return bestPosition
@@ -125,35 +125,20 @@ class Position(
      */
     fun copy(): Position {
         return Position(
-            Triple(
-                positions.first.toMutableList(),
-                positions.second.toMutableList(),
-                positions.third.toMutableList()
-            ), freePieces, pieceToMove, removalCount
+            positions.map { it.copy() }.toMutableList(),
+            freePieces,
+            greenPiecesAmount,
+            bluePiecesAmount,
+            pieceToMove,
+            removalCount
         )
-    }
-
-    /**
-     * @param color color of the piece
-     * @return number of pieces with specified color
-     */
-    private fun countPieces(color: Piece): UByte {
-        return positions[color.index].size.toUByte()
-    }
-
-    /**
-     * @param color color of the piece
-     * @return indexes with pieces of the needed color
-     */
-    private fun indexes(color: Piece): MutableCollection<UByte> {
-        return positions[color.index]
     }
 
     /**
      * @param currentDepth the current depth we are at
      * @return possible positions we can achieve in 1 move
      */
-    private fun generatePositions(currentDepth: UByte): List<Position> {
+    fun generatePositions(currentDepth: UByte): List<Position> {
         val str = toString()
         // check if we can abort calculation / use our previous result
         occurredPositions[str]?.let {
@@ -180,8 +165,8 @@ class Position(
     fun removalAmount(move: Movement): UByte {
         if (move.endIndex == null) return 0U
 
-        return removeChecker[move.endIndex]!!.count {
-            positions[pieceToMove.index].containsAll(it)
+        return removeChecker[move.endIndex]!!.count { list ->
+            list.all { positions[it].isGreen != null && positions[it].isGreen == pieceToMove }
         }.toUByte()
     }
 
@@ -213,38 +198,60 @@ class Position(
     }
 
     private fun generateRemovalMoves(): List<Movement> {
-        return this.indexes(this.pieceToMove.opposite()).map { Movement(it, null) }
+        val possibleMove: MutableList<Movement> = mutableListOf()
+        positions.forEachIndexed { index, piece ->
+            if (piece.isGreen != null && piece.isGreen != pieceToMove) {
+                possibleMove.add(Movement(index, null))
+            }
+        }
+        return possibleMove
     }
 
     /**
      * @return all possible normal movements
      */
     private fun generateNormalMovements(): List<Movement> {
-        return indexes(pieceToMove).flatMap { startIndex ->
-            moveProvider[startIndex]!!.filter { endIndex ->
-                positions[2U].contains(endIndex)
-            }.map { endIndex -> Movement(startIndex, endIndex) }
+        val possibleMove: MutableList<Movement> = mutableListOf()
+        positions.forEachIndexed { startIndex, piece ->
+            if (piece.isGreen != null && piece.isGreen == pieceToMove) {
+                moveProvider[startIndex]!!.forEach { endIndex ->
+                    if (positions[endIndex].isGreen == null) {
+                        possibleMove.add(Movement(startIndex, endIndex))
+                    }
+                }
+            }
         }
+        return possibleMove
     }
 
     /**
      * @return all possible flying movements
      */
     private fun generateFlyingMovements(): List<Movement> {
-        return indexes(pieceToMove).flatMap { start ->
-            indexes(Piece.EMPTY).map { end ->
-                Movement(
-                    start, end
-                )
+        val possibleMove: MutableList<Movement> = mutableListOf()
+        positions.forEachIndexed { startIndex, piece ->
+            if (piece.isGreen != null && piece.isGreen == pieceToMove) {
+                positions.forEachIndexed { endIndex, endPiece ->
+                    if (endPiece.isGreen == null) {
+                        possibleMove.add(Movement(startIndex, endIndex))
+                    }
+                }
             }
         }
+        return possibleMove
     }
 
     /**
      * @return possible piece placements
      */
     private fun generatePlacementMovements(): List<Movement> {
-        return indexes(Piece.EMPTY).map { Movement(null, it) }
+        val possibleMove: MutableList<Movement> = mutableListOf()
+        positions.forEachIndexed { endIndex, piece ->
+            if (piece.isGreen == null) {
+                possibleMove.add(Movement(null, endIndex))
+            }
+        }
+        return possibleMove
     }
 
     /**
@@ -252,7 +259,7 @@ class Position(
      */
     fun gameState(): GameState {
         return when {
-            ((countPieces(Piece.GREEN) + freePieces[Piece.GREEN.index] < 3U) || (countPieces(Piece.BLUE_) + freePieces[Piece.BLUE_.index] < 3U)) -> {
+            (greenPiecesAmount < 3U || bluePiecesAmount < 3U) -> {
                 GameState.End
             }
 
@@ -260,16 +267,52 @@ class Position(
                 GameState.Removing
             }
 
-            (freePieces[pieceToMove.index] > 0U) -> {
+            (freePieces[pieceToMove] > 0U) -> {
                 GameState.Placement
             }
 
-            (countPieces(pieceToMove) == 3.toUByte()) -> {
+            ((pieceToMove && greenPiecesAmount == 3.toUByte()) || (!pieceToMove && bluePiecesAmount == 3.toUByte())) -> {
                 GameState.Flying
             }
 
             else -> GameState.Normal
         }
+    }
+
+
+    fun display() {
+        val c = positions.map {
+            if (it.isGreen == null) {
+                //GRAY_CIRCLE
+                CIRCLE
+            } else {
+                if (!it.isGreen!!) {
+                    //BLUE_CIRCLE
+                    BLUE + CIRCLE + NONE
+                } else {
+                    //GREEN_CIRCLE
+                    GREEN + CIRCLE + NONE
+                }
+            }
+        }
+        println(
+            """$NONE
+        ${c[0]}-----------------${c[1]}-----------------${c[2]}
+        |                  |                  |
+        |     ${c[3]}-----------${c[4]}-----------${c[5]}     |
+        |     |            |            |     |
+        |     |     ${c[6]}-----${c[7]}-----${c[8]}     |     |
+        |     |     |             |     |     |
+        ${c[9]}----${c[10]}----${c[11]}             ${c[12]}----${c[13]}----${c[14]}
+        |     |     |             |     |     |
+        |     |     ${c[15]}-----${c[16]}-----${c[17]}     |     |
+        |     |            |            |     |
+        |     ${c[18]}-----------${c[19]}-----------${c[20]}     |
+        |                  |                  |
+        ${c[21]}-----------------${c[22]}-----------------${c[23]}
+        """.trimIndent()
+        )
+        println()
     }
 
     override fun equals(other: Any?): Boolean {
@@ -282,8 +325,15 @@ class Position(
     }
 
     override fun toString(): String {
-        return removalCount.toString() + "!" + pieceToMove.index.toString() + "!/" + positions.first.joinToString { it.toString() } + "/" + positions.second.joinToString { it.toString() } + "/" + freePieces.first + "|" + freePieces.second
+        return if (pieceToMove) "0" else "1" + removalCount.toString() + " " + positions.joinToString { it.toString() } + "/" + freePieces.first + "|" + freePieces.second
     }
+}
+
+private operator fun <A> Pair<A, A>.get(first: Boolean): A {
+    return if (first)
+        this.first
+    else
+        this.second
 }
 
 private operator fun Int.plus(uInt: UInt): UInt {
@@ -293,3 +343,45 @@ private operator fun Int.plus(uInt: UInt): UInt {
 private operator fun Int.plus(uByte: UByte): UByte {
     return (this + uByte.toInt()).toUByte()
 }
+
+/**
+ * circle unicode symbol
+ * linux only
+ */
+const val CIRCLE: String = "\uD83D\uDD35"
+
+/**
+ * blue color
+ * linux only
+ */
+const val BLUE: String = "\u001B[34m"
+
+/**
+ * green color
+ * linux only
+ */
+const val GREEN: String = "\u001B[32m"
+
+/**
+ * resets to default color
+ * linux only
+ */
+const val NONE: String = "\u001B[90m"
+
+/**
+ * blue circle unicode symbol
+ * windows only
+ */
+const val BLUE_CIRCLE: String = "\uD83D\uDD35"
+
+/**
+ * green circle unicode symbol
+ * windows only
+ */
+const val GREEN_CIRCLE: String = "\uD83D\uDFE2"
+
+/**
+ * gray circle unicode symbol
+ * windows only
+ */
+const val GRAY_CIRCLE: String = "⚪"
