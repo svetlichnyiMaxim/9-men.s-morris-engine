@@ -40,52 +40,62 @@ class Position(
         if (bluePiecesAmount < 3U) {
             return Pair(Int.MAX_VALUE, Int.MIN_VALUE)
         }
-        val bluePieces =
-            (bluePiecesAmount.toInt() + if (!pieceToMove) removalCount.toInt() else 0)
         val greenPieces =
             (greenPiecesAmount.toInt() + if (pieceToMove) removalCount.toInt() else 0)
+        val bluePieces =
+            (bluePiecesAmount.toInt() + if (!pieceToMove) removalCount.toInt() else 0)
+
+        val basicGreenEvaluation = (greenPieces - bluePieces)
+        val basicBlueEvaluation = (bluePieces - greenPieces)
+
+        val greenUnfinishedTriplesEvaluation =
+            findUnfinishedTriples().first - findUnfinishedTriples().second
+        val blueUnfinishedTriplesEvaluation =
+            findUnfinishedTriples().second - findUnfinishedTriples().first
+
+        val greenPossibleTriplesEvaluation =
+            (findBlockedTriples().first * 4 - findBlockedTriples().second * 5)
+        val bluePossibleTriplesEvaluation =
+            (findBlockedTriples().second * 4 - findBlockedTriples().first * 5)
+
         val greenEvaluation =
-            ((greenPieces - bluePieces) * 1000 + (findPossibleTriple().first.toInt() - findPossibleTriple().second.toInt()) * 15 + depth)
+            (basicGreenEvaluation * 1000 + greenUnfinishedTriplesEvaluation * 200 + greenPossibleTriplesEvaluation * 5 + depth)
         val blueEvaluation =
-            ((bluePieces - greenPieces) * 1000 + (findPossibleTriple().second.toInt() - findPossibleTriple().first.toInt()) * 15 + depth)
+            (basicBlueEvaluation * 1000 + blueUnfinishedTriplesEvaluation * 200 + bluePossibleTriplesEvaluation * 5 + depth)
+
         return Pair(greenEvaluation, blueEvaluation)
     }
 
-    /**
-     * @return amount of 2-s close to each other
-     */
-    private fun findPossibleTriple(): Pair<Int, Int> {
-        var greenEvaluation = 0
-        for (element in 0..<positions.size) {
-            removeChecker[element]!!.map { it.toMutableList().also { it1 -> it1.add(element) } }
-                .forEach { it1 ->
-                    it1.forEach {
-                        if (positions[it].isGreen != null) {
-                            if (positions[it].isGreen!!) {
-                                greenEvaluation += 10
-                            } else {
-                                greenEvaluation -= 3
-                            }
-                        }
-                    }
-                }
+    fun findUnfinishedTriples(): Pair<Int, Int> {
+        var greenUnfinishedTriples = 0
+        var blueUnfinishedTriples = 0
+        for (ints in triplesMap) {
+            // green
+            if (ints.none { positions[it].isGreen == false } && ints.count { positions[it].isGreen == true } == 2) {
+                greenUnfinishedTriples++
+            }
+            // blue
+            if (ints.none { positions[it].isGreen == true } && ints.count { positions[it].isGreen == false } == 2) {
+                blueUnfinishedTriples++
+            }
         }
-        var blueEvaluation = 0
-        for (element in 0..<positions.size) {
-            removeChecker[element]!!.map { it.toMutableList().also { it1 -> it1.add(element) } }
-                .forEach { it1 ->
-                    it1.forEach {
-                        if (positions[it].isGreen != null) {
-                            if (!positions[it].isGreen!!) {
-                                blueEvaluation += 10
-                            } else {
-                                blueEvaluation -= 3
-                            }
-                        }
-                    }
-                }
+        return Pair(greenUnfinishedTriples, blueUnfinishedTriples)
+    }
+
+    private fun findBlockedTriples(): Pair<Int, Int> {
+        var greenBlockedTriples = 0
+        var blueBlockedTriples = 0
+        for (ints in triplesMap) {
+            // green
+            if (ints.count { positions[it].isGreen == false } == 1 && ints.count { positions[it].isGreen == true } == 2) {
+                greenBlockedTriples++
+            }
+            // blue
+            if (ints.count { positions[it].isGreen == true } == 1 && ints.count { positions[it].isGreen == false } == 2) {
+                blueBlockedTriples++
+            }
         }
-        return Pair(greenEvaluation, blueEvaluation)
+        return Pair(greenBlockedTriples, blueBlockedTriples)
     }
 
     /**
@@ -99,14 +109,35 @@ class Position(
         if (depth == 0.toUByte()) {
             return Pair(evaluate(), mutableListOf(this))
         }
+        if (greenPiecesAmount < 3U) {
+            return Pair(
+                Pair(Int.MIN_VALUE, Int.MAX_VALUE), mutableListOf(this)
+            )
+        }
+        if (bluePiecesAmount < 3U) {
+            return Pair(
+                Pair(Int.MAX_VALUE, Int.MIN_VALUE), mutableListOf(this)
+            )
+        }
         // for all possible positions, we try to solve them
         val positions = (generatePositions(depth).map {
+            if (it.greenPiecesAmount < 3U) {
+                Pair(
+                    Pair(Int.MIN_VALUE, Int.MAX_VALUE), mutableListOf(this)
+                )
+            }
+            if (it.bluePiecesAmount < 3U) {
+                Pair(
+                    Pair(Int.MAX_VALUE, Int.MIN_VALUE), mutableListOf(this)
+                )
+            }
             it.solve((depth - 1u).toUByte())
         }.filter { it.second.isNotEmpty() })
         if (positions.isEmpty()) {
+
             // if we can't make a move, we lose
             return Pair(
-                if (pieceToMove) {
+                if (!pieceToMove) {
                     Pair(Int.MIN_VALUE, Int.MAX_VALUE)
                 } else {
                     Pair(Int.MAX_VALUE, Int.MIN_VALUE)
@@ -142,7 +173,7 @@ class Position(
         val str = toString()
         // check if we can abort calculation / use our previous result
         occurredPositions[str]?.let {
-            if (it.second >= currentDepth + 1u) {
+            if (it.second >= currentDepth) {
                 return listOf()
             } else {
                 occurredPositions[str] = Pair(it.first, currentDepth)

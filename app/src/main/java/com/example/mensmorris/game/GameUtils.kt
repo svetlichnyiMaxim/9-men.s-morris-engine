@@ -31,6 +31,19 @@ val gameStartPosition = Position(
 val occurredPositions: HashMap<String, Pair<List<Position>, UByte>> = hashMapOf()
 
 class Piece(var isGreen: Boolean?) {
+    override fun toString(): String {
+        return when (isGreen) {
+            null -> {
+                "0"
+            }
+            true -> {
+                "Green"
+            }
+            false -> {
+                "Blue"
+            }
+        }
+    }
     fun copy(): Piece {
         return Piece(isGreen)
     }
@@ -172,7 +185,6 @@ fun handleClick(elementIndex: Int) {
         gamePosition.value = it.producePosition(pos)
         resetAnalyze()
         saveMove(pos)
-        resetCachedPositions()
         if (pos.gameState() == GameState.End) {
             currentScreen = Screen.EndGame
         }
@@ -236,6 +248,7 @@ fun pieceToMoveSelector(elementIndex: Int) {
  * hides analyze gui and delete it's result
  */
 fun resetAnalyze() {
+    resetCachedPositions()
     solveResult.value = mutableListOf()
     if (solving != null) {
         try {
@@ -299,6 +312,10 @@ var selectedButton = mutableStateOf<Int?>(null)
  * @note >= 5 causes OOM
  */
 var depth = mutableIntStateOf(3)
+    set(value) {
+        resetAnalyze()
+        field = value
+    }
 
 /**
  * used for storing our analyze coroutine
