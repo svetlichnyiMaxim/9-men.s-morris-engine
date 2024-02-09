@@ -9,7 +9,7 @@ import com.example.mensmorris.game.resetAnalyze
 import org.junit.Test
 
 class CopyTest {
-    private val position1 = mutableListOf(
+    private val position = mutableListOf(
             Blue(),                             Blue(),                                 Empty(),
                         Green(),                Empty(),                Blue(),
                                     Empty(),    Empty(),    Empty(),
@@ -18,11 +18,15 @@ class CopyTest {
                         Empty(),                Empty(),                Empty(),
             Empty(),                            Empty(),                                Blue()
         )
+
+    /**
+     * this tests we our copy method actually works
+     */
     @Test
-    fun `copy test`() {
-        val position2 = position1.map { it.copy() }
+    fun `copy`() {
+        val position2 = position.map { it.copy() }
         position2[0].isGreen = null
-        assert(position1 != position2)
+        assert(position != position2)
         resetAnalyze()
     }
 }

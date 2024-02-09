@@ -7,7 +7,7 @@ import com.example.mensmorris.game.Position
 import org.junit.Test
 
 class DepthTest {
-    private val wonPosition1 = Position(
+    private val wonPosition = Position(
         mutableListOf(
             Empty(),                                    Empty(),                                    Blue(),
                             Empty(),                    Empty(),                    Empty(),
@@ -22,12 +22,12 @@ class DepthTest {
     )
 
     @Test
-    fun `winning position1`() {
-            wonPosition1.solve(5u).let {
-                println(it.first)
-                it.second.forEach {
-                    it.display()
-                }
+    fun `depth`() {
+        wonPosition1.solve(5u).let {
+            println(it.first)
+            it.second.forEach {
+                it.display()
             }
+        }
     }
 }

@@ -7,10 +7,11 @@ import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.occurredPositions
 import com.example.mensmorris.game.resetAnalyze
 import com.example.mensmorris.game.resetCachedPositions
+import junit.framework.TestCase
 import org.junit.Test
 
 class CachingTest {
-    private val position1 = Position(mutableListOf(
+    private val position = Position(mutableListOf(
             Blue(),                             Blue(),                                 Empty(),
                         Green(),                Empty(),                Blue(),
                                     Empty(),    Empty(),    Empty(),
@@ -21,11 +22,11 @@ class CachingTest {
         ), pieceToMove = true
     )
     @Test
-    fun `copy test`() {
-        position1.solve(6u)
-        assert(occurredPositions.size == 8)
-        assert(position1.solve(4u).second.size == 1)
+    fun `cache`() {
+        position.solve(6u)
+        TestCase.assertEquals(occurredPositions.size == 8)
+        TestCase.assertEquals(position.solve(4u).second.size == 1)
         resetAnalyze()
-        assert(position1.solve(4u).second.size == 1)
+        TestCase.assertEquals(position.solve(4u).second.size == 1)
     }
 }

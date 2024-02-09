@@ -24,7 +24,7 @@ class MoveGenerationTest {
     )
 
     @Test
-    fun `winning test1`() {
+    fun `generation 1`() {
         var maxEvaluationGreen = Int.MIN_VALUE
         var maxEvaluationBlue = Int.MIN_VALUE
         position1.generatePositions(1u).forEach { it2 ->
@@ -54,7 +54,7 @@ class MoveGenerationTest {
     )
 
     @Test
-    fun `winning test2`() {
+    fun `generation 2`() {
         var maxEvaluationGreen = Int.MIN_VALUE
         var maxEvaluationBlue = Int.MIN_VALUE
         position2.generatePositions(1u).forEach { it2 ->
@@ -84,7 +84,7 @@ class MoveGenerationTest {
     )
 
     @Test
-    fun `winning test3`() {
+    fun `generation 3`() {
         var maxEvaluationGreen = Int.MIN_VALUE
         var maxEvaluationBlue = Int.MIN_VALUE
         position3.generatePositions(1u).forEach { it2 ->
@@ -113,7 +113,7 @@ class MoveGenerationTest {
     )
 
     @Test
-    fun `winning test4`() {
+    fun `generation 4`() {
         var maxEvaluationGreen = Int.MIN_VALUE
         var maxEvaluationBlue = Int.MIN_VALUE
         position4.generatePositions(1u).forEach { it2 ->
