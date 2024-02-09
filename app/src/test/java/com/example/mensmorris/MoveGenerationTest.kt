@@ -99,17 +99,17 @@ class MoveGenerationTest {
     }
     private val position4 = Position(
         mutableListOf(
-            Blue(),                                     Green(),                                    Empty(),
+            Empty(),                                     Empty(),                                    Empty(),
                             Empty(),                    Empty(),                    Empty(),
                                         Green(),        Empty(),        Green(),
             Empty(),        Empty(),    Blue(),                         Empty(),    Empty(),        Empty(),
                                         Blue(),         Empty(),        Empty(),
-                            Empty(),                    Empty(),                    Empty(),
+                            Empty(),                    Empty(),                    Blue(),
             Empty(),                                    Empty(),                                    Empty()
         ),
         freePieces = Pair(5u, 5u),
         pieceToMove = false,
-        removalCount = 1u
+        removalCount = 0u
     )
 
     @Test

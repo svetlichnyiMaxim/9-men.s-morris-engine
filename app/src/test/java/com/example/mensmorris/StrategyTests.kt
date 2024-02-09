@@ -67,14 +67,14 @@ class StrategyTests {
                             Empty(),                    Empty(),                    Blue(),
             Empty(),                                    Empty(),                                    Empty()
         ),
-        freePieces = Pair(6u, 6u),
+        freePieces = Pair(5u, 5u),
         pieceToMove = false,
         removalCount = 0u
     )
 
     @Test
     fun `winning test3`() {
-        position3.solve(3u).let {
+        position3.solve(2u).let {
             println(it.first)
             it.second.forEach { it2 ->
                 it2.display()

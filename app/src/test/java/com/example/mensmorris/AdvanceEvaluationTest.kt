@@ -44,22 +44,42 @@ class AdvanceEvaluationTest {
     fun `winning position1`() {
         println(wonPosition1.evaluate())
     }
-/*
-    private val lostPosition = Position(
+
+    private val lostPosition2 = Position(
         mutableListOf(
-            Blue(),                                     Blue(),                                    Blue(),
-                            Green(),                    Empty(),                    Empty(),
-                                            Empty(),    Empty(),    Empty(),
-            Empty(),        Green(),        Empty(),                Empty(),        Empty(),        Empty(),
-                                            Empty(),    Empty(),    Empty(),
-                            Empty(),                    Empty(),                    Empty(),
+            Blue(),                                     Green(),                                    Empty(),
+                            Empty(),                    Empty(),                    Blue(),
+                                            Green(),    Empty(),   Green(),
+            Empty(),        Empty(),        Blue(),                Empty(),         Empty(),        Empty(),
+                                            Blue(),    Empty(),    Empty(),
+                            Empty(),                    Empty(),                    Blue(),
             Empty(),                                    Empty(),                                    Empty()
         ),
+        freePieces = Pair(5u, 5u),
         pieceToMove = false
     )
 
     @Test
-    fun `loosing position`() {
-        TestCase.assertEquals(lostPosition.evaluate(), Pair(-2147483648, 2147483647))
-    }*/
+    fun `loosing position2`() {
+        println(lostPosition2.evaluate())
+    }
+
+    private val lostPosition3 = Position(
+        mutableListOf(
+            Blue(),                                     Green(),                                    Empty(),
+                            Empty(),                    Empty(),                    Empty(),
+                                            Green(),    Blue(),   Green(),
+            Empty(),        Empty(),        Blue(),                Empty(),         Empty(),        Empty(),
+                                            Blue(),    Empty(),    Empty(),
+                            Empty(),                    Empty(),                    Blue(),
+            Empty(),                                    Empty(),                                    Empty()
+        ),
+        freePieces = Pair(5u, 5u),
+        pieceToMove = false
+    )
+
+    @Test
+    fun `loosing position3`() {
+        println(lostPosition3.evaluate())
+    }
 }

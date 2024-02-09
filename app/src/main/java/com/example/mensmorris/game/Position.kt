@@ -49,14 +49,14 @@ class Position(
         val basicBlueEvaluation = (bluePieces - greenPieces)
 
         val greenUnfinishedTriplesEvaluation =
-            findUnfinishedTriples().first - findUnfinishedTriples().second
+            findUnfinishedTriples().first - findUnfinishedTriples().second * 3
         val blueUnfinishedTriplesEvaluation =
-            findUnfinishedTriples().second - findUnfinishedTriples().first
+            findUnfinishedTriples().second - findUnfinishedTriples().first * 3
 
         val greenPossibleTriplesEvaluation =
-            (findBlockedTriples().first * 4 - findBlockedTriples().second * 5)
+            (findBlockedTriples().first - findBlockedTriples().second)
         val bluePossibleTriplesEvaluation =
-            (findBlockedTriples().second * 4 - findBlockedTriples().first * 5)
+            (findBlockedTriples().second - findBlockedTriples().first)
 
         val greenEvaluation =
             (basicGreenEvaluation * 1000 + greenUnfinishedTriplesEvaluation * 200 + greenPossibleTriplesEvaluation * 5 + depth)
@@ -356,7 +356,19 @@ class Position(
     }
 
     override fun toString(): String {
-        return if (pieceToMove) "0" else "1" + removalCount.toString() + " " + positions.joinToString { it.toString() } + "/" + freePieces.first + "|" + freePieces.second
+        return (if (pieceToMove) "0" else "1") + removalCount.toString() + " " + positions.joinToString(separator = "") {
+            when (it.isGreen) {
+                null -> {
+                    "2"
+                }
+                true -> {
+                    "0"
+                }
+                false -> {
+                    "1"
+                }
+            }
+        } + " " + freePieces.first + " " + freePieces.second
     }
 }
 
