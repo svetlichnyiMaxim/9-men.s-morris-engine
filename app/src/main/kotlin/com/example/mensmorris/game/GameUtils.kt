@@ -14,13 +14,13 @@ import kotlin.coroutines.cancellation.CancellationException
  */
 val gameStartPosition = Position(
     mutableListOf(
-        Empty(),                            Empty(),                            Empty(),
-                    Empty(),                Empty(),                Empty(),
-                                Empty(),    Empty(),    Empty(),
-        Empty(),    Empty(),    Empty(),                Empty(),    Empty(),    Empty(),
-                                Empty(),    Empty(),    Empty(),
-                    Empty(),                Empty(),                Empty(),
-        Empty(),                            Empty(),                            Empty()
+        empty(),                            empty(),                            empty(),
+                    empty(),                empty(),                empty(),
+                                empty(),    empty(),    empty(),
+        empty(),    empty(),    empty(),                empty(),    empty(),    empty(),
+                                empty(),    empty(),    empty(),
+                    empty(),                empty(),                empty(),
+        empty(),                            empty(),                            empty()
     ),
     Pair(8u, 8u), pieceToMove = false
 )
@@ -30,6 +30,10 @@ val gameStartPosition = Position(
  */
 val occurredPositions: HashMap<String, Pair<List<Position>, UByte>> = hashMapOf()
 
+/**
+ * used for storing info about pieces
+ * @param isGreen null if empty, true if green, false if blue
+ */
 class Piece(var isGreen: Boolean?) {
     override fun toString(): String {
         return when (isGreen) {
@@ -44,58 +48,53 @@ class Piece(var isGreen: Boolean?) {
             }
         }
     }
+    /**
+     * provides a way for creating copy of the pieces
+     * this is required
+     */
     fun copy(): Piece {
         return Piece(isGreen)
     }
 }
 
-fun Green(): Piece {
+/**
+ * fast way for creating green piece
+ */
+fun green(): Piece {
     return Piece(true)
 }
 
-fun Blue(): Piece {
+/**
+ * fast way for creating blue piece
+ */
+fun blue(): Piece {
     return Piece(false)
 }
-fun Empty(): Piece {
+
+/**
+ * fast way for creating empty piece
+ */
+fun empty(): Piece {
     return Piece(null)
 }
 
+/**
+ * @return color we are using to draw this piece
+ * @param piece pieces
+ */
 fun colorMap(piece: Piece): Color {
-    return if (piece.isGreen == null)
-        Color.Black
-    else
-        if (piece.isGreen!!) {
+    return when (piece.isGreen) {
+        null -> {
+            Color.Black
+        }
+        true -> {
             Color.Green
-        } else {
+        }
+        false -> {
             Color.Blue
         }
+    }
 }
-/*
-*/
-/**
- * used for storing piece color
- * @param index index of free pieces in Position class
- * @param color of the piece
- *//*
-enum class Piece(val index: UByte, val color: Color) {
-    */
-/**
- * green color
- *//*
-    GREEN(0U, Color.Green),
-
-    */
-/**
- * blue color
- *//*
-    BLUE_(1U, Color.Blue),
-
-    */
-/**
- * no piece is placed
- *//*
-    EMPTY(2U, Color.Black)
-}*/
 
 /**
  * used for storing game state
@@ -133,24 +132,23 @@ enum class GameState {
  * @param elementIndex element that got clicked
  */
 fun handleClick(elementIndex: Int) {
-    var producedMove: Movement? = null
     when (pos.gameState()) {
         GameState.Placement -> {
             if (pos.positions[elementIndex].isGreen == null) {
-                producedMove = Movement(null, elementIndex)
+                processMove(Movement(null, elementIndex))
             }
         }
 
         GameState.Normal -> {
             if (selectedButton.value == null) {
-                if (pos.positions[elementIndex].isGreen == pos.pieceToMove)
+                if (pos.positions[elementIndex].isGreen == pos.pieceToMove) {
                     selectedButton.value = elementIndex
+                }
             } else {
                 if (moveProvider[selectedButton.value!!]!!.filter { endIndex ->
                         pos.positions[endIndex].isGreen == null
                     }.contains(elementIndex)) {
-                    producedMove = Movement(selectedButton.value, elementIndex)
-                    selectedButton.value = null
+                    processMove(Movement(selectedButton.value, elementIndex))
                 } else {
                     pieceToMoveSelector(elementIndex)
                 }
@@ -159,12 +157,11 @@ fun handleClick(elementIndex: Int) {
 
         GameState.Flying -> {
             if (selectedButton.value == null) {
-                if (pos.positions[elementIndex].isGreen == pos.pieceToMove) selectedButton.value =
-                    elementIndex
+                if (pos.positions[elementIndex].isGreen == pos.pieceToMove)
+                    selectedButton.value = elementIndex
             } else {
                 if (pos.positions[elementIndex].isGreen == null) {
-                    producedMove = Movement(selectedButton.value, elementIndex)
-                    selectedButton.value = null
+                    processMove(Movement(selectedButton.value, elementIndex))
                 } else {
                     pieceToMoveSelector(elementIndex)
                 }
@@ -173,7 +170,7 @@ fun handleClick(elementIndex: Int) {
 
         GameState.Removing -> {
             if (pos.positions[elementIndex].isGreen != pos.pieceToMove) {
-                producedMove = Movement(elementIndex, null)
+                processMove(Movement(elementIndex, null))
             }
         }
 
@@ -181,17 +178,21 @@ fun handleClick(elementIndex: Int) {
             currentScreen = Screen.EndGame
         }
     }
-    producedMove?.let {
-        gamePosition.value = it.producePosition(pos)
-        resetAnalyze()
-        saveMove(pos)
-        if (pos.gameState() == GameState.End) {
-            currentScreen = Screen.EndGame
-        }
-    }
     handleHighLighting()
 }
 
+/**
+ * processes selected movement
+ */
+fun processMove(move: Movement) {
+    selectedButton.value = null
+    gamePosition.value = move.producePosition(pos)
+    resetAnalyze()
+    saveMove(pos)
+    if (pos.gameState() == GameState.End) {
+        currentScreen = Screen.EndGame
+    }
+}
 /**
  * finds pieces we should highlight
  */

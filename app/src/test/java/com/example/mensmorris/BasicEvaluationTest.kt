@@ -1,41 +1,23 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.Blue
-import com.example.mensmorris.game.Empty
-import com.example.mensmorris.game.Green
+import com.example.mensmorris.game.blue
+import com.example.mensmorris.game.empty
+import com.example.mensmorris.game.green
 import com.example.mensmorris.game.Position
 import junit.framework.TestCase
 import org.junit.Test
 
 class BasicEvaluationTest {
-    private val wonPosition = Position(
-        mutableListOf(
-            Blue(),                                     Blue(),                                     Blue(),
-                            Green(),                    Empty(),                    Empty(),
-                                        Empty(),        Empty(),        Empty(),
-            Empty(),        Green(),    Empty(),                        Empty(),    Empty(),        Empty(),
-                                        Empty(),        Empty(),        Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
-        ),
-        pieceToMove = true
-    )
-
-    @Test
-    fun `win 1`() {
-        TestCase.assertEquals(wonPosition.evaluate(), Pair(-2147483648, 2147483647))
-    }
     private val wonPosition1 = Position(
         mutableListOf(
-            Blue(),                                     Blue(),                                     Empty(),
-                            Green(),                    Empty(),                    Empty(),
-                                        Empty(),        Empty(),        Empty(),
-            Empty(),        Green(),    Empty(),                        Empty(),    Empty(),        Empty(),
-                                        Empty(),        Empty(),        Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     blue(),                                     blue(),
+                            green(),                    empty(),                    empty(),
+                                        empty(),        empty(),        empty(),
+            empty(),        green(),    empty(),                        empty(),    empty(),        empty(),
+                                        empty(),        empty(),        empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(0u, 1u),
         pieceToMove = true
     )
 
@@ -43,16 +25,34 @@ class BasicEvaluationTest {
     fun `win 1`() {
         TestCase.assertEquals(wonPosition1.evaluate(), Pair(-2147483648, 2147483647))
     }
+    private val wonPosition2 = Position(
+        mutableListOf(
+            blue(),                                     blue(),                                     empty(),
+                            green(),                    empty(),                    empty(),
+                                        empty(),        empty(),        empty(),
+            empty(),        green(),    empty(),                        empty(),    empty(),        empty(),
+                                        empty(),        empty(),        empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
+        ),
+        freePieces = Pair(0u, 1u),
+        pieceToMove = true
+    )
+
+    @Test
+    fun `win 2`() {
+        TestCase.assertEquals(wonPosition2.evaluate(), Pair(-2147483648, 2147483647))
+    }
 
     private val lostPosition = Position(
         mutableListOf(
-            Blue(),                                     Blue(),                                    Blue(),
-                            Green(),                    Empty(),                    Empty(),
-                                            Empty(),    Empty(),    Empty(),
-            Empty(),        Green(),        Empty(),                Empty(),        Empty(),        Empty(),
-                                            Empty(),    Empty(),    Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     blue(),                                    blue(),
+                            green(),                    empty(),                    empty(),
+                                            empty(),    empty(),    empty(),
+            empty(),        green(),        empty(),                empty(),        empty(),        empty(),
+                                            empty(),    empty(),    empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
         ),
         pieceToMove = false
     )

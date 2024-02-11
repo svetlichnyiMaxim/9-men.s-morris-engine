@@ -1,22 +1,21 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.Blue
-import com.example.mensmorris.game.Empty
-import com.example.mensmorris.game.Green
+import com.example.mensmorris.game.blue
+import com.example.mensmorris.game.empty
+import com.example.mensmorris.game.green
 import com.example.mensmorris.game.Position
-import junit.framework.TestCase
 import org.junit.Test
 
 class AdvanceEvaluationTest {
     private val wonPosition = Position(
         mutableListOf(
-            Blue(),                                     Empty(),                                     Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-                                        Green(),        Empty(),        Green(),
-            Empty(),        Empty(),    Blue(),                        Empty(),    Empty(),        Empty(),
-                                        Blue(),        Empty(),        Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     empty(),                                     empty(),
+                            empty(),                    empty(),                    empty(),
+                                        green(),        empty(),        green(),
+            empty(),        empty(),    blue(),                        empty(),    empty(),        empty(),
+                                        blue(),        empty(),        empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
         ),
         freePieces = Pair(7u, 6u),
         pieceToMove = true
@@ -28,13 +27,13 @@ class AdvanceEvaluationTest {
     }
     private val wonPosition1 = Position(
         mutableListOf(
-            Empty(),                                    Empty(),                                     Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-                                        Green(),        Blue(),         Green(),
-            Empty(),        Empty(),    Blue(),                         Empty(),    Empty(),        Empty(),
-                                        Blue(),         Empty(),        Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
+            empty(),                                    empty(),                                     empty(),
+                            empty(),                    empty(),                    empty(),
+                                        green(),        blue(),         green(),
+            empty(),        empty(),    blue(),                         empty(),    empty(),        empty(),
+                                        blue(),         empty(),        empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
         ),
         freePieces = Pair(7u, 6u),
         pieceToMove = true
@@ -47,13 +46,13 @@ class AdvanceEvaluationTest {
 
     private val lostPosition2 = Position(
         mutableListOf(
-            Blue(),                                     Green(),                                    Empty(),
-                            Empty(),                    Empty(),                    Blue(),
-                                            Green(),    Empty(),   Green(),
-            Empty(),        Empty(),        Blue(),                Empty(),         Empty(),        Empty(),
-                                            Blue(),    Empty(),    Empty(),
-                            Empty(),                    Empty(),                    Blue(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     green(),                                    empty(),
+                            empty(),                    empty(),                    blue(),
+                                            green(),    empty(),   green(),
+            empty(),        empty(),        blue(),                empty(),         empty(),        empty(),
+                                            blue(),    empty(),    empty(),
+                            empty(),                    empty(),                    blue(),
+            empty(),                                    empty(),                                    empty()
         ),
         freePieces = Pair(5u, 5u),
         pieceToMove = false
@@ -66,13 +65,13 @@ class AdvanceEvaluationTest {
 
     private val lostPosition3 = Position(
         mutableListOf(
-            Blue(),                                     Green(),                                    Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-                                            Green(),    Blue(),   Green(),
-            Empty(),        Empty(),        Blue(),                Empty(),         Empty(),        Empty(),
-                                            Blue(),    Empty(),    Empty(),
-                            Empty(),                    Empty(),                    Blue(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     green(),                                    empty(),
+                            empty(),                    empty(),                    empty(),
+                                            green(),    blue(),   green(),
+            empty(),        empty(),        blue(),                empty(),         empty(),        empty(),
+                                            blue(),    empty(),    empty(),
+                            empty(),                    empty(),                    blue(),
+            empty(),                                    empty(),                                    empty()
         ),
         freePieces = Pair(5u, 5u),
         pieceToMove = false

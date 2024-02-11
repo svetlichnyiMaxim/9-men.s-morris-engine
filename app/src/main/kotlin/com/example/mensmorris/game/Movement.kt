@@ -135,6 +135,9 @@ val removeChecker: HashMap<Int, List<List<Int>>> = hashMapOf(
     23 to listOf(listOf(21, 22), listOf(2, 14))
 )
 
+/**
+ * lists all possible triples
+ */
 val triplesMap: List<List<Int>> = listOf(
     listOf(0, 1, 2),
     listOf(3, 4, 5),

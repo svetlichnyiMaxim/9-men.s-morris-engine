@@ -1,8 +1,8 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.Blue
-import com.example.mensmorris.game.Empty
-import com.example.mensmorris.game.Green
+import com.example.mensmorris.game.blue
+import com.example.mensmorris.game.empty
+import com.example.mensmorris.game.green
 import com.example.mensmorris.game.Position
 import junit.framework.TestCase
 import org.junit.Test
@@ -10,30 +10,30 @@ import org.junit.Test
 class UnfinishedTriplesEvaluation {
     private val wonPosition = Position(
         mutableListOf(
-            Blue(),                                     Blue(),                                     Empty(),
-                            Green(),                    Empty(),                    Empty(),
-                                        Empty(),        Empty(),        Empty(),
-            Empty(),        Green(),    Empty(),                        Empty(),    Empty(),        Empty(),
-                                        Empty(),        Empty(),        Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     blue(),                                     empty(),
+                            green(),                    empty(),                    empty(),
+                                        empty(),        empty(),        empty(),
+            empty(),        green(),    empty(),                        empty(),    empty(),        empty(),
+                                        empty(),        empty(),        empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
         ),
         pieceToMove = true
     )
 
     @Test
     fun `winning position`() {
-        TestCase.assertEquals(wonPosition.findUnfinishedTriples(), Pair(1, 1))
+        TestCase.assertEquals(wonPosition.unfinishedTriples(), Pair(1, 1))
     }
     private val wonPosition1 = Position(
         mutableListOf(
-            Blue(),                                     Blue(),                                     Empty(),
-                            Green(),                    Empty(),                    Empty(),
-                                        Empty(),        Empty(),        Empty(),
-            Empty(),        Green(),    Empty(),                        Empty(),    Empty(),        Empty(),
-                                        Empty(),        Empty(),        Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     blue(),                                     empty(),
+                            green(),                    empty(),                    empty(),
+                                        empty(),        empty(),        empty(),
+            empty(),        green(),    empty(),                        empty(),    empty(),        empty(),
+                                        empty(),        empty(),        empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
         ),
         freePieces = Pair(0u, 1u),
         pieceToMove = true
@@ -46,13 +46,13 @@ class UnfinishedTriplesEvaluation {
 
     private val lostPosition = Position(
         mutableListOf(
-            Blue(),                                     Blue(),                                    Blue(),
-                            Green(),                    Empty(),                    Empty(),
-                                            Empty(),    Empty(),    Empty(),
-            Empty(),        Green(),        Empty(),                Empty(),        Empty(),        Empty(),
-                                            Empty(),    Empty(),    Empty(),
-                            Empty(),                    Empty(),                    Empty(),
-            Empty(),                                    Empty(),                                    Empty()
+            blue(),                                     blue(),                                    blue(),
+                            green(),                    empty(),                    empty(),
+                                            empty(),    empty(),    empty(),
+            empty(),        green(),        empty(),                empty(),        empty(),        empty(),
+                                            empty(),    empty(),    empty(),
+                            empty(),                    empty(),                    empty(),
+            empty(),                                    empty(),                                    empty()
         ),
         pieceToMove = false
     )

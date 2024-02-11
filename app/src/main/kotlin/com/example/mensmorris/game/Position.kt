@@ -4,6 +4,8 @@ package com.example.mensmorris.game
  * used for storing position data
  * @param positions all pieces
  * @param freePieces pieces we can still place: first - green, second - blue
+ * @param greenPiecesAmount used for fast evaluation & game state checker (stores green pieces)
+ * @param bluePiecesAmount used for fast evaluation & game state checker (stores blue pieces)
  * @param pieceToMove piece going to move next
  * @param removalCount amount of pieces to remove
  */
@@ -20,53 +22,56 @@ class Position(
         freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
         pieceToMove: Boolean,
         removalCount: UByte = 0U
-    ) : this(
-        positions,
+    ) : this(positions,
         freePieces,
         (positions.count { it.isGreen != null && it.isGreen!! } + freePieces.first),
         (positions.count { it.isGreen != null && !it.isGreen!! } + freePieces.second),
         pieceToMove,
-        removalCount
-    )
+        removalCount)
 
     /**
      * evaluates position
      * @return pair, where first is eval. for green and the second one for blue
      */
-    fun evaluate(depth: Int = 0): Pair<Int, Int> {
-        if (greenPiecesAmount < 3U) {
+    fun evaluate(depth: UByte = 0u): Pair<Int, Int> {
+        if (greenPiecesAmount < PIECES_TO_FLY) {
             return Pair(Int.MIN_VALUE, Int.MAX_VALUE)
         }
-        if (bluePiecesAmount < 3U) {
+        if (bluePiecesAmount < PIECES_TO_FLY) {
             return Pair(Int.MAX_VALUE, Int.MIN_VALUE)
         }
-        val greenPieces =
-            (greenPiecesAmount.toInt() + if (pieceToMove) removalCount.toInt() else 0)
-        val bluePieces =
-            (bluePiecesAmount.toInt() + if (!pieceToMove) removalCount.toInt() else 0)
+        val greenPieces = (greenPiecesAmount.toInt() + if (pieceToMove) removalCount.toInt() else 0)
+        val bluePieces = (bluePiecesAmount.toInt() + if (!pieceToMove) removalCount.toInt() else 0)
 
-        val basicGreenEvaluation = (greenPieces - bluePieces)
-        val basicBlueEvaluation = (bluePieces - greenPieces)
+        val basicGreenEval = (greenPieces - bluePieces) * PIECE_COST
+        val basicBlueEval = (bluePieces - greenPieces) * PIECE_COST
 
-        val greenUnfinishedTriplesEvaluation =
-            findUnfinishedTriples().first - findUnfinishedTriples().second * 3
-        val blueUnfinishedTriplesEvaluation =
-            findUnfinishedTriples().second - findUnfinishedTriples().first * 3
+        val unfinishedTriples = unfinishedTriples()
+        val greenUnfinishedTriplesEval =
+            (unfinishedTriples.first - unfinishedTriples.second * ENEMY_UNFINISHED_TRIPLES_COST) *
+                    UNFINISHED_TRIPLES_COST
+        val blueUnfinishedTriplesEval =
+            (unfinishedTriples.second - unfinishedTriples.first * ENEMY_UNFINISHED_TRIPLES_COST) *
+                    UNFINISHED_TRIPLES_COST
 
-        val greenPossibleTriplesEvaluation =
-            (findBlockedTriples().first - findBlockedTriples().second)
-        val bluePossibleTriplesEvaluation =
-            (findBlockedTriples().second - findBlockedTriples().first)
+        val findBlockedTriples = findBlockedTriples()
+        val greenPossibleTriplesEval =
+            (findBlockedTriples.first - findBlockedTriples.second) * POSSIBLE_TRIPLE_COST
+        val bluePossibleTriplesEval =
+            (findBlockedTriples.second - findBlockedTriples.first) * POSSIBLE_TRIPLE_COST
 
         val greenEvaluation =
-            (basicGreenEvaluation * 1000 + greenUnfinishedTriplesEvaluation * 200 + greenPossibleTriplesEvaluation * 5 + depth)
+            (basicGreenEval + greenUnfinishedTriplesEval + greenPossibleTriplesEval + depth.toInt())
         val blueEvaluation =
-            (basicBlueEvaluation * 1000 + blueUnfinishedTriplesEvaluation * 200 + bluePossibleTriplesEvaluation * 5 + depth)
+            (basicBlueEval + blueUnfinishedTriplesEval + bluePossibleTriplesEval + depth.toInt())
 
         return Pair(greenEvaluation, blueEvaluation)
     }
 
-    fun findUnfinishedTriples(): Pair<Int, Int> {
+    /**
+     * @return amount of lines with only 1 missing piece for new removal (triple)
+     */
+    fun unfinishedTriples(): Pair<Int, Int> {
         var greenUnfinishedTriples = 0
         var blueUnfinishedTriples = 0
         for (ints in triplesMap) {
@@ -87,11 +92,13 @@ class Position(
         var blueBlockedTriples = 0
         for (ints in triplesMap) {
             // green
-            if (ints.count { positions[it].isGreen == false } == 1 && ints.count { positions[it].isGreen == true } == 2) {
+            if (ints.count { positions[it].isGreen == false } == 1 &&
+                ints.count { positions[it].isGreen == true } == 2) {
                 greenBlockedTriples++
             }
             // blue
-            if (ints.count { positions[it].isGreen == true } == 1 && ints.count { positions[it].isGreen == false } == 2) {
+            if (ints.count { positions[it].isGreen == true } == 1 &&
+                ints.count { positions[it].isGreen == false } == 2) {
                 blueBlockedTriples++
             }
         }
@@ -107,30 +114,15 @@ class Position(
         depth: UByte
     ): Pair<Pair<Int, Int>, MutableList<Position>> {
         if (depth == 0.toUByte()) {
-            return Pair(evaluate(), mutableListOf(this))
+            return Pair(evaluate(depth), mutableListOf(this))
         }
-        if (greenPiecesAmount < 3U) {
+        if (greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY) {
             return Pair(
-                Pair(Int.MIN_VALUE, Int.MAX_VALUE), mutableListOf(this)
-            )
-        }
-        if (bluePiecesAmount < 3U) {
-            return Pair(
-                Pair(Int.MAX_VALUE, Int.MIN_VALUE), mutableListOf(this)
+                this.evaluate(), mutableListOf(this)
             )
         }
         // for all possible positions, we try to solve them
         val positions = (generatePositions(depth).map {
-            if (it.greenPiecesAmount < 3U) {
-                Pair(
-                    Pair(Int.MIN_VALUE, Int.MAX_VALUE), mutableListOf(this)
-                )
-            }
-            if (it.bluePiecesAmount < 3U) {
-                Pair(
-                    Pair(Int.MAX_VALUE, Int.MIN_VALUE), mutableListOf(this)
-                )
-            }
             it.solve((depth - 1u).toUByte())
         }.filter { it.second.isNotEmpty() })
         if (positions.isEmpty()) {
@@ -205,25 +197,25 @@ class Position(
      * @return possible movements
      */
     fun generateMoves(): List<Movement> {
-        when (gameState()) {
+        return when (gameState()) {
             GameState.Placement -> {
-                return generatePlacementMovements()
+                generatePlacementMovements()
             }
 
             GameState.End -> {
-                return listOf()
+                listOf()
             }
 
             GameState.Flying -> {
-                return generateFlyingMovements()
+                generateFlyingMovements()
             }
 
             GameState.Normal -> {
-                return generateNormalMovements()
+                generateNormalMovements()
             }
 
             GameState.Removing -> {
-                return generateRemovalMoves()
+                generateRemovalMoves()
             }
         }
     }
@@ -290,7 +282,7 @@ class Position(
      */
     fun gameState(): GameState {
         return when {
-            (greenPiecesAmount < 3U || bluePiecesAmount < 3U) -> {
+            (greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY) -> {
                 GameState.End
             }
 
@@ -302,7 +294,8 @@ class Position(
                 GameState.Placement
             }
 
-            ((pieceToMove && greenPiecesAmount == 3.toUByte()) || (!pieceToMove && bluePiecesAmount == 3.toUByte())) -> {
+            ((pieceToMove && greenPiecesAmount == PIECES_TO_FLY) ||
+                    (!pieceToMove && bluePiecesAmount == PIECES_TO_FLY)) -> {
                 GameState.Flying
             }
 
@@ -311,6 +304,10 @@ class Position(
     }
 
 
+    /**
+     * displays position
+     * used for testing purpose
+     */
     fun display() {
         val c = positions.map {
             if (it.isGreen == null) {
@@ -356,14 +353,18 @@ class Position(
     }
 
     override fun toString(): String {
-        return (if (pieceToMove) "0" else "1") + removalCount.toString() + " " + positions.joinToString(separator = "") {
+        return (if (pieceToMove) "0" else "1") + removalCount.toString() + positions.joinToString(
+            separator = ""
+        ) {
             when (it.isGreen) {
                 null -> {
                     "2"
                 }
+
                 true -> {
                     "0"
                 }
+
                 false -> {
                     "1"
                 }
@@ -373,10 +374,8 @@ class Position(
 }
 
 private operator fun <A> Pair<A, A>.get(first: Boolean): A {
-    return if (first)
-        this.first
-    else
-        this.second
+    return if (first) this.first
+    else this.second
 }
 
 private operator fun Int.plus(uInt: UInt): UInt {

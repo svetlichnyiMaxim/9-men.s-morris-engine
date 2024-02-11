@@ -1,22 +1,20 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.Blue
-import com.example.mensmorris.game.Empty
-import com.example.mensmorris.game.Green
-import com.example.mensmorris.game.Position
-import com.example.mensmorris.game.occurredPositions
+import com.example.mensmorris.game.blue
+import com.example.mensmorris.game.empty
+import com.example.mensmorris.game.green
 import com.example.mensmorris.game.resetAnalyze
 import org.junit.Test
 
 class CopyTest {
     private val position = mutableListOf(
-            Blue(),                             Blue(),                                 Empty(),
-                        Green(),                Empty(),                Blue(),
-                                    Empty(),    Empty(),    Empty(),
-            Empty(),    Green(),    Empty(),                Empty(),    Empty(),        Green(),
-                                    Empty(),    Empty(),    Empty(),
-                        Empty(),                Empty(),                Empty(),
-            Empty(),                            Empty(),                                Blue()
+            blue(),                             blue(),                                 empty(),
+                        green(),                empty(),                blue(),
+                                    empty(),    empty(),    empty(),
+            empty(),    green(),    empty(),                empty(),    empty(),        green(),
+                                    empty(),    empty(),    empty(),
+                        empty(),                empty(),                empty(),
+            empty(),                            empty(),                                blue()
         )
 
     /**
