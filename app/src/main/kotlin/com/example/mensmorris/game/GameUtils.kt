@@ -41,10 +41,10 @@ class Piece(var isGreen: Boolean?) {
                 "0"
             }
             true -> {
-                "Green"
+                "1"
             }
             false -> {
-                "Blue"
+                "2"
             }
         }
     }

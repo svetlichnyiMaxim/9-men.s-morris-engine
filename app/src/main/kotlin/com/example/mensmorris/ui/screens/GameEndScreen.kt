@@ -14,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mensmorris.game.Piece
 import com.example.mensmorris.game.moveHints
 import com.example.mensmorris.game.pos
 import com.example.mensmorris.ui.AppTheme
@@ -45,7 +44,8 @@ fun GameEnd() {
                 Box(
                     modifier = Modifier
                         .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Green, CircleShape), Alignment.Center
+                        .background(Color.Green, CircleShape),
+                    Alignment.Center
                 ) {
                     Text(color = Color.Blue, text = pos.freePieces.first.toString())
                 }
@@ -54,7 +54,8 @@ fun GameEnd() {
                 Box(
                     modifier = Modifier
                         .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Blue, CircleShape), Alignment.Center
+                        .background(Color.Blue, CircleShape),
+                    Alignment.Center
                 ) {
                     Text(color = Color.Green, text = pos.freePieces.second.toString())
                 }

@@ -24,8 +24,8 @@ class Position(
         removalCount: UByte = 0U
     ) : this(positions,
         freePieces,
-        (positions.count { it.isGreen != null && it.isGreen!! } + freePieces.first),
-        (positions.count { it.isGreen != null && !it.isGreen!! } + freePieces.second),
+        (positions.count { it.isGreen == true } + freePieces.first),
+        (positions.count { it.isGreen == false } + freePieces.second),
         pieceToMove,
         removalCount)
 
@@ -106,6 +106,12 @@ class Position(
     }
 
     /**
+     * @return true if game has ended
+     */
+    private fun gameEnded(): Boolean {
+        return greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY
+    }
+    /**
      * @param depth current depth
      * @color color of the piece we are finding a move for
      * @return possible positions and there evaluation
@@ -113,20 +119,14 @@ class Position(
     fun solve(
         depth: UByte
     ): Pair<Pair<Int, Int>, MutableList<Position>> {
-        if (depth == 0.toUByte()) {
+        if (depth == 0.toUByte() || gameEnded()) {
             return Pair(evaluate(depth), mutableListOf(this))
-        }
-        if (greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY) {
-            return Pair(
-                this.evaluate(), mutableListOf(this)
-            )
         }
         // for all possible positions, we try to solve them
         val positions = (generatePositions(depth).map {
             it.solve((depth - 1u).toUByte())
         }.filter { it.second.isNotEmpty() })
         if (positions.isEmpty()) {
-
             // if we can't make a move, we lose
             return Pair(
                 if (!pieceToMove) {
@@ -136,11 +136,9 @@ class Position(
                 }, mutableListOf(this)
             )
         }
-        val bestPosition = positions.maxBy {
+        return positions.maxBy {
             it.first[pieceToMove]
-        }
-        bestPosition.second.add(this)
-        return bestPosition
+        }.apply { this.second.add(this@Position) }
     }
 
     /**
@@ -173,8 +171,7 @@ class Position(
             }
         }
         val generatedList = generateMoves().map {
-            val position = it.producePosition(this)
-            position
+            it.producePosition(this)
         }
         // store our work into our hashMap
         occurredPositions[str] = Pair(generatedList, currentDepth)
@@ -189,7 +186,7 @@ class Position(
         if (move.endIndex == null) return 0U
 
         return removeChecker[move.endIndex]!!.count { list ->
-            list.all { positions[it].isGreen != null && positions[it].isGreen == pieceToMove }
+            list.all { positions[it].isGreen == pieceToMove }
         }.toUByte()
     }
 
@@ -236,7 +233,7 @@ class Position(
     private fun generateNormalMovements(): List<Movement> {
         val possibleMove: MutableList<Movement> = mutableListOf()
         positions.forEachIndexed { startIndex, piece ->
-            if (piece.isGreen != null && piece.isGreen == pieceToMove) {
+            if (piece.isGreen == pieceToMove) {
                 moveProvider[startIndex]!!.forEach { endIndex ->
                     if (positions[endIndex].isGreen == null) {
                         possibleMove.add(Movement(startIndex, endIndex))
@@ -253,7 +250,7 @@ class Position(
     private fun generateFlyingMovements(): List<Movement> {
         val possibleMove: MutableList<Movement> = mutableListOf()
         positions.forEachIndexed { startIndex, piece ->
-            if (piece.isGreen != null && piece.isGreen == pieceToMove) {
+            if (piece.isGreen == pieceToMove) {
                 positions.forEachIndexed { endIndex, endPiece ->
                     if (endPiece.isGreen == null) {
                         possibleMove.add(Movement(startIndex, endIndex))
@@ -282,7 +279,7 @@ class Position(
      */
     fun gameState(): GameState {
         return when {
-            (greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY) -> {
+            (gameEnded()) -> {
                 GameState.End
             }
 
@@ -356,19 +353,7 @@ class Position(
         return (if (pieceToMove) "0" else "1") + removalCount.toString() + positions.joinToString(
             separator = ""
         ) {
-            when (it.isGreen) {
-                null -> {
-                    "2"
-                }
-
-                true -> {
-                    "0"
-                }
-
-                false -> {
-                    "1"
-                }
-            }
+            it.toString()
         } + " " + freePieces.first + " " + freePieces.second
     }
 }

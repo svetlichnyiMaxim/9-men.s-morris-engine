@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import com.example.mensmorris.game.gamePosition
 import com.example.mensmorris.game.gameStartPosition
 import com.example.mensmorris.game.occurredPositions
+import com.example.mensmorris.render
 import com.example.mensmorris.ui.screens.GameEnd
 import com.example.mensmorris.ui.screens.MainPage
 

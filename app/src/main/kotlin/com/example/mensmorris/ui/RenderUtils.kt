@@ -1,6 +1,5 @@
 package com.example.mensmorris.ui
 
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -54,17 +53,6 @@ inline fun AppTheme(function: () -> Unit) {
             .fillMaxSize()
             .background(Color(0xFFBDBDBD))
     ) {
-        function()
-    }
-}
-
-/**
- * provides a quicker way for setting current windows
- * uses mainActivity
- * @param function our composable function we want to render (usually we set screens)
- */
-fun render(function: @Composable () -> Unit) {
-    mainActivity.setContent {
         function()
     }
 }
