@@ -221,7 +221,7 @@ class Position(
     private fun generateRemovalMoves(): List<Movement> {
         val possibleMove: MutableList<Movement> = mutableListOf()
         positions.forEachIndexed { index, piece ->
-            if (piece.isGreen != null && piece.isGreen != pieceToMove) {
+            if (piece.isGreen == !pieceToMove) {
                 possibleMove.add(Movement(index, null))
             }
         }
@@ -341,6 +341,9 @@ class Position(
         println()
     }
 
+    /**
+     * used for easier writing of auto tests
+     */
     fun display2() {
         val c = positions.map {
             if (it.isGreen == null) {
