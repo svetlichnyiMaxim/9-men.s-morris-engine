@@ -8,6 +8,7 @@ import org.junit.Test
 
 class DepthTest {
     private val wonPosition = Position(
+        // @formatter:off
         mutableListOf(
             empty(),                                    empty(),                                    blue(),
                             empty(),                    empty(),                    empty(),
@@ -17,6 +18,7 @@ class DepthTest {
                             empty(),                    empty(),                    empty(),
             empty(),                                    empty(),                                    green()
         ),
+        // @formatter:on
         freePieces = Pair(6u, 6u),
         pieceToMove = true
     )

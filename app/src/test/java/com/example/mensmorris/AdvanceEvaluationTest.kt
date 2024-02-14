@@ -1,13 +1,15 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.blue
 import com.example.mensmorris.game.empty
 import com.example.mensmorris.game.green
-import com.example.mensmorris.game.Position
+import junit.framework.TestCase
 import org.junit.Test
 
 class AdvanceEvaluationTest {
     private val wonPosition = Position(
+        // @formatter:off
         mutableListOf(
             blue(),                                     empty(),                                     empty(),
                             empty(),                    empty(),                    empty(),
@@ -17,15 +19,17 @@ class AdvanceEvaluationTest {
                             empty(),                    empty(),                    empty(),
             empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(7u, 6u),
-        pieceToMove = true
+        // @formatter:on
+        freePieces = Pair(7u, 6u), pieceToMove = true
     )
 
     @Test
     fun `winning position`() {
-        println(wonPosition.evaluate())
+        TestCase.assertEquals(wonPosition.evaluate(), Pair(195, -595))
     }
+
     private val wonPosition1 = Position(
+        // @formatter:off
         mutableListOf(
             empty(),                                    empty(),                                     empty(),
                             empty(),                    empty(),                    empty(),
@@ -35,16 +39,17 @@ class AdvanceEvaluationTest {
                             empty(),                    empty(),                    empty(),
             empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(7u, 6u),
-        pieceToMove = true
+        // @formatter:on
+        freePieces = Pair(7u, 6u), pieceToMove = true
     )
 
     @Test
     fun `winning position1`() {
-        println(wonPosition1.evaluate())
+        TestCase.assertEquals(wonPosition1.evaluate(), Pair(0, 0))
     }
 
     private val lostPosition2 = Position(
+        // @formatter:off
         mutableListOf(
             blue(),                                     green(),                                    empty(),
                             empty(),                    empty(),                    blue(),
@@ -54,16 +59,17 @@ class AdvanceEvaluationTest {
                             empty(),                    empty(),                    blue(),
             empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(5u, 5u),
-        pieceToMove = false
+        // @formatter:on
+        freePieces = Pair(5u, 5u), pieceToMove = false
     )
 
     @Test
     fun `loosing position2`() {
-        println(lostPosition2.evaluate())
+        TestCase.assertEquals(lostPosition2.evaluate(), Pair(-2405, 1605))
     }
 
     private val lostPosition3 = Position(
+        // @formatter:off
         mutableListOf(
             blue(),                                     green(),                                    empty(),
                             empty(),                    empty(),                    empty(),
@@ -73,12 +79,12 @@ class AdvanceEvaluationTest {
                             empty(),                    empty(),                    blue(),
             empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(5u, 5u),
-        pieceToMove = false
+        // @formatter:on
+        freePieces = Pair(5u, 5u), pieceToMove = false
     )
 
     @Test
     fun `loosing position3`() {
-        println(lostPosition3.evaluate())
+        TestCase.assertEquals(lostPosition3.evaluate(), Pair(-2000, 2000))
     }
 }

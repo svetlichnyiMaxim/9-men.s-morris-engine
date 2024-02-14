@@ -1,5 +1,6 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.blue
 import com.example.mensmorris.game.empty
 import com.example.mensmorris.game.green
@@ -7,7 +8,9 @@ import com.example.mensmorris.game.resetAnalyze
 import org.junit.Test
 
 class CopyTest {
-    private val position = mutableListOf(
+    private val position = Position(
+        // @formatter:off
+        mutableListOf(
             blue(),                             blue(),                                 empty(),
                         green(),                empty(),                blue(),
                                     empty(),    empty(),    empty(),
@@ -15,15 +18,18 @@ class CopyTest {
                                     empty(),    empty(),    empty(),
                         empty(),                empty(),                empty(),
             empty(),                            empty(),                                blue()
-        )
+        ),
+        // @formatter:on
+        pieceToMove = true
+    )
 
     /**
      * this tests we our copy method actually works
      */
     @Test
-    fun `copy`() {
-        val position2 = position.map { it.copy() }
-        position2[0].isGreen = null
+    fun `copy test`() {
+        val position2 = position.copy()
+        position2.positions[0].isGreen = null
         assert(position != position2)
         resetAnalyze()
     }

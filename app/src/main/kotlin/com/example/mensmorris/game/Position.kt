@@ -111,6 +111,7 @@ class Position(
     private fun gameEnded(): Boolean {
         return greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY
     }
+
     /**
      * @param depth current depth
      * @color color of the piece we are finding a move for
@@ -340,13 +341,48 @@ class Position(
         println()
     }
 
+    fun display2() {
+        val c = positions.map {
+            if (it.isGreen == null) {
+                "empty()"
+            } else {
+                if (it.isGreen == false) {
+                    "blue()"
+                } else {
+                    "green()"
+                }
+            }
+        }
+        println(
+            """
+        Position(
+            mutableListOf(
+                ${c[0]},                                    ${c[1]},                                     ${c[2]},
+                                ${c[3]},                    ${c[4]},                    ${c[5]},
+                                            ${c[6]},        ${c[7]},        ${c[8]},
+                ${c[9]},        ${c[10]},   ${c[11]},                       ${c[12]},   ${c[13]},        ${c[14]},
+                                            ${c[15]},       ${c[16]},       ${c[17]},
+                                ${c[18]},                   ${c[19]},                   ${c[20]},
+                ${c[21]},                                   ${c[22]},                                    ${c[23]}
+            ),
+            freePieces = Pair(${freePieces.first}u, ${freePieces.second}u),
+            pieceToMove = ${pieceToMove},
+            removalCount = ${removalCount}u
+        )
+        """.trimIndent()
+        )
+    }
+
     override fun equals(other: Any?): Boolean {
         if (other !is Position) {
             return super.equals(other)
         }
-        other.positions.let {
-            return positions == it && freePieces == other.freePieces && pieceToMove == other.pieceToMove
+        for (i in 0..<positions.size) {
+            if (positions[i] != other.positions[i]) {
+                return false
+            }
         }
+        return freePieces == other.freePieces && pieceToMove == other.pieceToMove
     }
 
     override fun toString(): String {

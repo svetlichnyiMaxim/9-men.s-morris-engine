@@ -10,7 +10,9 @@ import junit.framework.TestCase
 import org.junit.Test
 
 class CachingTest {
-    private val position = Position(mutableListOf(
+    private val position = Position(
+        // @formatter:off
+        mutableListOf(
             blue(),                             blue(),                                 empty(),
                         green(),                empty(),                blue(),
                                     empty(),    empty(),    empty(),
@@ -18,10 +20,12 @@ class CachingTest {
                                     empty(),    empty(),    empty(),
                         empty(),                empty(),                empty(),
             empty(),                            empty(),                                blue()
-        ), pieceToMove = true
+        ),
+        // @formatter:on
+        pieceToMove = true
     )
     @Test
-    fun `cache`() {
+    fun `cache test`() {
         position.solve(6u)
         TestCase.assertEquals(occurredPositions.size, 42)
         TestCase.assertEquals(position.solve(4u).second.size, 1)

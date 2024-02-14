@@ -13,6 +13,7 @@ import kotlin.coroutines.cancellation.CancellationException
  * a default game start position
  */
 val gameStartPosition = Position(
+    // @formatter:off
     mutableListOf(
         empty(),                            empty(),                            empty(),
                     empty(),                empty(),                empty(),
@@ -22,6 +23,7 @@ val gameStartPosition = Position(
                     empty(),                empty(),                empty(),
         empty(),                            empty(),                            empty()
     ),
+    // @formatter:on
     Pair(8u, 8u), pieceToMove = false
 )
 
@@ -40,20 +42,30 @@ class Piece(var isGreen: Boolean?) {
             null -> {
                 "0"
             }
+
             true -> {
                 "1"
             }
+
             false -> {
                 "2"
             }
         }
     }
+
     /**
      * provides a way for creating copy of the pieces
      * this is required
      */
     fun copy(): Piece {
         return Piece(isGreen)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is Piece) {
+            return other == this
+        }
+        return isGreen == other.isGreen
     }
 }
 
@@ -87,9 +99,11 @@ fun colorMap(piece: Piece): Color {
         null -> {
             Color.Black
         }
+
         true -> {
             Color.Green
         }
+
         false -> {
             Color.Blue
         }
@@ -157,8 +171,8 @@ fun handleClick(elementIndex: Int) {
 
         GameState.Flying -> {
             if (selectedButton.value == null) {
-                if (pos.positions[elementIndex].isGreen == pos.pieceToMove)
-                    selectedButton.value = elementIndex
+                if (pos.positions[elementIndex].isGreen == pos.pieceToMove) selectedButton.value =
+                    elementIndex
             } else {
                 if (pos.positions[elementIndex].isGreen == null) {
                     processMove(Movement(selectedButton.value, elementIndex))
@@ -169,7 +183,7 @@ fun handleClick(elementIndex: Int) {
         }
 
         GameState.Removing -> {
-            if (pos.positions[elementIndex].isGreen != pos.pieceToMove) {
+            if (pos.positions[elementIndex].isGreen == !pos.pieceToMove) {
                 processMove(Movement(elementIndex, null))
             }
         }
@@ -193,6 +207,7 @@ fun processMove(move: Movement) {
         currentScreen = Screen.EndGame
     }
 }
+
 /**
  * finds pieces we should highlight
  */

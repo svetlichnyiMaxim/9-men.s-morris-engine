@@ -1,14 +1,16 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.blue
 import com.example.mensmorris.game.empty
 import com.example.mensmorris.game.green
-import com.example.mensmorris.game.Position
+import com.example.mensmorris.game.occurredPositions
 import org.junit.Test
 import kotlin.math.max
 
 class MoveGenerationTest {
     private val position1 = Position(
+        // @formatter:off
         mutableListOf(
             blue(),                                     blue(),                                     empty(),
                             green(),                    empty(),                    empty(),
@@ -18,9 +20,8 @@ class MoveGenerationTest {
                             empty(),                    empty(),                    empty(),
             empty(),                                    empty(),                                    green()
         ),
-        freePieces = Pair(1u, 1u),
-        pieceToMove = true,
-        removalCount = 0u
+        // @formatter:on
+        freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0u
     )
 
     @Test
@@ -36,9 +37,11 @@ class MoveGenerationTest {
             it2.display()
         }
         println("green - $maxEvaluationGreen; blue - $maxEvaluationBlue")
+        occurredPositions.clear()
     }
 
     private val position2 = Position(
+        // @formatter:off
         mutableListOf(
             blue(),                                     empty(),                                    empty(),
                             empty(),                    empty(),                    empty(),
@@ -48,9 +51,8 @@ class MoveGenerationTest {
                             empty(),                    empty(),                    empty(),
             empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(6u, 6u),
-        pieceToMove = true,
-        removalCount = 0u
+        // @formatter:on
+        freePieces = Pair(6u, 6u), pieceToMove = true, removalCount = 0u
     )
 
     @Test
@@ -66,9 +68,11 @@ class MoveGenerationTest {
             it2.display()
         }
         println("green - $maxEvaluationGreen; blue - $maxEvaluationBlue")
+        occurredPositions.clear()
     }
 
     private val position3 = Position(
+        // @formatter:off
         mutableListOf(
             blue(),                                     empty(),                                    empty(),
                             empty(),                    empty(),                    empty(),
@@ -78,9 +82,8 @@ class MoveGenerationTest {
                             empty(),                    empty(),                    empty(),
             empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(5u, 6u),
-        pieceToMove = true,
-        removalCount = 1u
+        // @formatter:on
+        freePieces = Pair(5u, 6u), pieceToMove = true, removalCount = 1u
     )
 
     @Test
@@ -96,8 +99,11 @@ class MoveGenerationTest {
             it2.display()
         }
         println("green - $maxEvaluationGreen; blue - $maxEvaluationBlue")
+        occurredPositions.clear()
     }
+
     private val position4 = Position(
+        // @formatter:off
         mutableListOf(
             empty(),                                     empty(),                                    empty(),
                             empty(),                    empty(),                    empty(),
@@ -107,9 +113,8 @@ class MoveGenerationTest {
                             empty(),                    empty(),                    blue(),
             empty(),                                    empty(),                                    empty()
         ),
-        freePieces = Pair(5u, 5u),
-        pieceToMove = false,
-        removalCount = 0u
+        // @formatter:on
+        freePieces = Pair(5u, 5u), pieceToMove = false, removalCount = 0u
     )
 
     @Test
@@ -125,5 +130,6 @@ class MoveGenerationTest {
             it2.display()
         }
         println("green - $maxEvaluationGreen; blue - $maxEvaluationBlue")
+        occurredPositions.clear()
     }
 }
