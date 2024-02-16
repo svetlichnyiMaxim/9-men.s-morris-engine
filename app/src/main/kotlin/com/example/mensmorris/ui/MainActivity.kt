@@ -12,7 +12,6 @@ import com.example.mensmorris.render
 import com.example.mensmorris.ui.screens.GameEnd
 import com.example.mensmorris.ui.screens.MainPage
 
-
 /**
  * shows how thick our pieces & board will be
  */
