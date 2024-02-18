@@ -22,25 +22,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.R
-import com.example.mensmorris.game.Position
-import com.example.mensmorris.game.depth
 import com.example.mensmorris.game.gameStartPosition
-import com.example.mensmorris.game.hasCache
 import com.example.mensmorris.game.moveHints
+import com.example.mensmorris.game.movesHistory
 import com.example.mensmorris.game.pos
-import com.example.mensmorris.game.resetAnalyze
 import com.example.mensmorris.game.selectedButton
 import com.example.mensmorris.game.solveResult
-import com.example.mensmorris.game.solving
+import com.example.mensmorris.game.undoneMoveHistory
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard
 import com.example.mensmorris.ui.Locate
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.Stack
-import kotlin.math.max
-
 
 /**
  * draws screen during the game
@@ -79,22 +70,13 @@ fun MainPage() {
 }
 
 /**
- * stores all movements (positions) history
- */
-val movesHistory: Stack<Position> = Stack()
-/**
- * stores a moves we have undone
- * resets them if we do any other move
- */
-val undoneMoveHistory: Stack<Position> = Stack()
-
-/**
  * renders undo buttons
  */
 @Composable
 fun RenderUndo() {
     Locate(Alignment.BottomStart) {
-        Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
+        Button(
+            modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
             onClick = {
                 if (!movesHistory.empty()) {
                     undoneMoveHistory.push(movesHistory.peek())
@@ -104,12 +86,14 @@ fun RenderUndo() {
                     selectedButton.value = null
                 }
             }) {
-            Icon(painter = painterResource(id = R.drawable.forward),
-                "undo")
+            Icon(
+                painter = painterResource(id = R.drawable.forward), "undo"
+            )
         }
     }
     Locate(Alignment.BottomEnd) {
-        Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
+        Button(
+            modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
             onClick = {
                 if (!undoneMoveHistory.empty()) {
                     movesHistory.push(undoneMoveHistory.peek())
@@ -119,56 +103,9 @@ fun RenderUndo() {
                     selectedButton.value = null
                 }
             }) {
-            Icon(painter = painterResource(id = R.drawable.back),
-                "redo")
-        }
-    }
-}
-
-/**
- * saves a move we have made
- */
-fun saveMove(pos: Position) {
-    if (undoneMoveHistory.isNotEmpty()) {
-        undoneMoveHistory.clear()
-    }
-    movesHistory.push(pos)
-}
-
-/**
- * draws ui elements for accessing game analyzes
- */
-@Composable
-fun DrawGameAnalyze() {
-    if (solveResult.value.isNotEmpty()) {
-        DrawBestLine()
-    }
-    Locate(Alignment.TopStart) {
-        Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
-            onClick = {
-                depth.intValue = max(0, depth.intValue - 1)
-                resetAnalyze()
-            }) {
-            Text("-")
-        }
-    }
-    Locate(Alignment.TopCenter) {
-        Button(onClick = {
-            solving = CoroutineScope(Dispatchers.Default).launch {
-                hasCache = true
-                solveResult.value = pos.solve(depth.intValue.toUByte()).second
-            }
-        }) {
-            Text("Analyze (depth - ${depth.intValue})")
-        }
-    }
-    Locate(Alignment.TopEnd) {
-        Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
-            onClick = {
-                depth.intValue++
-                resetAnalyze()
-            }) {
-            Text("+")
+            Icon(
+                painter = painterResource(id = R.drawable.back), "redo"
+            )
         }
     }
 }

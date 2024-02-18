@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
-import com.example.mensmorris.ui.screens.saveMove
 import kotlinx.coroutines.Job
 import kotlin.coroutines.cancellation.CancellationException
 
