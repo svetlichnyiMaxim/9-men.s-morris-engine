@@ -9,7 +9,13 @@ import com.example.mensmorris.ui.Locate
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
 
+/**
+ * this screen is shown at the start of the game
+ */
 object WelcomeScreen {
+    /**
+     * a basic start screen
+     */
     @Composable
     fun StartWelcomeScreen() {
         Locate(Alignment.TopCenter) {

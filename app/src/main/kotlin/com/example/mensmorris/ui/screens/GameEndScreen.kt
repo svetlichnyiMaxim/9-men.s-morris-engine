@@ -23,6 +23,9 @@ import com.example.mensmorris.ui.Locate
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
 
+/**
+ * screen that is shown at the end
+ */
 object GameEndScreen {
     /**
      * draws screen after the game has ended
