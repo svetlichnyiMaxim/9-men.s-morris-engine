@@ -76,11 +76,13 @@ class Position(
         var blueUnfinishedTriples = 0
         for (ints in triplesMap) {
             // green
-            if (ints.none { positions[it].isGreen == false } && ints.count { positions[it].isGreen == true } == 2) {
+            if (ints.none { positions[it].isGreen == false }
+                && ints.count { positions[it].isGreen == true } == 2) {
                 greenUnfinishedTriples++
             }
             // blue
-            if (ints.none { positions[it].isGreen == true } && ints.count { positions[it].isGreen == false } == 2) {
+            if (ints.none { positions[it].isGreen == true }
+                && ints.count { positions[it].isGreen == false } == 2) {
                 blueUnfinishedTriples++
             }
         }
@@ -356,6 +358,7 @@ class Position(
                 }
             }
         }
+        @Suppress("LongLine")
         println(
             """
         Position(
@@ -433,21 +436,3 @@ const val GREEN: String = "\u001B[32m"
  * linux only
  */
 const val NONE: String = "\u001B[90m"
-
-/**
- * blue circle unicode symbol
- * windows only
- */
-const val BLUE_CIRCLE: String = "\uD83D\uDD35"
-
-/**
- * green circle unicode symbol
- * windows only
- */
-const val GREEN_CIRCLE: String = "\uD83D\uDFE2"
-
-/**
- * gray circle unicode symbol
- * windows only
- */
-const val GRAY_CIRCLE: String = "⚪"
