@@ -23,53 +23,55 @@ import com.example.mensmorris.ui.Locate
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
 
-/**
- * draws screen after the game has ended
- */
-@Composable
-fun GameEnd() {
-    moveHints.value.clear()
-    AppTheme {
-        Locate(alignment = Alignment.Center) {
-            Box(
-                modifier = Modifier
-                    .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
-                    .fillMaxSize(),
-                Alignment.Center
-            ) {
-                Text(fontSize = 30.sp, text = "Game has ended")
-            }
-            DrawBoard(pos, onClick = {})
-            Locate(Alignment.TopStart) {
+object GameEndScreen {
+    /**
+     * draws screen after the game has ended
+     */
+    @Composable
+    fun GameEnd() {
+        moveHints.value.clear()
+        AppTheme {
+            Locate(alignment = Alignment.Center) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Green, CircleShape),
+                        .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
+                        .fillMaxSize(),
                     Alignment.Center
                 ) {
-                    Text(color = Color.Blue, text = pos.freePieces.first.toString())
+                    Text(fontSize = 30.sp, text = "Game has ended")
                 }
-            }
-            Locate(Alignment.TopEnd) {
+                DrawBoard(pos, onClick = {})
+                Locate(Alignment.TopStart) {
+                    Box(
+                        modifier = Modifier
+                            .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
+                            .background(Color.Green, CircleShape),
+                        Alignment.Center
+                    ) {
+                        Text(color = Color.Blue, text = pos.freePieces.first.toString())
+                    }
+                }
+                Locate(Alignment.TopEnd) {
+                    Box(
+                        modifier = Modifier
+                            .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
+                            .background(Color.Blue, CircleShape),
+                        Alignment.Center
+                    ) {
+                        Text(color = Color.Green, text = pos.freePieces.second.toString())
+                    }
+                }
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Blue, CircleShape),
+                        .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
+                        .fillMaxSize(),
                     Alignment.Center
                 ) {
-                    Text(color = Color.Green, text = pos.freePieces.second.toString())
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
-                    .fillMaxSize(),
-                Alignment.Center
-            ) {
-                Button(onClick = {
-                    currentScreen = Screen.MainGame
-                }) {
-                    Text("Reset")
+                    Button(onClick = {
+                        currentScreen = Screen.GameWithFriend
+                    }) {
+                        Text("Reset")
+                    }
                 }
             }
         }

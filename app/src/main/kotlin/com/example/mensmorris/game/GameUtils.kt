@@ -188,7 +188,7 @@ fun handleClick(elementIndex: Int) {
         }
 
         GameState.End -> {
-            currentScreen = Screen.EndGame
+            currentScreen = Screen.EndGameScreen
         }
     }
     handleHighLighting()
@@ -203,7 +203,7 @@ fun processMove(move: Movement) {
     resetAnalyze()
     saveMove(pos)
     if (pos.gameState() == GameState.End) {
-        currentScreen = Screen.EndGame
+        currentScreen = Screen.EndGameScreen
     }
 }
 

@@ -5,12 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import com.example.mensmorris.game.gamePosition
-import com.example.mensmorris.game.gameStartPosition
-import com.example.mensmorris.game.occurredPositions
 import com.example.mensmorris.render
-import com.example.mensmorris.ui.screens.GameEnd
-import com.example.mensmorris.ui.screens.MainPage
+import com.example.mensmorris.ui.screens.GameEndScreen.GameEnd
+import com.example.mensmorris.ui.screens.GameWithBotScreen.StartGameWithBot
+import com.example.mensmorris.ui.screens.GameWithFriendScreen.StartGameWithFriend
+import com.example.mensmorris.ui.screens.WelcomeScreen.StartWelcomeScreen
 
 /**
  * shows how thick our pieces & board will be
@@ -26,7 +25,7 @@ lateinit var mainActivity: MainActivity
 /**
  * stores current game screen & updates it on change
  */
-var currentScreen: Screen = Screen.MainGame
+var currentScreen: Screen = Screen.WelcomeScreen
     set(value) {
         mainActivity.setContent {
             ScreenSwitcher()
@@ -56,21 +55,27 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ScreenSwitcher() {
     when (currentScreen) {
-        Screen.MainGame -> {
+        Screen.WelcomeScreen -> {
             render {
-                AppTheme {
-                    gamePosition.value = gameStartPosition
-                    occurredPositions.clear()
-                    MainPage()
-                }
+                StartWelcomeScreen()
             }
         }
 
-        Screen.EndGame -> {
+        Screen.GameWithFriend -> {
             render {
-                AppTheme {
-                    GameEnd()
-                }
+                StartGameWithFriend()
+            }
+        }
+
+        Screen.GameWithBot -> {
+            render {
+                StartGameWithBot()
+            }
+        }
+
+        Screen.EndGameScreen -> {
+            render {
+                GameEnd()
             }
         }
     }
@@ -81,12 +86,22 @@ fun ScreenSwitcher() {
  */
 enum class Screen {
     /**
+     * screen everything starts from
+     */
+    WelcomeScreen,
+
+    /**
      * just a normal game
      */
-    MainGame,
+    GameWithFriend,
+
+    /**
+     * no friends :(
+     */
+    GameWithBot,
 
     /**
      * when the game has ended
      */
-    EndGame
+    EndGameScreen
 }

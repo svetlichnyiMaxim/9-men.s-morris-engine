@@ -1,7 +1,9 @@
 package com.example.mensmorris.game
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlin.math.max
 
@@ -28,7 +30,7 @@ fun startAnalyze() {
     if (hasCache) {
         return
     }
-    solving = CoroutineScope(Dispatchers.Default).launch {
+    solving = CoroutineScope(Dispatchers.Default).async {
         hasCache = true
         solveResult.value = pos.solve(depth.intValue.toUByte()).second
     }
