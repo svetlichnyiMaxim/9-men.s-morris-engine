@@ -1,11 +1,14 @@
 package com.example.mensmorris.ui.screens
 
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import com.example.mensmorris.ui.Locate
+import androidx.compose.ui.Modifier
+import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
 
@@ -18,20 +21,22 @@ object WelcomeScreen {
      */
     @Composable
     fun StartWelcomeScreen() {
-        Locate(Alignment.TopCenter) {
-            Row {
-                Button(onClick = {
-                    currentScreen = Screen.GameWithFriend
-                }) {
-                    Text(text = "Play with friends")
-                }
+        Column(
+            modifier = Modifier,
+            verticalArrangement = Arrangement.spacedBy(
+                BUTTON_WIDTH * 5, Alignment.CenterVertically
+            ),
+            Alignment.CenterHorizontally,
+        ) {
+            Button(onClick = {
+                currentScreen = Screen.GameWithFriend
+            }) {
+                Text(text = "Play with friends")
             }
-            Row {
-                Button(onClick = {
-                    currentScreen = Screen.GameWithFriend
-                }) {
-                    Text(text = "Play with bot")
-                }
+            Button(onClick = {
+                currentScreen = Screen.GameWithFriend
+            }) {
+                Text(text = "Play with bot")
             }
         }
     }

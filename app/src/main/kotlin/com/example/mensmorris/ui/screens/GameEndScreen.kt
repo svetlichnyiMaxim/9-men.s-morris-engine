@@ -71,7 +71,7 @@ object GameEndScreen {
                     Alignment.Center
                 ) {
                     Button(onClick = {
-                        currentScreen = Screen.GameWithFriend
+                        currentScreen = Screen.WelcomeScreen
                     }) {
                         Text("Reset")
                     }
