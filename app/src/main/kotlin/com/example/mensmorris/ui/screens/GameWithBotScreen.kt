@@ -14,47 +14,69 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.mensmorris.R
-import com.example.mensmorris.game.gamePosition
+import com.example.mensmorris.game.GameState
+import com.example.mensmorris.game.botJob
 import com.example.mensmorris.game.gameStartPosition
 import com.example.mensmorris.game.handleClick
 import com.example.mensmorris.game.moveHints
 import com.example.mensmorris.game.movesHistory
 import com.example.mensmorris.game.occurredPositions
 import com.example.mensmorris.game.pos
+import com.example.mensmorris.game.resetCachedPositions
 import com.example.mensmorris.game.selectedButton
 import com.example.mensmorris.game.solveResult
-import com.example.mensmorris.game.solving
+import com.example.mensmorris.game.solvingJob
 import com.example.mensmorris.game.startAnalyze
 import com.example.mensmorris.game.undoneMoveHistory
 import com.example.mensmorris.ui.AppTheme
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard
 import com.example.mensmorris.ui.Locate
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 
 /**
  * Game main screen
  */
 object GameWithBotScreen {
+    fun launchBot() {
+        botJob = CoroutineScope(Dispatchers.Default).async {
+            while (true) {
+                if (!pos.pieceToMove && pos.gameState() != GameState.End) {
+                    startAnalyze()
+                    pos = solveResult.value.last().producePosition(pos)
+                    resetCachedPositions()
+                } else {
+                    //delay(300)
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun StartGameWithBot() {
+        pos = gameStartPosition
+        occurredPositions.clear()
+        launchBot()
+        RenderGameWithBot()
+    }
+
+    fun performClickResponse(it: Int) {
+        if (pos.pieceToMove) {
+            handleClick(it)
+        }
+    }
+
     /**
      * draws screen during the game
      */
     @Composable
-    fun StartGameWithBot() {
-        gamePosition.value = gameStartPosition
-        occurredPositions.clear()
+    fun RenderGameWithBot() {
         AppTheme {
             DrawBoard(pos) {
-                if (pos.pieceToMove) {
-                    handleClick(it)
-                } else {
-                    startAnalyze()
-                    runBlocking {
-                        (solving as Deferred<*>).await()
-                    }
-                    gamePosition.value = solveResult.value.last()
-                }
+                performClickResponse(it)
             }
             DrawMainPage()
             RenderUndoRedo()

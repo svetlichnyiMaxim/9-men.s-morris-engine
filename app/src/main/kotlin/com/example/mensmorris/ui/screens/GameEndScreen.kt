@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mensmorris.game.moveHints
 import com.example.mensmorris.game.pos
+import com.example.mensmorris.game.stopBot
 import com.example.mensmorris.ui.AppTheme
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard
@@ -32,6 +33,7 @@ object GameEndScreen {
      */
     @Composable
     fun GameEnd() {
+        stopBot()
         moveHints.value.clear()
         AppTheme {
             Locate(alignment = Alignment.Center) {

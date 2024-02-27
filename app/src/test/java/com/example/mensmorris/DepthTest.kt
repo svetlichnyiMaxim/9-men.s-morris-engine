@@ -26,9 +26,11 @@ class DepthTest {
     @Test
     fun `depth test`() {
         wonPosition.solve(5u).let {
+            var currentPos = wonPosition
             println(it.first)
-            it.second.forEach { pos ->
-                pos.display()
+            it.second!!.forEach { move ->
+                currentPos = move.producePosition(currentPos)
+                currentPos.display()
             }
         }
     }

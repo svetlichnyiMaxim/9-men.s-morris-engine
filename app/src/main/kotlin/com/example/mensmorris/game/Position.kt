@@ -35,10 +35,10 @@ class Position(
      */
     fun evaluate(depth: UByte = 0u): Pair<Int, Int> {
         if (greenPiecesAmount < PIECES_TO_FLY) {
-            return Pair(Int.MIN_VALUE, Int.MAX_VALUE)
+            return Pair(LOST_GAME_COST, Int.MAX_VALUE)
         }
         if (bluePiecesAmount < PIECES_TO_FLY) {
-            return Pair(Int.MAX_VALUE, Int.MIN_VALUE)
+            return Pair(Int.MAX_VALUE, LOST_GAME_COST)
         }
         val greenPieces = (greenPiecesAmount.toInt() + if (pieceToMove) removalCount.toInt() else 0)
         val bluePieces = (bluePiecesAmount.toInt() + if (!pieceToMove) removalCount.toInt() else 0)
@@ -121,27 +121,31 @@ class Position(
      */
     fun solve(
         depth: UByte
-    ): Pair<Pair<Int, Int>, MutableList<Position>> {
+    ): Pair<Pair<Int, Int>, MutableList<Movement>?> {
         if (depth == 0.toUByte() || gameEnded()) {
-            return Pair(evaluate(depth), mutableListOf(this))
+            return Pair(evaluate(depth), mutableListOf())
         }
         // for all possible positions, we try to solve them
-        val positions = (generatePositions(depth).map {
-            it.solve((depth - 1u).toUByte())
-        }.filter { it.second.isNotEmpty() })
+        val positions = (generateMoves(depth).map {
+            val result = it.producePosition(this).solve((depth - 1u).toUByte())
+            if (result.second != null) {
+                result.apply { this.second!!.add(it) }
+            }
+            result
+        }.filter { it.second != null })
         if (positions.isEmpty()) {
             // if we can't make a move, we lose
             return Pair(
                 if (!pieceToMove) {
-                    Pair(Int.MIN_VALUE, Int.MAX_VALUE)
+                    Pair(LOST_GAME_COST, Int.MAX_VALUE)
                 } else {
-                    Pair(Int.MAX_VALUE, Int.MIN_VALUE)
-                }, mutableListOf(this)
+                    Pair(Int.MAX_VALUE, LOST_GAME_COST)
+                }, null
             )
         }
         return positions.maxBy {
             it.first[pieceToMove]
-        }.apply { this.second.add(this@Position) }
+        }
     }
 
     /**
@@ -162,22 +166,10 @@ class Position(
      * @param currentDepth the current depth we are at
      * @return possible positions we can achieve in 1 move
      */
-    fun generatePositions(currentDepth: UByte): List<Position> {
-        val str = toString()
-        // check if we can abort calculation / use our previous result
-        occurredPositions[str]?.let {
-            if (it.second >= currentDepth) {
-                return listOf()
-            } else {
-                occurredPositions[str] = Pair(it.first, currentDepth)
-                return it.first
-            }
-        }
-        val generatedList = generateMoves().map {
+    fun generatePositions(currentDepth: UByte, ignoreCache: Boolean = false): List<Position> {
+        val generatedList = generateMoves(currentDepth, ignoreCache).map {
             it.producePosition(this)
         }
-        // store our work into our hashMap
-        occurredPositions[str] = Pair(generatedList, currentDepth)
         return generatedList
     }
 
@@ -196,8 +188,20 @@ class Position(
     /**
      * @return possible movements
      */
-    fun generateMoves(): List<Movement> {
-        return when (gameState()) {
+    fun generateMoves(currentDepth: UByte, ignoreCache: Boolean = false): List<Movement> {
+        val str = toString()
+        if (!ignoreCache) {
+            // check if we can abort calculation / use our previous result
+            occurredPositions[str]?.let {
+                if (it.second >= currentDepth) {
+                    return listOf()
+                } else {
+                    occurredPositions[str] = Pair(it.first, currentDepth)
+                    return it.first
+                }
+            }
+        }
+        val generatedList = when (gameState()) {
             GameState.Placement -> {
                 generatePlacementMovements()
             }
@@ -218,6 +222,9 @@ class Position(
                 generateRemovalMoves()
             }
         }
+        // store our work into our hashMap
+        occurredPositions[str] = Pair(generatedList, currentDepth)
+        return generatedList
     }
 
     private fun generateRemovalMoves(): List<Movement> {

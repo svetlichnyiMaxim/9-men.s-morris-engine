@@ -42,6 +42,17 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
         }
         return copy
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Movement) {
+            return this.startIndex == other.startIndex && this.endIndex == other.endIndex
+        }
+        return super.equals(other)
+    }
+
+    fun display() {
+        println("Movement($startIndex, $endIndex)")
+    }
 }
 
 /*

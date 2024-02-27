@@ -5,11 +5,12 @@ import com.example.mensmorris.game.blue
 import com.example.mensmorris.game.empty
 import com.example.mensmorris.game.green
 import com.example.mensmorris.game.occurredPositions
+import com.example.mensmorris.positions.position1
 import org.junit.Test
 import kotlin.math.max
 
 class MoveGenerationTest {
-    private val position1 = Position(
+    private val position11 = Position(
         // @formatter:off
         mutableListOf(
             blue(),                                     blue(),                                     empty(),
@@ -28,7 +29,7 @@ class MoveGenerationTest {
     fun `generation 1`() {
         var maxEvaluationGreen = Int.MIN_VALUE
         var maxEvaluationBlue = Int.MIN_VALUE
-        position1.generatePositions(1u).forEach { it2 ->
+        position11.generatePositions(1u).forEach { it2 ->
             println(it2.freePieces)
             maxEvaluationGreen = max(maxEvaluationGreen, it2.evaluate().first)
             maxEvaluationBlue = max(maxEvaluationBlue, it2.evaluate().second)
@@ -122,6 +123,22 @@ class MoveGenerationTest {
         var maxEvaluationGreen = Int.MIN_VALUE
         var maxEvaluationBlue = Int.MIN_VALUE
         position4.generatePositions(1u).forEach { it2 ->
+            println(it2.freePieces)
+            maxEvaluationGreen = max(maxEvaluationGreen, it2.evaluate().first)
+            maxEvaluationBlue = max(maxEvaluationBlue, it2.evaluate().second)
+            println(it2.evaluate())
+            println(it2.removalCount)
+            it2.display()
+        }
+        println("green - $maxEvaluationGreen; blue - $maxEvaluationBlue")
+        occurredPositions.clear()
+    }
+
+    @Test
+    fun `generate 5`() {
+        var maxEvaluationGreen = Int.MIN_VALUE
+        var maxEvaluationBlue = Int.MIN_VALUE
+        position1.generatePositions(1u).forEach { it2 ->
             println(it2.freePieces)
             maxEvaluationGreen = max(maxEvaluationGreen, it2.evaluate().first)
             maxEvaluationBlue = max(maxEvaluationBlue, it2.evaluate().second)

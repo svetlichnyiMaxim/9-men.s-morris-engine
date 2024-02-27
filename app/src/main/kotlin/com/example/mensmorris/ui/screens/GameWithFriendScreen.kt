@@ -34,13 +34,18 @@ import com.example.mensmorris.ui.Locate
  * Game main screen
  */
 object GameWithFriendScreen {
+    @Composable
+    fun StartGameWithFriend() {
+        pos = gameStartPosition
+        occurredPositions.clear()
+        RenderGameWithFriend()
+    }
+
     /**
      * draws screen during the game
      */
     @Composable
-    fun StartGameWithFriend() {
-        gamePosition.value = gameStartPosition
-        occurredPositions.clear()
+    fun RenderGameWithFriend() {
         AppTheme {
             DrawBoard(pos)
             DrawMainPage()

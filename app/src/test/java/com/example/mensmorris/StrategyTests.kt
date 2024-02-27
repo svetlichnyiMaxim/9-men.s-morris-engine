@@ -13,7 +13,15 @@ import org.junit.Test
 class StrategyTests {
     @Test
     fun `winning test1`() {
+/*        position1.generatePositions(0u).forEach {
+            it.display()
+            println(it.evaluate())
+            println()
+            println()
+        }*/
+        occurredPositions.clear()
         val ourResult = position1.solve(2u)
+        ourResult.second!!.displayAsPositions(position1)
         TestCase.assertEquals(ourResult, correctResult1)
         occurredPositions.clear()
     }
@@ -21,18 +29,18 @@ class StrategyTests {
     @Test
     fun `winning test2`() {
         val ourResult = position2.solve(2u)
-        ourResult.second.onEach { it.display2() }
         TestCase.assertEquals(ourResult.first, correctResult2.first)
-        TestCase.assertEquals(ourResult.second.size, correctResult2.second.size)
-        for (i in 0..<ourResult.second.size) {
-            TestCase.assertEquals(ourResult.second[i], correctResult2.second[i])
-        }
+        TestCase.assertEquals(ourResult.second!!.size, correctResult2.second.size)
+        TestCase.assertEquals(ourResult.second, correctResult2.second)
         occurredPositions.clear()
     }
 
     @Test
     fun `winning test3`() {
         val ourResult = position3.solve(2u)
+        ourResult.second!!.toPositions(position3).forEach {
+            it.display()
+        }
         TestCase.assertEquals(ourResult, correctResult3)
         occurredPositions.clear()
     }

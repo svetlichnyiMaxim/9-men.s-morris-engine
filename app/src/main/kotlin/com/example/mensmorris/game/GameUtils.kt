@@ -23,13 +23,13 @@ val gameStartPosition = Position(
         empty(),                            empty(),                            empty()
     ),
     // @formatter:on
-    Pair(8u, 8u), pieceToMove = false
+    Pair(8u, 8u), pieceToMove = true
 )
 
 /**
  * we store occurred positions here which massively increases speed
  */
-val occurredPositions: HashMap<String, Pair<List<Position>, UByte>> = hashMapOf()
+val occurredPositions: HashMap<String, Pair<List<Movement>, UByte>> = hashMapOf()
 
 /**
  * used for storing info about pieces
@@ -199,7 +199,7 @@ fun handleClick(elementIndex: Int) {
  */
 fun processMove(move: Movement) {
     selectedButton.value = null
-    gamePosition.value = move.producePosition(pos)
+    pos = move.producePosition(pos).copy()
     resetAnalyze()
     saveMove(pos)
     if (pos.gameState() == GameState.End) {
@@ -211,7 +211,7 @@ fun processMove(move: Movement) {
  * finds pieces we should highlight
  */
 fun handleHighLighting() {
-    pos.generateMoves().let { moves ->
+    pos.generateMoves(0u, true).let { moves ->
         when (pos.gameState()) {
             GameState.Placement -> {
                 moveHints.value = moves.map { it.endIndex!! }.toMutableList()
@@ -265,9 +265,9 @@ fun pieceToMoveSelector(elementIndex: Int) {
 fun resetAnalyze() {
     resetCachedPositions()
     solveResult.value = mutableListOf()
-    if (solving != null) {
+    if (solvingJob != null) {
         try {
-            solving!!.cancel()
+            solvingJob!!.cancel()
         } catch (_: CancellationException) {
         }
     }
@@ -305,7 +305,7 @@ var pos
 /**
  * used for storing our game analyzes result
  */
-var solveResult = mutableStateOf<MutableList<Position>>(mutableListOf())
+var solveResult = mutableStateOf<MutableList<Movement>>(mutableListOf())
 
 /**
  * stores current game position
@@ -336,4 +336,13 @@ var depth = mutableIntStateOf(3)
  * used for storing our analyze coroutine
  * gets force-stopped when no longer needed
  */
-var solving: Job? = null
+var solvingJob: Job? = null
+
+var botJob: Job? = null
+
+fun stopBot() {
+    try {
+        botJob?.cancel()
+    } catch (_: CancellationException) {
+    }
+}

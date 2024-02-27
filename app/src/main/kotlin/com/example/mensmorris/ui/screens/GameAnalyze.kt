@@ -20,8 +20,10 @@ import androidx.compose.ui.unit.dp
 import com.example.mensmorris.game.decreaseDepth
 import com.example.mensmorris.game.depth
 import com.example.mensmorris.game.increaseDepth
+import com.example.mensmorris.game.pos
 import com.example.mensmorris.game.solveResult
 import com.example.mensmorris.game.startAnalyze
+import com.example.mensmorris.game.startAsyncAnalyze
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard
 import com.example.mensmorris.ui.Locate
@@ -44,7 +46,7 @@ fun DrawGameAnalyze() {
     }
     Locate(Alignment.TopCenter) {
         Button(onClick = {
-            startAnalyze()
+            startAsyncAnalyze()
         }) {
             Text("Analyze (depth - ${depth.intValue})")
         }
@@ -76,9 +78,11 @@ fun DrawBestLine() {
                     .verticalScroll(rememberScrollState())
                     .weight(1f, false)
             ) {
+                var previousPos = pos
                 for (i in 0..<solveResult.value.size) {
                     Row {
-                        DrawBoard(solveResult.value[i])
+                        previousPos = solveResult.value[i].producePosition(previousPos)
+                        DrawBoard(previousPos)
                     }
                 }
             }

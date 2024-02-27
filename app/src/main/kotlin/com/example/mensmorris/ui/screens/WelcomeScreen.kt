@@ -33,7 +33,7 @@ object WelcomeScreen {
                 Text(text = "Play with friends")
             }
             Button(onClick = {
-                currentScreen = Screen.GameWithFriend
+                currentScreen = Screen.GameWithBot
             }) {
                 Text(text = "Play with bot")
             }
