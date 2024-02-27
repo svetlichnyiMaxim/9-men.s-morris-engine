@@ -260,20 +260,6 @@ fun pieceToMoveSelector(elementIndex: Int) {
 }
 
 /**
- * hides analyze gui and delete it's result
- */
-fun resetAnalyze() {
-    resetCachedPositions()
-    solveResult.value = mutableListOf()
-    if (solvingJob != null) {
-        try {
-            solvingJob!!.cancel()
-        } catch (_: CancellationException) {
-        }
-    }
-}
-
-/**
  * used to check if need to reset our cache or it already is
  */
 var hasCache = false
@@ -338,8 +324,16 @@ var depth = mutableIntStateOf(3)
  */
 var solvingJob: Job? = null
 
+/**
+ * used for storing our analyze coroutine
+ * gets force-stopped when no longer needed
+ */
 var botJob: Job? = null
 
+/**
+ * force stops bot
+ * TODO: make sure we always shut it down
+ */
 fun stopBot() {
     try {
         botJob?.cancel()

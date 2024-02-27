@@ -34,6 +34,9 @@ import com.example.mensmorris.ui.Locate
  * Game main screen
  */
 object GameWithFriendScreen {
+    /**
+     * function that invokes entire screen
+     */
     @Composable
     fun StartGameWithFriend() {
         pos = gameStartPosition

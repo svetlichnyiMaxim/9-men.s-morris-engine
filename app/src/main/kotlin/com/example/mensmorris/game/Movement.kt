@@ -25,10 +25,12 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
                 }
             }
         } else {
-            if (copy.positions[startIndex].isGreen!!) {
-                copy.greenPiecesAmount--
-            } else {
-                copy.bluePiecesAmount--
+            if (pos.freePieces[pos.pieceToMove] > 0u) {
+                if (copy.positions[startIndex].isGreen!!) {
+                    copy.greenPiecesAmount--
+                } else {
+                    copy.bluePiecesAmount--
+                }
             }
             copy.positions[startIndex].isGreen = null
             copy.removalCount--
@@ -48,10 +50,6 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
             return this.startIndex == other.startIndex && this.endIndex == other.endIndex
         }
         return super.equals(other)
-    }
-
-    fun display() {
-        println("Movement($startIndex, $endIndex)")
     }
 }
 

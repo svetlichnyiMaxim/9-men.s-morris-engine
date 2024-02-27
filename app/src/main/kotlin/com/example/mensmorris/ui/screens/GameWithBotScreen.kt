@@ -25,7 +25,6 @@ import com.example.mensmorris.game.pos
 import com.example.mensmorris.game.resetCachedPositions
 import com.example.mensmorris.game.selectedButton
 import com.example.mensmorris.game.solveResult
-import com.example.mensmorris.game.solvingJob
 import com.example.mensmorris.game.startAnalyze
 import com.example.mensmorris.game.undoneMoveHistory
 import com.example.mensmorris.ui.AppTheme
@@ -34,38 +33,43 @@ import com.example.mensmorris.ui.DrawBoard
 import com.example.mensmorris.ui.Locate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Game main screen
  */
 object GameWithBotScreen {
+    /**
+     * launches bot actions against player
+     */
     fun launchBot() {
-        botJob = CoroutineScope(Dispatchers.Default).async {
-            while (true) {
-                if (!pos.pieceToMove && pos.gameState() != GameState.End) {
-                    startAnalyze()
-                    pos = solveResult.value.last().producePosition(pos)
-                    resetCachedPositions()
-                } else {
-                    //delay(300)
-                }
+        botJob = CoroutineScope(Dispatchers.Default).launch {
+            while (!pos.pieceToMove && pos.gameState() != GameState.End) {
+                startAnalyze()
+                pos = solveResult.value.last().producePosition(pos)
+                resetCachedPositions()
             }
         }
     }
 
+    /**
+     * function that invokes entire screen
+     */
     @Composable
     fun StartGameWithBot() {
         pos = gameStartPosition
         occurredPositions.clear()
-        launchBot()
         RenderGameWithBot()
     }
 
-    fun performClickResponse(it: Int) {
+    /**
+     * performs needed actions after click
+     * @param index index of the clicked element
+     */
+    fun performClickResponse(index: Int) {
         if (pos.pieceToMove) {
-            handleClick(it)
+            handleClick(index)
+            launchBot()
         }
     }
 

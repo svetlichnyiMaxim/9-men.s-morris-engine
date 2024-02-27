@@ -22,4 +22,8 @@ const val POSSIBLE_TRIPLE_COST = 5
  */
 const val PIECES_TO_FLY: UByte = 3U
 
+/**
+ * a constant for lost games
+ * we need it to be not INT.MIN_VALUE cause we still want the least worst lost positions
+ */
 const val LOST_GAME_COST = -2_147_483_648 + 1_000_000

@@ -164,6 +164,7 @@ class Position(
 
     /**
      * @param currentDepth the current depth we are at
+     * @param ignoreCache if we should ignore cache positions
      * @return possible positions we can achieve in 1 move
      */
     fun generatePositions(currentDepth: UByte, ignoreCache: Boolean = false): List<Position> {
@@ -353,6 +354,7 @@ class Position(
     /**
      * used for easier writing of auto tests
      */
+    @Suppress("unused")
     fun display2() {
         val c = positions.map {
             if (it.isGreen == null) {
@@ -407,7 +409,10 @@ class Position(
     }
 }
 
-private operator fun <A> Pair<A, A>.get(first: Boolean): A {
+/**
+ * provides a clean way to access need element of the pair
+ */
+operator fun <A> Pair<A, A>.get(first: Boolean): A {
     return if (first) this.first
     else this.second
 }

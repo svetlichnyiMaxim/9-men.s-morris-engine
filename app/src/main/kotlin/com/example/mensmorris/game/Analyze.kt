@@ -3,6 +3,7 @@ package com.example.mensmorris.game
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.max
 
 /**
@@ -21,6 +22,9 @@ fun increaseDepth() {
     resetAnalyze()
 }
 
+/**
+ * starts async board analyze
+ */
 fun startAsyncAnalyze() {
     solvingJob = CoroutineScope(Dispatchers.Default).async {
         startAnalyze()
@@ -36,4 +40,18 @@ fun startAnalyze() {
     }
     hasCache = true
     solveResult.value = pos.solve(depth.intValue.toUByte()).second ?: mutableListOf()
+}
+
+/**
+ * hides analyze gui and delete it's result
+ */
+fun resetAnalyze() {
+    resetCachedPositions()
+    solveResult.value = mutableListOf()
+    if (solvingJob != null) {
+        try {
+            solvingJob!!.cancel()
+        } catch (_: CancellationException) {
+        }
+    }
 }
