@@ -42,7 +42,7 @@ object GameWithBotScreen {
     /**
      * launches bot actions against player
      */
-    fun launchBot() {
+    private fun launchBot() {
         botJob = CoroutineScope(Dispatchers.Default).launch {
             while (!pos.pieceToMove && pos.gameState() != GameState.End) {
                 startAnalyze()
@@ -66,7 +66,7 @@ object GameWithBotScreen {
      * performs needed actions after click
      * @param index index of the clicked element
      */
-    fun performClickResponse(index: Int) {
+    private fun performClickResponse(index: Int) {
         if (pos.pieceToMove) {
             handleClick(index)
             launchBot()

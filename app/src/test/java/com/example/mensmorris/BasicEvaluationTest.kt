@@ -64,7 +64,7 @@ class BasicEvaluationTest {
     )
 
     @Test
-    fun `lose`() {
+    fun `lose test`() {
         TestCase.assertEquals(lostPosition.evaluate(), Pair(-2146483648, 2147483647))
     }
 }

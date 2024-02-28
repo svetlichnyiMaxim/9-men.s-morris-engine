@@ -22,7 +22,6 @@ import com.example.mensmorris.game.depth
 import com.example.mensmorris.game.increaseDepth
 import com.example.mensmorris.game.pos
 import com.example.mensmorris.game.solveResult
-import com.example.mensmorris.game.startAnalyze
 import com.example.mensmorris.game.startAsyncAnalyze
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard
@@ -37,7 +36,8 @@ fun DrawGameAnalyze() {
         DrawBestLine()
     }
     Locate(Alignment.TopStart) {
-        Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
+        Button(
+            modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
             onClick = {
                 decreaseDepth()
             }) {
@@ -52,7 +52,8 @@ fun DrawGameAnalyze() {
         }
     }
     Locate(Alignment.TopEnd) {
-        Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
+        Button(
+            modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
             onClick = {
                 increaseDepth()
             }) {

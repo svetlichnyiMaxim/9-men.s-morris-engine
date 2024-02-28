@@ -21,11 +21,9 @@ object WelcomeScreen {
     @Composable
     fun StartWelcomeScreen() {
         Column(
-            modifier = Modifier,
-            verticalArrangement = Arrangement.spacedBy(
+            modifier = Modifier, verticalArrangement = Arrangement.spacedBy(
                 BUTTON_WIDTH * 5, Alignment.CenterVertically
-            ),
-            Alignment.CenterHorizontally,
+            ), horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = {
                 currentScreen = Screen.GameWithFriend

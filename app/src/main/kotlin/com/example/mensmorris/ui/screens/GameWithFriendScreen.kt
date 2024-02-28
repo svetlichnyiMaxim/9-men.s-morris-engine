@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.R
-import com.example.mensmorris.game.gamePosition
 import com.example.mensmorris.game.gameStartPosition
 import com.example.mensmorris.game.moveHints
 import com.example.mensmorris.game.movesHistory
