@@ -4,6 +4,9 @@ env:
   # The name of the main module repository
   main_project_module: app
 
+  path_to_release: ${{ env.main_project_module }}/build/outputs/apk/release
+
+  path_to_debug: ${{ env.main_project_module }}/build/outputs/apk/debug
   # The name of the Play Store
   playstore_name: Nine mens morris
 
@@ -62,21 +65,6 @@ jobs:
       - name: Build apk release project (APK) - ${{ env.main_project_module }} module
         run: ./gradlew assemble
 
-      # Upload Artifact Build
-      # Noted For Output [main_project_module]/build/outputs/apk/debug/
-      - name: Upload APK Debug - ${{ env.repository_name }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) debug generated
-          path: ${{ env.main_project_module }}/build/outputs/apk/debug/
-
-      # Noted For Output [main_project_module]/build/outputs/apk/release/
-      - name: Upload APK Release - ${{ env.repository_name }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
-          path: ${{ env.main_project_module }}/build/outputs/apk/release/
-
       # Decode keystore
       - name: Decode keystore.txt
         run: |
@@ -86,5 +74,21 @@ jobs:
       # Sign apk
       - name: Sign apk
         run: |
-          ls ${{ env.main_project_module }}/build/outputs/apk/release/
-          apksigner sign --ks ~/keystore.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out new-apk.apk  ${{ env.main_project_module }}/build/outputs/apk/release/app-release.apk
+          ls ${{ env.path_to_release }}/
+          apksigner sign --ks ~/keystore.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out ${{ env.path_to_release }}/app-release-signed.apk  ${{ env.path_to_release }}/app-release.apk
+          apksigner sign --ks ~/keystore.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out ${{ env.path_to_debug }}/app-debug-signed.apk  ${{ env.path_to_debug }}/app-debug.apk
+
+      # Upload Artifact Build
+      # Noted For Output [main_project_module]/build/outputs/apk/debug/
+      - name: Upload APK Debug - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) debug generated
+          path: ${{ env.path_to_debug }}/app-debug-signed.apk
+
+      # Noted For Output [main_project_module]/build/outputs/apk/release/
+      - name: Upload APK Release - ${{ env.repository_name }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
+          path: ${{ env.path_to_release }}/app-release-signed.apk
