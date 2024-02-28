@@ -77,9 +77,14 @@ jobs:
           name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - APK(s) release generated
           path: ${{ env.main_project_module }}/build/outputs/apk/release/
 
-      # Noted For Output [main_project_module]/build/outputs/bundle/release/
-      - name: Upload AAB (App Bundle) Release - ${{ env.repository_name }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.date_today }} - ${{ env.playstore_name }} - ${{ env.repository_name }} - App bundle(s) AAB release generated
-          path: ${{ env.main_project_module }}/build/outputs/bundle/release/
+      # Decode keystore
+      - name: Decode keystore.txt
+        run: |
+          echo ${{ secrets.KEYSTORE_TXT }} > ~/keystore.txt
+          base64 -d keystore.txt > ~/keystore.jks
+
+      # Sign apk
+      - name: Install apk-signer
+        run: |
+          sudo apt-get update &
+          sudo apt-get install apk-signer
