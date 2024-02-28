@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.mensmorris.R
+import com.example.mensmorris.game.processMove
 import com.example.mensmorris.game.GameState
 import com.example.mensmorris.game.botJob
 import com.example.mensmorris.game.gameStartPosition
@@ -46,7 +47,7 @@ object GameWithBotScreen {
         botJob = CoroutineScope(Dispatchers.Default).launch {
             while (!pos.pieceToMove && pos.gameState() != GameState.End) {
                 startAnalyze()
-                pos = solveResult.value.last().producePosition(pos)
+                processMove(solveResult.value.last())
                 resetCachedPositions()
             }
         }
