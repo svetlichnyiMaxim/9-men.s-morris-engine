@@ -126,6 +126,7 @@ object GameWithBotScreen {
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value.clear()
                         selectedButton.value = null
+                        launchBot()
                     }
                 }) {
                 Icon(
@@ -143,6 +144,7 @@ object GameWithBotScreen {
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value.clear()
                         selectedButton.value = null
+                        launchBot()
                     }
                 }) {
                 Icon(
