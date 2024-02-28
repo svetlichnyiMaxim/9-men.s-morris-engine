@@ -15,10 +15,8 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
         if (endIndex != null) {
             // this happens either when we move a piece or place it
             copy.positions[endIndex].isGreen = copy.pieceToMove
-            copy.removalCount = copy.removalAmount(this)
         } else {
             // this happens only when we remove smth
-            copy.removalCount--
             if (copy.positions[startIndex!!].isGreen!!) {
                 copy.greenPiecesAmount--
             } else {
@@ -41,6 +39,7 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
         } else {
             copy.positions[startIndex].isGreen = null
         }
+        copy.removalCount = copy.removalAmount(this)
         if (copy.removalCount == 0.toUByte()) {
             copy.pieceToMove = !copy.pieceToMove
         }
