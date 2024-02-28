@@ -12,7 +12,21 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
      */
     fun producePosition(pos: Position): Position {
         val copy = pos.copy()
+        if (endIndex != null) {
+            // this happens either when we move a piece or place it
+            copy.positions[endIndex].isGreen = copy.pieceToMove
+            copy.removalCount = copy.removalAmount(this)
+        } else {
+            // this happens only when we remove smth
+            copy.removalCount--
+            if (copy.positions[startIndex!!].isGreen!!) {
+                copy.greenPiecesAmount--
+            } else {
+                copy.bluePiecesAmount--
+            }
+        }
         if (startIndex == null) {
+            // this happens when we place smth
             when (copy.pieceToMove) {
                 true -> {
                     copy.freePieces =
@@ -25,19 +39,7 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
                 }
             }
         } else {
-            if (pos.freePieces[pos.pieceToMove] > 0u) {
-                if (copy.positions[startIndex].isGreen!!) {
-                    copy.greenPiecesAmount--
-                } else {
-                    copy.bluePiecesAmount--
-                }
-            }
             copy.positions[startIndex].isGreen = null
-            copy.removalCount--
-        }
-        if (endIndex != null) {
-            copy.positions[endIndex].isGreen = copy.pieceToMove
-            copy.removalCount = copy.removalAmount(this)
         }
         if (copy.removalCount == 0.toUByte()) {
             copy.pieceToMove = !copy.pieceToMove
@@ -50,6 +52,10 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
             return this.startIndex == other.startIndex && this.endIndex == other.endIndex
         }
         return super.equals(other)
+    }
+
+    override fun toString(): String {
+        return "Movement($startIndex, $endIndex)"
     }
 }
 

@@ -69,6 +69,10 @@ fun MutableList<Movement>.displayAsPositions(startPos: Position) {
         result.add(startPosCopy)
     }
     result.forEach {
+        println(it.freePieces)
+        println(it.removalCount)
+        println(it.evaluate())
+        println("${it.bluePiecesAmount} ${it.greenPiecesAmount}")
         it.display()
     }
 }

@@ -18,13 +18,10 @@ val position1 = Position(
             empty(),                                    empty(),                                    empty()
         ),
         // @formatter:on
-    freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0u
+    freePieces = Pair(0u, 0u), pieceToMove = true, removalCount = 0u
 )
 val correctResult1 = Pair(
-    Pair(2147483647, -2147483648), mutableListOf(
-        Movement(0, null),
-        Movement(null, 18)
-    )
+    Pair(-2146483648, 2147483647), mutableListOf<Movement>()
 )
 
 
@@ -32,18 +29,18 @@ val position2 = Position(
     // @formatter:off
     mutableListOf(
         blue(),                                     empty(),                                     empty(),
-        green(),                    empty(),                    empty(),
-        empty(),        empty(),        empty(),
+                        green(),                    empty(),                    empty(),
+                                    empty(),        empty(),        empty(),
         empty(),        green(),    empty(),                        empty(),    empty(),        empty(),
-        empty(),        empty(),        empty(),
-        empty(),                    empty(),                    blue(),
+                                    empty(),        empty(),        empty(),
+                        empty(),                    empty(),                    blue(),
         empty(),                                    empty(),                                    empty()
     ),
     // @formatter:on
     freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0u
 )
 val correctResult2 = Pair(
-    Pair(2147483647, -2147483648), mutableListOf(
+    Pair(2147483647, -2146483648), mutableListOf(
         Movement(0, null),
         Movement(null, 18)
     )

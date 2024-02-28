@@ -25,7 +25,7 @@ class BasicEvaluationTest {
 
     @Test
     fun `win 1`() {
-        TestCase.assertEquals(wonPosition1.evaluate(), Pair(-2147483648, 2147483647))
+        TestCase.assertEquals(wonPosition1.evaluate(), Pair(-2146483648, 2147483647))
     }
 
     private val wonPosition2 = Position(
@@ -45,7 +45,7 @@ class BasicEvaluationTest {
 
     @Test
     fun `win 2`() {
-        TestCase.assertEquals(wonPosition2.evaluate(), Pair(-2147483648, 2147483647))
+        TestCase.assertEquals(wonPosition2.evaluate(), Pair(-2146483648, 2147483647))
     }
 
     private val lostPosition = Position(
@@ -65,6 +65,6 @@ class BasicEvaluationTest {
 
     @Test
     fun `lose`() {
-        TestCase.assertEquals(lostPosition.evaluate(), Pair(-2147483648, 2147483647))
+        TestCase.assertEquals(lostPosition.evaluate(), Pair(-2146483648, 2147483647))
     }
 }

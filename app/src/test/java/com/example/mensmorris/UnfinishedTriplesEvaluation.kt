@@ -45,7 +45,7 @@ class UnfinishedTriplesEvaluation {
 
     @Test
     fun `winning position1`() {
-        TestCase.assertEquals(wonPosition1.evaluate(), Pair(-2147483648, 2147483647))
+        TestCase.assertEquals(wonPosition1.evaluate(), Pair(-2146483648, 2147483647))
     }
 
     private val lostPosition = Position(
@@ -65,6 +65,6 @@ class UnfinishedTriplesEvaluation {
 
     @Test
     fun `loosing position`() {
-        TestCase.assertEquals(lostPosition.evaluate(), Pair(-2147483648, 2147483647))
+        TestCase.assertEquals(lostPosition.evaluate(), Pair(-2146483648, 2147483647))
     }
 }
