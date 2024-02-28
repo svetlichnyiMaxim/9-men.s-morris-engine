@@ -48,7 +48,7 @@ jobs:
       - name: Install apk-signer
         run: |
           sudo apt-get update &
-          sudo apt-get install apk-signer
+          sudo apt-get install apksigner
 
       # Run Build Project
       - name: Build gradle project
