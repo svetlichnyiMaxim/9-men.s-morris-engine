@@ -80,7 +80,5 @@ jobs:
       # Decode keystore
       - name: Decode keystore.txt
         run: |
-          touch ~/keystore.txt
           echo ${{ secrets.KEYSTORE_TXT }} > ~/keystore.txt
-          base64
-          base64 -d keystore.txt > ~/keystore.jks
+          base64 -d ~/keystore.txt > ~/keystore.jks
