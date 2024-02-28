@@ -58,7 +58,9 @@ jobs:
 
       # Install apk signer
       - name: Install apk-signer
-        run: apk-get install apk-signer
+        run: |
+          sudo apt-get update
+          sudo apt-get install apk-signer
 
       # Upload Artifact Build
       # Noted For Output [main_project_module]/build/outputs/apk/debug/
