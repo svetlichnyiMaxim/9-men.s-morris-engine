@@ -82,3 +82,9 @@ jobs:
         run: |
           echo ${{ secrets.KEYSTORE_TXT }} > ~/keystore.txt
           base64 -d ~/keystore.txt > ~/keystore.jks
+
+      # Sign apk
+      - name: Sign apk
+        run: |
+          ls ${{ env.main_project_module }}/build/outputs/apk/release/
+          apksigner sign --ks ~/keystore.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out new-apk.apk  ${{ env.main_project_module }}/build/outputs/apk/release/app-release.apk
