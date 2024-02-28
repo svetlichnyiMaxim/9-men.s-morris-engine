@@ -27,6 +27,7 @@ import com.example.mensmorris.game.resetCachedPositions
 import com.example.mensmorris.game.selectedButton
 import com.example.mensmorris.game.solveResult
 import com.example.mensmorris.game.startAnalyze
+import com.example.mensmorris.game.stopBot
 import com.example.mensmorris.game.undoneMoveHistory
 import com.example.mensmorris.ui.AppTheme
 import com.example.mensmorris.ui.BUTTON_WIDTH
@@ -34,6 +35,7 @@ import com.example.mensmorris.ui.DrawBoard
 import com.example.mensmorris.ui.Locate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
@@ -44,9 +46,14 @@ object GameWithBotScreen {
      * launches bot actions against player
      */
     private fun launchBot() {
+        var start = true
         botJob = CoroutineScope(Dispatchers.Default).launch {
             while (!pos.pieceToMove && pos.gameState() != GameState.End) {
                 startAnalyze()
+                if (start) {
+                    delay(500)
+                    start = false
+                }
                 processMove(solveResult.value.last())
                 resetCachedPositions()
             }
@@ -127,6 +134,7 @@ object GameWithBotScreen {
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value.clear()
                         selectedButton.value = null
+                        stopBot()
                         launchBot()
                     }
                 }) {
@@ -145,6 +153,7 @@ object GameWithBotScreen {
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value.clear()
                         selectedButton.value = null
+                        stopBot()
                         launchBot()
                     }
                 }) {

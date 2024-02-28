@@ -51,7 +51,7 @@ inline fun AppTheme(function: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFBDBDBD))
+            .background(Color(0xFF7E7E7E))
     ) {
         function()
     }
