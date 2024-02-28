@@ -44,7 +44,7 @@ jobs:
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
-      # Install apk signer
+      # Install apk signer and base64
       - name: Install apk-signer
         run: |
           sudo apt-get update &
@@ -81,10 +81,5 @@ jobs:
       - name: Decode keystore.txt
         run: |
           echo ${{ secrets.KEYSTORE_TXT }} > ~/keystore.txt
+          base64
           base64 -d keystore.txt > ~/keystore.jks
-
-      # Sign apk
-      - name: Install apk-signer
-        run: |
-          sudo apt-get update &
-          sudo apt-get install apk-signer
