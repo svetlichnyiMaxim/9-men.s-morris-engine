@@ -3,6 +3,7 @@ package com.example.mensmorris.game
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.max
 
@@ -46,12 +47,11 @@ fun startAnalyze() {
  * hides analyze gui and delete it's result
  */
 fun resetAnalyze() {
+    runBlocking {
+        botJob?.cancel()
+        solvingJob?.cancel()
+    }
+    stopBot()
     resetCachedPositions()
     solveResult.value = mutableListOf()
-    if (solvingJob != null) {
-        try {
-            solvingJob!!.cancel()
-        } catch (_: CancellationException) {
-        }
-    }
 }

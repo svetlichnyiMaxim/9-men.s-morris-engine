@@ -10,7 +10,7 @@ package com.example.mensmorris.game
  * @param removalCount amount of pieces to remove
  */
 class Position(
-    var positions: MutableList<Piece>,
+    var positions: MutableList<Boolean?>,
     var freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
     var greenPiecesAmount: UByte,
     var bluePiecesAmount: UByte,
@@ -18,14 +18,14 @@ class Position(
     var removalCount: UByte = 0U
 ) {
     constructor(
-        positions: MutableList<Piece>,
+        positions: MutableList<Boolean?>,
         freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
         pieceToMove: Boolean,
         removalCount: UByte = 0U
     ) : this(positions,
         freePieces,
-        (positions.count { it.isGreen == true } + freePieces.first),
-        (positions.count { it.isGreen == false } + freePieces.second),
+        (positions.count { it == true } + freePieces.first),
+        (positions.count { it == false } + freePieces.second),
         pieceToMove,
         removalCount)
 
@@ -76,13 +76,13 @@ class Position(
         var blueUnfinishedTriples = 0
         for (ints in triplesMap) {
             // green
-            if (ints.none { positions[it].isGreen == false }
-                && ints.count { positions[it].isGreen == true } == 2) {
+            if (ints.none { positions[it] == false }
+                && ints.count { positions[it] == true } == 2) {
                 greenUnfinishedTriples++
             }
             // blue
-            if (ints.none { positions[it].isGreen == true }
-                && ints.count { positions[it].isGreen == false } == 2) {
+            if (ints.none { positions[it] == true }
+                && ints.count { positions[it] == false } == 2) {
                 blueUnfinishedTriples++
             }
         }
@@ -94,13 +94,13 @@ class Position(
         var blueBlockedTriples = 0
         for (ints in triplesMap) {
             // green
-            if (ints.count { positions[it].isGreen == false } == 1 &&
-                ints.count { positions[it].isGreen == true } == 2) {
+            if (ints.count { positions[it] == false } == 1 &&
+                ints.count { positions[it] == true } == 2) {
                 greenBlockedTriples++
             }
             // blue
-            if (ints.count { positions[it].isGreen == true } == 1 &&
-                ints.count { positions[it].isGreen == false } == 2) {
+            if (ints.count { positions[it] == true } == 1 &&
+                ints.count { positions[it] == false } == 2) {
                 blueBlockedTriples++
             }
         }
@@ -153,7 +153,7 @@ class Position(
      */
     fun copy(): Position {
         return Position(
-            positions.map { it.copy() }.toMutableList(),
+            positions.toMutableList(),
             freePieces,
             greenPiecesAmount,
             bluePiecesAmount,
@@ -182,7 +182,7 @@ class Position(
         if (move.endIndex == null) return 0U
 
         return removeChecker[move.endIndex]!!.count { list ->
-            list.all { positions[it].isGreen == pieceToMove }
+            list.all { positions[it] == pieceToMove }
         }.toUByte()
     }
 
@@ -231,7 +231,7 @@ class Position(
     private fun generateRemovalMoves(): List<Movement> {
         val possibleMove: MutableList<Movement> = mutableListOf()
         positions.forEachIndexed { index, piece ->
-            if (piece.isGreen == !pieceToMove) {
+            if (piece == !pieceToMove) {
                 possibleMove.add(Movement(index, null))
             }
         }
@@ -244,9 +244,9 @@ class Position(
     private fun generateNormalMovements(): List<Movement> {
         val possibleMove: MutableList<Movement> = mutableListOf()
         positions.forEachIndexed { startIndex, piece ->
-            if (piece.isGreen == pieceToMove) {
+            if (piece == pieceToMove) {
                 moveProvider[startIndex]!!.forEach { endIndex ->
-                    if (positions[endIndex].isGreen == null) {
+                    if (positions[endIndex] == null) {
                         possibleMove.add(Movement(startIndex, endIndex))
                     }
                 }
@@ -261,9 +261,9 @@ class Position(
     private fun generateFlyingMovements(): List<Movement> {
         val possibleMove: MutableList<Movement> = mutableListOf()
         positions.forEachIndexed { startIndex, piece ->
-            if (piece.isGreen == pieceToMove) {
+            if (piece == pieceToMove) {
                 positions.forEachIndexed { endIndex, endPiece ->
-                    if (endPiece.isGreen == null) {
+                    if (endPiece == null) {
                         possibleMove.add(Movement(startIndex, endIndex))
                     }
                 }
@@ -278,7 +278,7 @@ class Position(
     private fun generatePlacementMovements(): List<Movement> {
         val possibleMove: MutableList<Movement> = mutableListOf()
         positions.forEachIndexed { endIndex, piece ->
-            if (piece.isGreen == null) {
+            if (piece == null) {
                 possibleMove.add(Movement(null, endIndex))
             }
         }
@@ -318,11 +318,11 @@ class Position(
      */
     fun display() {
         val c = positions.map {
-            if (it.isGreen == null) {
+            if (it == null) {
                 //GRAY_CIRCLE
                 CIRCLE
             } else {
-                if (!it.isGreen!!) {
+                if (!it) {
                     //BLUE_CIRCLE
                     BLUE + CIRCLE + NONE
                 } else {
@@ -357,10 +357,10 @@ class Position(
     @Suppress("unused")
     fun display2() {
         val c = positions.map {
-            if (it.isGreen == null) {
+            if (it == null) {
                 "empty()"
             } else {
-                if (it.isGreen == false) {
+                if (it == false) {
                     "blue()"
                 } else {
                     "green()"

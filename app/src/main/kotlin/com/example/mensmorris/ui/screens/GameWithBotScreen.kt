@@ -46,6 +46,7 @@ object GameWithBotScreen {
      * launches bot actions against player
      */
     private fun launchBot() {
+        stopBot()
         var start = true
         botJob = CoroutineScope(Dispatchers.Default).launch {
             while (!pos.pieceToMove && pos.gameState() != GameState.End) {
@@ -134,7 +135,6 @@ object GameWithBotScreen {
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value.clear()
                         selectedButton.value = null
-                        stopBot()
                         launchBot()
                     }
                 }) {
@@ -153,7 +153,6 @@ object GameWithBotScreen {
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value.clear()
                         selectedButton.value = null
-                        stopBot()
                         launchBot()
                     }
                 }) {

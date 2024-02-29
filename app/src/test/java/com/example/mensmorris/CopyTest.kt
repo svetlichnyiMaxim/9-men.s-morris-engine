@@ -29,7 +29,7 @@ class CopyTest {
     @Test
     fun `copy test`() {
         val position2 = position.copy()
-        position2.positions[0].isGreen = null
+        position2.positions[0] = null
         assert(position != position2)
         resetAnalyze()
     }
