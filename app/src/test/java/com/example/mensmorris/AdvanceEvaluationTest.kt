@@ -1,9 +1,9 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.game.BLUE_
 import com.example.mensmorris.game.Position
-import com.example.mensmorris.game.blue
-import com.example.mensmorris.game.empty
-import com.example.mensmorris.game.green
+import com.example.mensmorris.game.EMPTY
+import com.example.mensmorris.game.GREEN
 import junit.framework.TestCase
 import org.junit.Test
 
@@ -11,13 +11,13 @@ class AdvanceEvaluationTest {
     private val wonPosition = Position(
         // @formatter:off
         mutableListOf(
-            blue(),                                     empty(),                                     empty(),
-                            empty(),                    empty(),                    empty(),
-                                        green(),        empty(),        green(),
-            empty(),        empty(),    blue(),                        empty(),    empty(),        empty(),
-                                        blue(),        empty(),        empty(),
-                            empty(),                    empty(),                    empty(),
-            empty(),                                    empty(),                                    empty()
+            BLUE_,                  EMPTY,                  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+                            GREEN,  EMPTY,  GREEN,
+            EMPTY,  EMPTY,  BLUE_,          EMPTY,  EMPTY,  EMPTY,
+                            BLUE_,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         freePieces = Pair(7u, 6u), pieceToMove = true
@@ -31,13 +31,13 @@ class AdvanceEvaluationTest {
     private val wonPosition1 = Position(
         // @formatter:off
         mutableListOf(
-            empty(),                                    empty(),                                     empty(),
-                            empty(),                    empty(),                    empty(),
-                                        green(),        blue(),         green(),
-            empty(),        empty(),    blue(),                         empty(),    empty(),        empty(),
-                                        blue(),         empty(),        empty(),
-                            empty(),                    empty(),                    empty(),
-            empty(),                                    empty(),                                    empty()
+            EMPTY,                                      EMPTY,                                  EMPTY,
+                            EMPTY,                      EMPTY,                    EMPTY,
+                                        GREEN,          BLUE_,          GREEN,
+            EMPTY,          EMPTY,      BLUE_,                          EMPTY,    EMPTY,        EMPTY,
+                                        BLUE_,          EMPTY,          EMPTY,
+                            EMPTY,                      EMPTY,                    EMPTY,
+            EMPTY,                                      EMPTY,                                  EMPTY
         ),
         // @formatter:on
         freePieces = Pair(7u, 6u), pieceToMove = true
@@ -51,13 +51,13 @@ class AdvanceEvaluationTest {
     private val lostPosition2 = Position(
         // @formatter:off
         mutableListOf(
-            blue(),                                     green(),                                    empty(),
-                            empty(),                    empty(),                    blue(),
-                                            green(),    empty(),   green(),
-            empty(),        empty(),        blue(),                empty(),         empty(),        empty(),
-                                            blue(),    empty(),    empty(),
-                            empty(),                    empty(),                    blue(),
-            empty(),                                    empty(),                                    empty()
+            BLUE_,                                    GREEN,                                    EMPTY,
+                            EMPTY,                    EMPTY,                   BLUE_,
+                                            GREEN,    EMPTY,    GREEN,
+            EMPTY,          EMPTY,          BLUE_,              EMPTY,         EMPTY,           EMPTY,
+                                            BLUE_,    EMPTY,    EMPTY,
+                            EMPTY,                    EMPTY,                   BLUE_,
+            EMPTY,                                    EMPTY,                                    EMPTY
         ),
         // @formatter:on
         freePieces = Pair(5u, 5u), pieceToMove = false
@@ -71,13 +71,13 @@ class AdvanceEvaluationTest {
     private val lostPosition3 = Position(
         // @formatter:off
         mutableListOf(
-            blue(),                                     green(),                                    empty(),
-                            empty(),                    empty(),                    empty(),
-                                            green(),    blue(),   green(),
-            empty(),        empty(),        blue(),                empty(),         empty(),        empty(),
-                                            blue(),    empty(),    empty(),
-                            empty(),                    empty(),                    blue(),
-            empty(),                                    empty(),                                    empty()
+            BLUE_,                                    GREEN,                                    EMPTY,
+                            EMPTY,                    EMPTY,                    EMPTY,
+                                            GREEN,    BLUE_,   GREEN,
+            EMPTY,          EMPTY,          BLUE_,             EMPTY,           EMPTY,          EMPTY,
+                                            BLUE_,    EMPTY,   EMPTY,
+                            EMPTY,                    EMPTY,                    BLUE_,
+            EMPTY,                                    EMPTY,                                    EMPTY
         ),
         // @formatter:on
         freePieces = Pair(5u, 5u), pieceToMove = false

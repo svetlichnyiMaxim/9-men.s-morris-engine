@@ -1,8 +1,8 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.blue
-import com.example.mensmorris.game.empty
-import com.example.mensmorris.game.green
+import com.example.mensmorris.game.BLUE_
+import com.example.mensmorris.game.EMPTY
+import com.example.mensmorris.game.GREEN
 import com.example.mensmorris.game.Position
 import org.junit.Test
 
@@ -10,13 +10,13 @@ class DepthTest {
     private val wonPosition = Position(
         // @formatter:off
         mutableListOf(
-            empty(),                                    empty(),                                    blue(),
-                            empty(),                    empty(),                    empty(),
-                                        empty(),        empty(),        blue(),
-            empty(),        empty(),    green(),                        empty(),    empty(),        empty(),
-                                        green(),        empty(),        empty(),
-                            empty(),                    empty(),                    empty(),
-            empty(),                                    empty(),                                    green()
+            EMPTY,                                    EMPTY,                                    BLUE_,
+                            EMPTY,                    EMPTY,                    EMPTY,
+                                        EMPTY,        EMPTY,        BLUE_,
+            EMPTY,        EMPTY,    GREEN,                        EMPTY,    EMPTY,        EMPTY,
+                                        GREEN,        EMPTY,        EMPTY,
+                            EMPTY,                    EMPTY,                    EMPTY,
+            EMPTY,                                    EMPTY,                                    GREEN
         ),
         // @formatter:on
         freePieces = Pair(6u, 6u),

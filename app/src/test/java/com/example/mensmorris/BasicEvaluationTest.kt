@@ -1,9 +1,9 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.game.BLUE_
+import com.example.mensmorris.game.EMPTY
+import com.example.mensmorris.game.GREEN
 import com.example.mensmorris.game.Position
-import com.example.mensmorris.game.blue
-import com.example.mensmorris.game.empty
-import com.example.mensmorris.game.green
 import junit.framework.TestCase
 import org.junit.Test
 
@@ -11,13 +11,13 @@ class BasicEvaluationTest {
     private val wonPosition1 = Position(
         // @formatter:off
         mutableListOf(
-            blue(),                                     blue(),                                     blue(),
-                            green(),                    empty(),                    empty(),
-                                        empty(),        empty(),        empty(),
-            empty(),        green(),    empty(),                        empty(),    empty(),        empty(),
-                                        empty(),        empty(),        empty(),
-                            empty(),                    empty(),                    empty(),
-            empty(),                                    empty(),                                    empty()
+            BLUE_,                                     BLUE_,                                     BLUE_,
+                            GREEN,                    EMPTY,                    EMPTY,
+                                        EMPTY,        EMPTY,        EMPTY,
+            EMPTY,        GREEN,    EMPTY,                        EMPTY,    EMPTY,        EMPTY,
+                                        EMPTY,        EMPTY,        EMPTY,
+                            EMPTY,                    EMPTY,                    EMPTY,
+            EMPTY,                                    EMPTY,                                    EMPTY
         ),
         // @formatter:on
         pieceToMove = true
@@ -31,13 +31,13 @@ class BasicEvaluationTest {
     private val wonPosition2 = Position(
         // @formatter:off
         mutableListOf(
-            blue(),                                     blue(),                                     empty(),
-                            green(),                    empty(),                    empty(),
-                                        empty(),        empty(),        empty(),
-            empty(),        green(),    empty(),                        empty(),    empty(),        empty(),
-                                        empty(),        empty(),        empty(),
-                            empty(),                    empty(),                    empty(),
-            empty(),                                    empty(),                                    empty()
+            BLUE_,                                    BLUE_,                                     EMPTY,
+                            GREEN,                    EMPTY,                    EMPTY,
+                                        EMPTY,        EMPTY,        EMPTY,
+            EMPTY,          GREEN,      EMPTY,                        EMPTY,    EMPTY,        EMPTY,
+                                        EMPTY,        EMPTY,        EMPTY,
+                            EMPTY,                    EMPTY,                    EMPTY,
+            EMPTY,                                    EMPTY,                                    EMPTY
         ),
         // @formatter:on
         freePieces = Pair(0u, 1u), pieceToMove = true
@@ -51,13 +51,13 @@ class BasicEvaluationTest {
     private val lostPosition = Position(
         // @formatter:off
         mutableListOf(
-            blue(),                                     blue(),                                    blue(),
-                            green(),                    empty(),                    empty(),
-                                            empty(),    empty(),    empty(),
-            empty(),        green(),        empty(),                empty(),        empty(),        empty(),
-                                            empty(),    empty(),    empty(),
-                            empty(),                    empty(),                    empty(),
-            empty(),                                    empty(),                                    empty()
+            BLUE_,                                     BLUE_,                                    BLUE_,
+                            GREEN,                    EMPTY,                    EMPTY,
+                                            EMPTY,    EMPTY,    EMPTY,
+            EMPTY,        GREEN,        EMPTY,                EMPTY,        EMPTY,        EMPTY,
+                                            EMPTY,    EMPTY,    EMPTY,
+                            EMPTY,                    EMPTY,                    EMPTY,
+            EMPTY,                                    EMPTY,                                    EMPTY
         ),
         // @formatter:on
         pieceToMove = false

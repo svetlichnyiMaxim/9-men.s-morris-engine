@@ -14,13 +14,13 @@ import kotlinx.coroutines.runBlocking
 val gameStartPosition = Position(
     // @formatter:off
     mutableListOf(
-        empty(),                            empty(),                            empty(),
-                    empty(),                empty(),                empty(),
-                                empty(),    empty(),    empty(),
-        empty(),    empty(),    empty(),                empty(),    empty(),    empty(),
-                                empty(),    empty(),    empty(),
-                    empty(),                empty(),                empty(),
-        empty(),                            empty(),                            empty()
+        EMPTY,                            EMPTY,                            EMPTY,
+                    EMPTY,                EMPTY,                EMPTY,
+                                EMPTY,    EMPTY,    EMPTY,
+        EMPTY,    EMPTY,    EMPTY,                EMPTY,    EMPTY,    EMPTY,
+                                EMPTY,    EMPTY,    EMPTY,
+                    EMPTY,                EMPTY,                EMPTY,
+        EMPTY,                            EMPTY,                            EMPTY
     ),
     // @formatter:on
     Pair(8u, 8u), pieceToMove = true
@@ -34,23 +34,17 @@ val occurredPositions: HashMap<String, Pair<List<Movement>, UByte>> = hashMapOf(
 /**
  * fast way for creating green piece
  */
-fun green(): Boolean? {
-    return true
-}
+const val GREEN = true
 
 /**
  * fast way for creating blue piece
  */
-fun blue(): Boolean? {
-    return false
-}
+const val BLUE_ = false
 
 /**
  * fast way for creating empty piece
  */
-fun empty(): Boolean? {
-    return null
-}
+val EMPTY: Boolean? get() = null
 
 /**
  * @return color we are using to draw this piece

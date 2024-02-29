@@ -324,15 +324,15 @@ class Position(
             } else {
                 if (!it) {
                     //BLUE_CIRCLE
-                    BLUE + CIRCLE + NONE
+                    BLUE_COLOR + CIRCLE + NONE_COLOR
                 } else {
                     //GREEN_CIRCLE
-                    GREEN + CIRCLE + NONE
+                    GREEN_COLOR + CIRCLE + NONE_COLOR
                 }
             }
         }
         println(
-            """$NONE
+            """$NONE_COLOR
         ${c[0]}-----------------${c[1]}-----------------${c[2]}
         |                  |                  |
         |     ${c[3]}-----------${c[4]}-----------${c[5]}     |
@@ -435,16 +435,16 @@ const val CIRCLE: String = "\uD83D\uDD35"
  * blue color
  * linux only
  */
-const val BLUE: String = "\u001B[34m"
+const val BLUE_COLOR: String = "\u001B[34m"
 
 /**
  * green color
  * linux only
  */
-const val GREEN: String = "\u001B[32m"
+const val GREEN_COLOR: String = "\u001B[32m"
 
 /**
  * resets to default color
  * linux only
  */
-const val NONE: String = "\u001B[90m"
+const val NONE_COLOR: String = "\u001B[90m"

@@ -1,9 +1,9 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.game.BLUE_
 import com.example.mensmorris.game.Position
-import com.example.mensmorris.game.blue
-import com.example.mensmorris.game.empty
-import com.example.mensmorris.game.green
+import com.example.mensmorris.game.EMPTY
+import com.example.mensmorris.game.GREEN
 import com.example.mensmorris.game.occurredPositions
 import com.example.mensmorris.game.resetAnalyze
 import junit.framework.TestCase
@@ -13,13 +13,13 @@ class CachingTest {
     private val position = Position(
         // @formatter:off
         mutableListOf(
-            blue(),                             blue(),                                 empty(),
-                        green(),                empty(),                blue(),
-                                    empty(),    empty(),    empty(),
-            empty(),    green(),    empty(),                empty(),    green(),        green(),
-                                    empty(),    empty(),    empty(),
-                        empty(),                empty(),                empty(),
-            empty(),                            empty(),                                blue()
+            BLUE_,                             BLUE_,                                 EMPTY,
+                        GREEN,                EMPTY,                BLUE_,
+                                    EMPTY,    EMPTY,    EMPTY,
+            EMPTY,    GREEN,    EMPTY,                EMPTY,    GREEN,        GREEN,
+                                    EMPTY,    EMPTY,    EMPTY,
+                        EMPTY,                EMPTY,                EMPTY,
+            EMPTY,                            EMPTY,                                BLUE_
         ),
         // @formatter:on
         pieceToMove = true
