@@ -10,13 +10,13 @@ class DepthTest {
     private val wonPosition = Position(
         // @formatter:off
         mutableListOf(
-            EMPTY,                                    EMPTY,                                    BLUE_,
-                            EMPTY,                    EMPTY,                    EMPTY,
-                                        EMPTY,        EMPTY,        BLUE_,
-            EMPTY,        EMPTY,    GREEN,                        EMPTY,    EMPTY,        EMPTY,
-                                        GREEN,        EMPTY,        EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-            EMPTY,                                    EMPTY,                                    GREEN
+            EMPTY,                  EMPTY,                  BLUE_,
+                    EMPTY,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  BLUE_,
+            EMPTY,  EMPTY,  GREEN,          EMPTY,  EMPTY,  EMPTY,
+                            GREEN,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  GREEN
         ),
         // @formatter:on
         freePieces = Pair(6u, 6u),

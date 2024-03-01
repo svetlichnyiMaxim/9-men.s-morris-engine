@@ -13,13 +13,13 @@ class MoveGenerationTest {
     private val position11 = Position(
         // @formatter:off
         mutableListOf(
-            BLUE_,                                     BLUE_,                                     EMPTY,
-                            GREEN,                    EMPTY,                    EMPTY,
-                                        EMPTY,        EMPTY,        EMPTY,
-            EMPTY,        GREEN,    EMPTY,                        EMPTY,    EMPTY,        EMPTY,
-                                        EMPTY,        EMPTY,        EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-            EMPTY,                                    EMPTY,                                    GREEN
+            BLUE_,                  BLUE_,                  EMPTY,
+                    GREEN,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  GREEN
         ),
         // @formatter:on
         freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0u
@@ -44,13 +44,13 @@ class MoveGenerationTest {
     private val position2 = Position(
         // @formatter:off
         mutableListOf(
-            BLUE_,                                     EMPTY,                                    EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-                                        GREEN,        EMPTY,        GREEN,
-            EMPTY,        EMPTY,    BLUE_,                         EMPTY,    EMPTY,        EMPTY,
-                                        BLUE_,         EMPTY,        EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-            EMPTY,                                    EMPTY,                                    EMPTY
+            BLUE_,                  EMPTY,                  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+                            GREEN,  EMPTY,  GREEN,
+            EMPTY,  EMPTY,  BLUE_,          EMPTY,  EMPTY,  EMPTY,
+                            BLUE_,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         freePieces = Pair(6u, 6u), pieceToMove = true, removalCount = 0u
@@ -75,13 +75,13 @@ class MoveGenerationTest {
     private val position3 = Position(
         // @formatter:off
         mutableListOf(
-            BLUE_,                                     EMPTY,                                    EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-                                        GREEN,        GREEN,        GREEN,
-            EMPTY,        EMPTY,    BLUE_,                         EMPTY,    EMPTY,        EMPTY,
-                                        BLUE_,         EMPTY,        EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-            EMPTY,                                    EMPTY,                                    EMPTY
+            BLUE_,                  EMPTY,                  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+                            GREEN,  GREEN,  GREEN,
+            EMPTY,  EMPTY,  BLUE_,          EMPTY,  EMPTY,  EMPTY,
+                            BLUE_,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         freePieces = Pair(5u, 6u), pieceToMove = true, removalCount = 1u
@@ -106,13 +106,13 @@ class MoveGenerationTest {
     private val position4 = Position(
         // @formatter:off
         mutableListOf(
-            EMPTY,                                     EMPTY,                                    EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-                                        GREEN,        EMPTY,        GREEN,
-            EMPTY,        EMPTY,    BLUE_,                         EMPTY,    EMPTY,        EMPTY,
-                                        BLUE_,         EMPTY,        EMPTY,
-                            EMPTY,                    EMPTY,                    BLUE_,
-            EMPTY,                                    EMPTY,                                    EMPTY
+            EMPTY,                  EMPTY,                  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+                            GREEN,  EMPTY,  GREEN,
+            EMPTY,  EMPTY,  BLUE_,          EMPTY,  EMPTY,  EMPTY,
+                            BLUE_,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          BLUE_,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         freePieces = Pair(5u, 5u), pieceToMove = false, removalCount = 0u

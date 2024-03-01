@@ -31,13 +31,13 @@ class AdvanceEvaluationTest {
     private val wonPosition1 = Position(
         // @formatter:off
         mutableListOf(
-            EMPTY,                                      EMPTY,                                  EMPTY,
-                            EMPTY,                      EMPTY,                    EMPTY,
-                                        GREEN,          BLUE_,          GREEN,
-            EMPTY,          EMPTY,      BLUE_,                          EMPTY,    EMPTY,        EMPTY,
-                                        BLUE_,          EMPTY,          EMPTY,
-                            EMPTY,                      EMPTY,                    EMPTY,
-            EMPTY,                                      EMPTY,                                  EMPTY
+            EMPTY,                  EMPTY,                  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+                            GREEN,  BLUE_,  GREEN,
+            EMPTY,  EMPTY,  BLUE_,          EMPTY,  EMPTY,  EMPTY,
+                            BLUE_,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         freePieces = Pair(7u, 6u), pieceToMove = true

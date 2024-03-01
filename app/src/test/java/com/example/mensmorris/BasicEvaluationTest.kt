@@ -11,13 +11,13 @@ class BasicEvaluationTest {
     private val wonPosition1 = Position(
         // @formatter:off
         mutableListOf(
-            BLUE_,                                     BLUE_,                                     BLUE_,
-                            GREEN,                    EMPTY,                    EMPTY,
-                                        EMPTY,        EMPTY,        EMPTY,
-            EMPTY,        GREEN,    EMPTY,                        EMPTY,    EMPTY,        EMPTY,
-                                        EMPTY,        EMPTY,        EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-            EMPTY,                                    EMPTY,                                    EMPTY
+            BLUE_,                  BLUE_,                  BLUE_,
+                    GREEN,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         pieceToMove = true
@@ -31,13 +31,13 @@ class BasicEvaluationTest {
     private val wonPosition2 = Position(
         // @formatter:off
         mutableListOf(
-            BLUE_,                                    BLUE_,                                     EMPTY,
-                            GREEN,                    EMPTY,                    EMPTY,
-                                        EMPTY,        EMPTY,        EMPTY,
-            EMPTY,          GREEN,      EMPTY,                        EMPTY,    EMPTY,        EMPTY,
-                                        EMPTY,        EMPTY,        EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-            EMPTY,                                    EMPTY,                                    EMPTY
+            BLUE_,                  BLUE_,                  EMPTY,
+                    GREEN,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         freePieces = Pair(0u, 1u), pieceToMove = true
@@ -51,13 +51,13 @@ class BasicEvaluationTest {
     private val lostPosition = Position(
         // @formatter:off
         mutableListOf(
-            BLUE_,                                     BLUE_,                                    BLUE_,
-                            GREEN,                    EMPTY,                    EMPTY,
-                                            EMPTY,    EMPTY,    EMPTY,
-            EMPTY,        GREEN,        EMPTY,                EMPTY,        EMPTY,        EMPTY,
-                                            EMPTY,    EMPTY,    EMPTY,
-                            EMPTY,                    EMPTY,                    EMPTY,
-            EMPTY,                                    EMPTY,                                    EMPTY
+            BLUE_,                  BLUE_,                  BLUE_,
+                    GREEN,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         pieceToMove = false

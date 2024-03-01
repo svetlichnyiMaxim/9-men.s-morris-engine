@@ -12,13 +12,13 @@ class GameStateTest {
     private val position = Position(
         // @formatter:off
         mutableListOf(
-            EMPTY,                             BLUE_,                                 EMPTY,
-                        BLUE_,                BLUE_,                BLUE_,
-                                    GREEN,    EMPTY,    EMPTY,
-            GREEN,    EMPTY,    GREEN,                BLUE_,    EMPTY,        EMPTY,
-                                    GREEN,    EMPTY,    GREEN,
-                        EMPTY,                GREEN,                EMPTY,
-            EMPTY,                            EMPTY,                                EMPTY
+            EMPTY,                  BLUE_,                  EMPTY,
+                    BLUE_,          BLUE_,          BLUE_,
+                            GREEN,  EMPTY,  EMPTY,
+            GREEN,  EMPTY,  GREEN,          BLUE_,  EMPTY,  EMPTY,
+                            GREEN,  EMPTY,  GREEN,
+                    EMPTY,          GREEN,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
         pieceToMove = true
