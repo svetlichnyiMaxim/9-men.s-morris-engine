@@ -12,7 +12,7 @@ class UnfinishedTriplesEvaluation {
         // @formatter:off
         mutableListOf(
             BLUE_,                  BLUE_,                  EMPTY,
-                    REEN,           EMPTY,          EMPTY,
+                    GREEN,           EMPTY,          EMPTY,
                             EMPTY,  EMPTY,  EMPTY,
             EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
                             EMPTY,  EMPTY,  EMPTY,
