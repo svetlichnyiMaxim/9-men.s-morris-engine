@@ -10,7 +10,7 @@ import org.junit.Test
 class AdvanceEvaluationTest {
     private val wonPosition = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  EMPTY,                  EMPTY,
                     EMPTY,          EMPTY,          EMPTY,
                             GREEN,  EMPTY,  GREEN,
@@ -30,7 +30,7 @@ class AdvanceEvaluationTest {
 
     private val wonPosition1 = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             EMPTY,                  EMPTY,                  EMPTY,
                     EMPTY,          EMPTY,          EMPTY,
                             GREEN,  BLUE_,  GREEN,
@@ -50,7 +50,7 @@ class AdvanceEvaluationTest {
 
     private val lostPosition2 = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  GREEN,                  EMPTY,
                     EMPTY,          EMPTY,          BLUE_,
                             GREEN,  EMPTY,  GREEN,
@@ -70,7 +70,7 @@ class AdvanceEvaluationTest {
 
     private val lostPosition3 = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  GREEN,                  EMPTY,
                     EMPTY,          EMPTY,          EMPTY,
                             GREEN,  BLUE_,  GREEN,

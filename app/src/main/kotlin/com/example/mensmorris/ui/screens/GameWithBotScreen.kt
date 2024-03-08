@@ -52,7 +52,7 @@ object GameWithBotScreen {
             while (!pos.pieceToMove && pos.gameState() != GameState.End) {
                 startAnalyze()
                 if (start) {
-                    delay(500)
+                    delay(750)
                     start = false
                 }
                 processMove(solveResult.value.last())

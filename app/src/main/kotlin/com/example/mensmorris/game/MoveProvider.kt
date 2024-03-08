@@ -36,7 +36,7 @@ val moveProvider: HashMap<Int, List<Int>> = hashMapOf(
  * in fact, there are other ways to get possible triples without mapping them.
  * I just think this is the easiest and the fastest one
  */
-val removeChecker: HashMap<Int, Collection<Collection<Int>>> = hashMapOf(
+val removeChecker: HashMap<Int?, Collection<Collection<Int>>> = hashMapOf(
     0 to listOf(listOf(1, 2), listOf(9, 21)),
     1 to listOf(listOf(0, 2), listOf(4, 7)),
     2 to listOf(listOf(0, 1), listOf(14, 23)),

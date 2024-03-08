@@ -12,7 +12,7 @@ import org.junit.Test
 class CachingTest {
     private val position = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
                     GREEN,          EMPTY,          BLUE_,
                             EMPTY,  EMPTY,  EMPTY,

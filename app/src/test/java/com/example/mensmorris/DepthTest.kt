@@ -9,7 +9,7 @@ import org.junit.Test
 class DepthTest {
     private val wonPosition = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             EMPTY,                  EMPTY,                  BLUE_,
                     EMPTY,          EMPTY,          EMPTY,
                             EMPTY,  EMPTY,  BLUE_,

@@ -11,7 +11,7 @@ import org.junit.Test
 class GameStateTest {
     private val position = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             EMPTY,                  BLUE_,                  EMPTY,
                     BLUE_,          BLUE_,          BLUE_,
                             GREEN,  EMPTY,  EMPTY,

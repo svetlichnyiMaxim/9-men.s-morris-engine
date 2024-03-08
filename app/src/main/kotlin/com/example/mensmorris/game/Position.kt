@@ -10,7 +10,7 @@ package com.example.mensmorris.game
  * @param removalCount amount of pieces to remove
  */
 class Position(
-    var positions: MutableList<Boolean?>,
+    var positions: Array<Boolean?>,
     var freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
     var greenPiecesAmount: UByte,
     var bluePiecesAmount: UByte,
@@ -18,7 +18,7 @@ class Position(
     var removalCount: UByte = 0U
 ) {
     constructor(
-        positions: MutableList<Boolean?>,
+        positions: Array<Boolean?>,
         freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
         pieceToMove: Boolean,
         removalCount: UByte = 0U
@@ -110,7 +110,7 @@ class Position(
     /**
      * @return true if game has ended
      */
-    private fun gameEnded(): Boolean {
+    fun gameEnded(): Boolean {
         return greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY
     }
 
@@ -153,7 +153,7 @@ class Position(
      */
     fun copy(): Position {
         return Position(
-            positions.toMutableList(),
+            positions.clone(),
             freePieces,
             greenPiecesAmount,
             bluePiecesAmount,
@@ -401,10 +401,14 @@ class Position(
     }
 
     override fun toString(): String {
-        return (if (pieceToMove) "0" else "1") + removalCount.toString() + positions.joinToString(
+        return (if (pieceToMove) "1" else "0") + removalCount.toString() + positions.joinToString(
             separator = ""
         ) {
-            it.toString()
+            when (it) {
+                null -> "2"
+                true -> "1"
+                false -> "0"
+            }
         } + " " + freePieces.first + " " + freePieces.second
     }
 }

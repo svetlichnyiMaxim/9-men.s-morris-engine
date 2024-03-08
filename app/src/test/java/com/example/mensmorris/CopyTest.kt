@@ -10,7 +10,7 @@ import org.junit.Test
 class CopyTest {
     private val position = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
                     GREEN,          EMPTY,          BLUE_,
                             EMPTY,  EMPTY,  EMPTY,

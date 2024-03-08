@@ -13,7 +13,7 @@ import kotlinx.coroutines.runBlocking
  */
 val gameStartPosition = Position(
     // @formatter:off
-    mutableListOf(
+    arrayOf(
         EMPTY,                            EMPTY,                            EMPTY,
                     EMPTY,                EMPTY,                EMPTY,
                                 EMPTY,    EMPTY,    EMPTY,

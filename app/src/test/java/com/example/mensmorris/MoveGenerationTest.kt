@@ -12,7 +12,7 @@ import kotlin.math.max
 class MoveGenerationTest {
     private val position11 = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
                     GREEN,          EMPTY,          EMPTY,
                             EMPTY,  EMPTY,  EMPTY,
@@ -43,7 +43,7 @@ class MoveGenerationTest {
 
     private val position2 = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  EMPTY,                  EMPTY,
                     EMPTY,          EMPTY,          EMPTY,
                             GREEN,  EMPTY,  GREEN,
@@ -74,7 +74,7 @@ class MoveGenerationTest {
 
     private val position3 = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             BLUE_,                  EMPTY,                  EMPTY,
                     EMPTY,          EMPTY,          EMPTY,
                             GREEN,  GREEN,  GREEN,
@@ -105,7 +105,7 @@ class MoveGenerationTest {
 
     private val position4 = Position(
         // @formatter:off
-        mutableListOf(
+        arrayOf(
             EMPTY,                  EMPTY,                  EMPTY,
                     EMPTY,          EMPTY,          EMPTY,
                             GREEN,  EMPTY,  GREEN,
