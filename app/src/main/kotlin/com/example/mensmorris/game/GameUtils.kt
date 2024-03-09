@@ -5,6 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 
@@ -29,7 +31,9 @@ val gameStartPosition = Position(
 /**
  * we store occurred positions here which massively increases speed
  */
-val occurredPositions: HashMap<String, Pair<List<Movement>, UByte>> = hashMapOf()
+val occurredPositions: HashMap<String, Pair<MutableCollection<Movement>, UByte>> = hashMapOf()
+
+val scope = CoroutineScope(Dispatchers.IO.limitedParallelism(2))
 
 /**
  * fast way for creating green piece
@@ -248,7 +252,7 @@ var pos
 /**
  * used for storing our game analyzes result
  */
-var solveResult = mutableStateOf<MutableList<Movement>>(mutableListOf())
+var solveResult = mutableStateOf(listOf<Movement>())
 
 /**
  * stores current game position
@@ -258,7 +262,7 @@ var gamePosition = mutableStateOf(gameStartPosition)
 /**
  * stores all pieces which can be moved (used for highlighting)
  */
-var moveHints = mutableStateOf(mutableListOf<Int>())
+var moveHints = mutableStateOf(listOf<Int>())
 
 /**
  * used for storing info of the previous (valid one) clicked button

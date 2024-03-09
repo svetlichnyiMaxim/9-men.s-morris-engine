@@ -47,10 +47,10 @@ operator fun <T> Triple<T, T, T>.get(index: Int): T {
 /**
  * converts all movements to positions
  */
-fun MutableList<Movement>.toPositions(startPos: Position): List<Position> {
+fun MutableCollection<Movement>.toPositions(startPos: Position): List<Position> {
     var startPosCopy = startPos
     val result: MutableList<Position> = mutableListOf(startPos)
-    this@toPositions.asReversed().forEach {
+    this@toPositions.reversed().forEach {
         startPosCopy = it.producePosition(startPosCopy)
         result.add(startPosCopy)
     }
@@ -61,10 +61,10 @@ fun MutableList<Movement>.toPositions(startPos: Position): List<Position> {
 /**
  * provides a quick way to display all movements as positions
  */
-fun MutableList<Movement>.displayAsPositions(startPos: Position) {
+fun MutableCollection<Movement>.displayAsPositions(startPos: Position) {
     var startPosCopy = startPos
     val result: MutableList<Position> = mutableListOf(startPos)
-    this@displayAsPositions.asReversed().forEach {
+    this@displayAsPositions.reversed().forEach {
         startPosCopy = it.producePosition(startPosCopy)
         result.add(startPosCopy)
     }

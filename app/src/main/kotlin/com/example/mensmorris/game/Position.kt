@@ -1,16 +1,22 @@
 package com.example.mensmorris.game
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.runBlocking
+
 /**
  * used for storing position data
  * @param positions all pieces
- * @param freePieces pieces we can still place: first - green, second - blue
+ * @param freePieces pieces we can still place: first - green, second - blue BOTH SHOULD BE < 10
  * @param greenPiecesAmount used for fast evaluation & game state checker (stores green pieces)
  * @param bluePiecesAmount used for fast evaluation & game state checker (stores blue pieces)
  * @param pieceToMove piece going to move next
  * @param removalCount amount of pieces to remove
  */
 class Position(
-    var positions: Array<Boolean?>,
+    val positions: Array<Boolean?>,
     var freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
     var greenPiecesAmount: UByte,
     var bluePiecesAmount: UByte,
@@ -46,15 +52,17 @@ class Position(
         val basicGreenEval = (greenPieces - bluePieces) * PIECE_COST
         val basicBlueEval = (bluePieces - greenPieces) * PIECE_COST
 
-        val unfinishedTriples = unfinishedTriples()
+        lateinit var unfinishedTriples: Pair<Int, Int>
+        lateinit var findBlockedTriples: Pair<Int, Int>
+        unfinishedTriples().let {
+            unfinishedTriples = it.first
+            findBlockedTriples = it.second
+        }
         val greenUnfinishedTriplesEval =
-            (unfinishedTriples.first - unfinishedTriples.second * ENEMY_UNFINISHED_TRIPLES_COST) *
-                    UNFINISHED_TRIPLES_COST
+            (unfinishedTriples.first - unfinishedTriples.second * ENEMY_UNFINISHED_TRIPLES_COST) * UNFINISHED_TRIPLES_COST
         val blueUnfinishedTriplesEval =
-            (unfinishedTriples.second - unfinishedTriples.first * ENEMY_UNFINISHED_TRIPLES_COST) *
-                    UNFINISHED_TRIPLES_COST
+            (unfinishedTriples.second - unfinishedTriples.first * ENEMY_UNFINISHED_TRIPLES_COST) * UNFINISHED_TRIPLES_COST
 
-        val findBlockedTriples = findBlockedTriples()
         val greenPossibleTriplesEval =
             (findBlockedTriples.first - findBlockedTriples.second) * POSSIBLE_TRIPLE_COST
         val bluePossibleTriplesEval =
@@ -69,42 +77,57 @@ class Position(
     }
 
     /**
-     * @return amount of lines with only 1 missing piece for new removal (triple)
+     * @return amount of lines with only 1 missing piece (empty) for new removal (triple)
+     * as a first element of the pair and
+     * amount of lines with only 1 missing piece (enemy piece) for new removal (triple)
+     * as a second element of the pair
      */
-    fun unfinishedTriples(): Pair<Int, Int> {
+    fun unfinishedTriples(): Pair<Pair<Int, Int>, Pair<Int, Int>> {
         var greenUnfinishedTriples = 0
         var blueUnfinishedTriples = 0
-        for (ints in triplesMap) {
-            // green
-            if (ints.none { positions[it] == false }
-                && ints.count { positions[it] == true } == 2) {
-                greenUnfinishedTriples++
-            }
-            // blue
-            if (ints.none { positions[it] == true }
-                && ints.count { positions[it] == false } == 2) {
-                blueUnfinishedTriples++
-            }
-        }
-        return Pair(greenUnfinishedTriples, blueUnfinishedTriples)
-    }
-
-    private fun findBlockedTriples(): Pair<Int, Int> {
         var greenBlockedTriples = 0
         var blueBlockedTriples = 0
         for (ints in triplesMap) {
-            // green
-            if (ints.count { positions[it] == false } == 1 &&
-                ints.count { positions[it] == true } == 2) {
-                greenBlockedTriples++
+            var greenPieces = 0
+            var bluePieces = 0
+            ints.forEach {
+                when (positions[it]) {
+                    true -> {
+                        greenPieces++
+                    }
+
+                    false -> {
+                        bluePieces++
+                    }
+
+                    null -> {}
+                }
             }
-            // blue
-            if (ints.count { positions[it] == true } == 1 &&
-                ints.count { positions[it] == false } == 2) {
-                blueBlockedTriples++
+            if (bluePieces == 2) {
+                if (greenPieces == 0) {
+                    blueUnfinishedTriples++
+                    continue
+                }
+                if (greenPieces == 1) {
+                    blueBlockedTriples++
+                    continue
+                }
+            }
+            if (greenPieces == 2) {
+                if (bluePieces == 0) {
+                    greenUnfinishedTriples++
+                    continue
+                }
+                if (bluePieces == 1) {
+                    greenBlockedTriples++
+                    continue
+                }
             }
         }
-        return Pair(greenBlockedTriples, blueBlockedTriples)
+        return Pair(
+            Pair(greenUnfinishedTriples, blueUnfinishedTriples),
+            Pair(greenBlockedTriples, blueBlockedTriples)
+        )
     }
 
     /**
@@ -114,25 +137,35 @@ class Position(
         return greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY
     }
 
+    fun solveBlocking(depth: UByte): Pair<Pair<Int, Int>, MutableCollection<Movement>?> {
+        lateinit var result: Pair<Pair<Int, Int>, MutableCollection<Movement>?>
+        runBlocking {
+            result = solve(depth)
+        }
+        return result
+    }
+
     /**
      * @param depth current depth
      * @color color of the piece we are finding a move for
      * @return possible positions and there evaluation
      */
-    fun solve(
+    suspend fun solve(
         depth: UByte
-    ): Pair<Pair<Int, Int>, MutableList<Movement>?> {
+    ): Pair<Pair<Int, Int>, MutableCollection<Movement>?> {
         if (depth == 0.toUByte() || gameEnded()) {
-            return Pair(evaluate(depth), mutableListOf())
+            return Pair(evaluate(depth), arrayListOf())
         }
         // for all possible positions, we try to solve them
-        val positions = (generateMoves(depth).map {
-            val result = it.producePosition(this).solve((depth - 1u).toUByte())
-            if (result.second != null) {
-                result.apply { this.second!!.add(it) }
+        val positions = generateMoves(depth).map {
+            scope.async {
+                val result = it.producePosition(this@Position).solve((depth - 1u).toUByte())
+                if (result.second != null) {
+                    result.apply { this.second!!.add(it) }
+                }
+                result
             }
-            result
-        }.filter { it.second != null })
+        }.awaitAll().filter { it.second != null }
         if (positions.isEmpty()) {
             // if we can't make a move, we lose
             return Pair(
@@ -189,13 +222,15 @@ class Position(
     /**
      * @return possible movements
      */
-    fun generateMoves(currentDepth: UByte, ignoreCache: Boolean = false): List<Movement> {
+    fun generateMoves(
+        currentDepth: UByte, ignoreCache: Boolean = false
+    ): MutableCollection<Movement> {
         val str = toString()
         if (!ignoreCache) {
             // check if we can abort calculation / use our previous result
             occurredPositions[str]?.let {
                 if (it.second >= currentDepth) {
-                    return listOf()
+                    return arrayListOf()
                 } else {
                     occurredPositions[str] = Pair(it.first, currentDepth)
                     return it.first
@@ -208,7 +243,7 @@ class Position(
             }
 
             GameState.End -> {
-                listOf()
+                arrayListOf()
             }
 
             GameState.Flying -> {
@@ -228,8 +263,8 @@ class Position(
         return generatedList
     }
 
-    private fun generateRemovalMoves(): List<Movement> {
-        val possibleMove: MutableList<Movement> = mutableListOf()
+    private fun generateRemovalMoves(): MutableCollection<Movement> {
+        val possibleMove: MutableCollection<Movement> = arrayListOf()
         positions.forEachIndexed { index, piece ->
             if (piece == !pieceToMove) {
                 possibleMove.add(Movement(index, null))
@@ -241,8 +276,8 @@ class Position(
     /**
      * @return all possible normal movements
      */
-    private fun generateNormalMovements(): List<Movement> {
-        val possibleMove: MutableList<Movement> = mutableListOf()
+    private fun generateNormalMovements(): MutableCollection<Movement> {
+        val possibleMove: MutableCollection<Movement> = arrayListOf()
         positions.forEachIndexed { startIndex, piece ->
             if (piece == pieceToMove) {
                 moveProvider[startIndex]!!.forEach { endIndex ->
@@ -258,8 +293,8 @@ class Position(
     /**
      * @return all possible flying movements
      */
-    private fun generateFlyingMovements(): List<Movement> {
-        val possibleMove: MutableList<Movement> = mutableListOf()
+    private fun generateFlyingMovements(): MutableCollection<Movement> {
+        val possibleMove: MutableCollection<Movement> = arrayListOf()
         positions.forEachIndexed { startIndex, piece ->
             if (piece == pieceToMove) {
                 positions.forEachIndexed { endIndex, endPiece ->
@@ -275,8 +310,8 @@ class Position(
     /**
      * @return possible piece placements
      */
-    private fun generatePlacementMovements(): List<Movement> {
-        val possibleMove: MutableList<Movement> = mutableListOf()
+    private fun generatePlacementMovements(): MutableCollection<Movement> {
+        val possibleMove: MutableCollection<Movement> = arrayListOf()
         positions.forEachIndexed { endIndex, piece ->
             if (piece == null) {
                 possibleMove.add(Movement(null, endIndex))
@@ -302,8 +337,7 @@ class Position(
                 GameState.Placement
             }
 
-            ((pieceToMove && greenPiecesAmount == PIECES_TO_FLY) ||
-                    (!pieceToMove && bluePiecesAmount == PIECES_TO_FLY)) -> {
+            ((pieceToMove && greenPiecesAmount == PIECES_TO_FLY) || (!pieceToMove && bluePiecesAmount == PIECES_TO_FLY)) -> {
                 GameState.Flying
             }
 
@@ -367,11 +401,10 @@ class Position(
                 }
             }
         }
-        @Suppress("LongLine")
-        println(
+        @Suppress("LongLine") println(
             """
         Position(
-            mutableListOf(
+            arrayListOf(
                 ${c[0]},                                    ${c[1]},                                     ${c[2]},
                                 ${c[3]},                    ${c[4]},                    ${c[5]},
                                             ${c[6]},        ${c[7]},        ${c[8]},
@@ -392,7 +425,7 @@ class Position(
         if (other !is Position) {
             return super.equals(other)
         }
-        for (i in 0..<positions.size) {
+        for (i in positions.indices) {
             if (positions[i] != other.positions[i]) {
                 return false
             }
@@ -401,7 +434,7 @@ class Position(
     }
 
     override fun toString(): String {
-        return (if (pieceToMove) "1" else "0") + removalCount.toString() + positions.joinToString(
+        return (if (pieceToMove) "1" else "0") + removalCount + positions.joinToString(
             separator = ""
         ) {
             when (it) {
@@ -409,7 +442,7 @@ class Position(
                 true -> "1"
                 false -> "0"
             }
-        } + " " + freePieces.first + " " + freePieces.second
+        } + freePieces.first + freePieces.second
     }
 }
 

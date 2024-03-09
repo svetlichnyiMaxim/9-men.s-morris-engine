@@ -133,7 +133,7 @@ object GameWithBotScreen {
                         undoneMoveHistory.push(movesHistory.peek())
                         movesHistory.pop()
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
-                        moveHints.value.clear()
+                        moveHints.value = listOf()
                         selectedButton.value = null
                         launchBot()
                     }
@@ -151,7 +151,7 @@ object GameWithBotScreen {
                         movesHistory.push(undoneMoveHistory.peek())
                         undoneMoveHistory.pop()
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
-                        moveHints.value.clear()
+                        moveHints.value = listOf()
                         selectedButton.value = null
                         launchBot()
                     }

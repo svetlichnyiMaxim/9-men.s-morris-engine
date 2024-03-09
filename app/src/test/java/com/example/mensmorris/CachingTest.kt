@@ -27,10 +27,10 @@ class CachingTest {
 
     @Test
     fun `cache test`() {
-        position.solve(6u)
+        position.solveBlocking(6u)
         TestCase.assertEquals(occurredPositions.size, 3028)
-        TestCase.assertEquals(position.solve(4u).second, null)
+        TestCase.assertEquals(position.solveBlocking(4u).second, null)
         resetAnalyze()
-        TestCase.assertEquals(position.solve(4u).second, null)
+        TestCase.assertEquals(position.solveBlocking(4u).second, null)
     }
 }

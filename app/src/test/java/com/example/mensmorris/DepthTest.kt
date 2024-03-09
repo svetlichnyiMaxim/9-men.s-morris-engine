@@ -25,7 +25,7 @@ class DepthTest {
 
     @Test
     fun `depth test`() {
-        wonPosition.solve(5u).let {
+        wonPosition.solveBlocking(5u).let {
             var currentPos = wonPosition
             println(it.first)
             it.second!!.forEach { move ->

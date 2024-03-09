@@ -14,7 +14,7 @@ class StrategyTests {
     @Test
     fun `winning test1`() {
         occurredPositions.clear()
-        val ourResult = position1.solve(2u)
+        val ourResult = position1.solveBlocking(2u)
         ourResult.second!!.displayAsPositions(position1)
         TestCase.assertEquals(ourResult, correctResult1)
         occurredPositions.clear()
@@ -23,7 +23,7 @@ class StrategyTests {
     @Test
     fun `winning test2`() {
         occurredPositions.clear()
-        val ourResult = position2.solve(2u)
+        val ourResult = position2.solveBlocking(2u)
         ourResult.second?.displayAsPositions(position2)
         TestCase.assertEquals(ourResult.first, correctResult2.first)
         TestCase.assertEquals(ourResult.second!!.size, correctResult2.second.size)
@@ -34,7 +34,7 @@ class StrategyTests {
     @Test
     fun `winning test3`() {
         occurredPositions.clear()
-        val ourResult = position3.solve(2u)
+        val ourResult = position3.solveBlocking(2u)
         ourResult.second!!.toPositions(position3).forEach {
             it.display()
         }

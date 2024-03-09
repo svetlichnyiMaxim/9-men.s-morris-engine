@@ -27,7 +27,7 @@ fun increaseDepth() {
  * starts async board analyze
  */
 fun startAsyncAnalyze() {
-    solvingJob = CoroutineScope(Dispatchers.Default).async {
+    solvingJob = scope.async {
         startAnalyze()
     }
 }
@@ -35,12 +35,12 @@ fun startAsyncAnalyze() {
 /**
  * starts board analyze
  */
-fun startAnalyze() {
+suspend fun startAnalyze() {
     if (hasCache) {
         return
     }
     hasCache = true
-    solveResult.value = pos.solve(depth.intValue.toUByte()).second ?: mutableListOf()
+    solveResult.value = (pos.solve(depth.intValue.toUByte()).second ?: listOf()).toList()
 }
 
 /**
