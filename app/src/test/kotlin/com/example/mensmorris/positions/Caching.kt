@@ -1,16 +1,12 @@
-package com.example.mensmorris
+package com.example.mensmorris.positions
 
 import com.example.mensmorris.game.BLUE_
-import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.EMPTY
 import com.example.mensmorris.game.GREEN
-import com.example.mensmorris.game.occurredPositions
-import com.example.mensmorris.game.resetAnalyze
-import junit.framework.TestCase
-import org.junit.Test
+import com.example.mensmorris.game.Position
 
-class CachingTest {
-    private val position = Position(
+open class Caching {
+    internal val position = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -24,13 +20,4 @@ class CachingTest {
         // @formatter:on
         pieceToMove = true
     )
-
-    @Test
-    fun `cache test`() {
-        position.solve(6u)
-        TestCase.assertEquals(occurredPositions.size, 3028)
-        TestCase.assertEquals(position.solve(4u).second, null)
-        resetAnalyze()
-        TestCase.assertEquals(position.solve(4u).second, null)
-    }
 }

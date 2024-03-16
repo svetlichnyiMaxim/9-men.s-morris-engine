@@ -1,14 +1,12 @@
-package com.example.mensmorris
+package com.example.mensmorris.positions
 
 import com.example.mensmorris.game.BLUE_
-import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.EMPTY
 import com.example.mensmorris.game.GREEN
-import com.example.mensmorris.game.resetAnalyze
-import org.junit.Test
+import com.example.mensmorris.game.Position
 
-class CopyTest {
-    private val position = Position(
+open class Copy {
+    internal val position = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -22,15 +20,4 @@ class CopyTest {
         // @formatter:on
         pieceToMove = true
     )
-
-    /**
-     * this tests we our copy method actually works
-     */
-    @Test
-    fun `copy test`() {
-        val position2 = position.copy()
-        position2.positions[0] = null
-        assert(position != position2)
-        resetAnalyze()
-    }
 }

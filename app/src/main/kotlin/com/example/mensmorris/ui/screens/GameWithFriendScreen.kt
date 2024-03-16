@@ -99,7 +99,7 @@ object GameWithFriendScreen {
                         undoneMoveHistory.push(movesHistory.peek())
                         movesHistory.pop()
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
-                        moveHints.value.clear()
+                        moveHints.value = arrayListOf()
                         selectedButton.value = null
                     }
                 }) {
@@ -116,7 +116,7 @@ object GameWithFriendScreen {
                         movesHistory.push(undoneMoveHistory.peek())
                         undoneMoveHistory.pop()
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
-                        moveHints.value.clear()
+                        moveHints.value = arrayListOf()
                         selectedButton.value = null
                     }
                 }) {

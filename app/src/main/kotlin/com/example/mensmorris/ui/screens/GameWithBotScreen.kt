@@ -17,6 +17,7 @@ import com.example.mensmorris.R
 import com.example.mensmorris.game.processMove
 import com.example.mensmorris.game.GameState
 import com.example.mensmorris.game.botJob
+import com.example.mensmorris.game.defaultDispatcher
 import com.example.mensmorris.game.gameStartPosition
 import com.example.mensmorris.game.handleClick
 import com.example.mensmorris.game.moveHints
@@ -33,8 +34,8 @@ import com.example.mensmorris.ui.AppTheme
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard
 import com.example.mensmorris.ui.Locate
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -45,10 +46,10 @@ object GameWithBotScreen {
     /**
      * launches bot actions against player
      */
-    private fun launchBot() {
+    private fun launchBot(dispatcher: CoroutineDispatcher = defaultDispatcher) {
         stopBot()
         var start = true
-        botJob = CoroutineScope(Dispatchers.Default).launch {
+        botJob = CoroutineScope(dispatcher).launch {
             while (!pos.pieceToMove && pos.gameState() != GameState.End) {
                 startAnalyze()
                 if (start) {
@@ -133,7 +134,7 @@ object GameWithBotScreen {
                         undoneMoveHistory.push(movesHistory.peek())
                         movesHistory.pop()
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
-                        moveHints.value.clear()
+                        moveHints.value = arrayListOf()
                         selectedButton.value = null
                         launchBot()
                     }
@@ -151,7 +152,7 @@ object GameWithBotScreen {
                         movesHistory.push(undoneMoveHistory.peek())
                         undoneMoveHistory.pop()
                         pos = movesHistory.lastOrNull() ?: gameStartPosition
-                        moveHints.value.clear()
+                        moveHints.value = arrayListOf()
                         selectedButton.value = null
                         launchBot()
                     }

@@ -32,21 +32,6 @@ val gameStartPosition = Position(
 val occurredPositions: HashMap<String, Pair<List<Movement>, UByte>> = hashMapOf()
 
 /**
- * fast way for creating green piece
- */
-const val GREEN = true
-
-/**
- * fast way for creating blue piece
- */
-const val BLUE_ = false
-
-/**
- * fast way for creating empty piece
- */
-val EMPTY: Boolean? get() = null
-
-/**
  * @return color we are using to draw this piece
  * @param piece pieces
  */
@@ -152,19 +137,6 @@ fun handleClick(elementIndex: Int) {
 }
 
 /**
- * processes selected movement
- */
-fun processMove(move: Movement) {
-    selectedButton.value = null
-    pos = move.producePosition(pos).copy()
-    resetAnalyze()
-    saveMove(pos)
-    if (pos.gameState() == GameState.End) {
-        currentScreen = Screen.EndGameScreen
-    }
-}
-
-/**
  * finds pieces we should highlight
  */
 fun handleHighLighting() {
@@ -225,6 +197,15 @@ var hasCache = false
  * resets all cached positions depth, which prevents engine from skipping important moves which have
  * occurred in previous analyzes
  */
+fun wipeCachedPositions() {
+    occurredPositions.clear()
+    hasCache = false
+}
+
+/**
+ * resets all cached positions depth, which prevents engine from skipping important moves which have
+ * occurred in previous analyzes
+ */
 fun resetCachedPositions() {
     if (!hasCache) {
         return
@@ -248,7 +229,7 @@ var pos
 /**
  * used for storing our game analyzes result
  */
-var solveResult = mutableStateOf<MutableList<Movement>>(mutableListOf())
+var solveResult = mutableStateOf<List<Movement>>(mutableListOf())
 
 /**
  * stores current game position
@@ -258,7 +239,7 @@ var gamePosition = mutableStateOf(gameStartPosition)
 /**
  * stores all pieces which can be moved (used for highlighting)
  */
-var moveHints = mutableStateOf(mutableListOf<Int>())
+var moveHints = mutableStateOf(listOf<Int>())
 
 /**
  * used for storing info of the previous (valid one) clicked button

@@ -1,18 +1,16 @@
-package com.example.mensmorris
+package com.example.mensmorris.positions
 
-import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.BLUE_
 import com.example.mensmorris.game.EMPTY
 import com.example.mensmorris.game.GREEN
-import junit.framework.TestCase
-import org.junit.Test
+import com.example.mensmorris.game.Position
 
-class UnfinishedTriplesEvaluation {
-    private val wonPosition = Position(
+open class UnfinishedTriplesEvaluation {
+    internal val draw1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
-                    GREEN,           EMPTY,          EMPTY,
+                    GREEN,          EMPTY,          EMPTY,
                             EMPTY,  EMPTY,  EMPTY,
             EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
                             EMPTY,  EMPTY,  EMPTY,
@@ -23,12 +21,7 @@ class UnfinishedTriplesEvaluation {
         pieceToMove = true
     )
 
-    @Test
-    fun `winning position`() {
-        TestCase.assertEquals(wonPosition.unfinishedTriples(), Pair(1, 1))
-    }
-
-    private val wonPosition1 = Position(
+    internal val greenWinning1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -43,12 +36,7 @@ class UnfinishedTriplesEvaluation {
         freePieces = Pair(0u, 1u), pieceToMove = true
     )
 
-    @Test
-    fun `winning position1`() {
-        TestCase.assertEquals(wonPosition1.evaluate(), Pair(-2146483648, 2147483647))
-    }
-
-    private val lostPosition = Position(
+    internal val greenWinning2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  BLUE_,
@@ -62,9 +50,4 @@ class UnfinishedTriplesEvaluation {
         // @formatter:on
         pieceToMove = false
     )
-
-    @Test
-    fun `loosing position`() {
-        TestCase.assertEquals(lostPosition.evaluate(), Pair(-2146483648, 2147483647))
-    }
 }

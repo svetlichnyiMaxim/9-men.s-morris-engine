@@ -47,6 +47,7 @@ operator fun <T> Triple<T, T, T>.get(index: Int): T {
 /**
  * converts all movements to positions
  */
+@Suppress("unused")
 fun MutableList<Movement>.toPositions(startPos: Position): List<Position> {
     var startPosCopy = startPos
     val result: MutableList<Position> = mutableListOf(startPos)
@@ -61,6 +62,7 @@ fun MutableList<Movement>.toPositions(startPos: Position): List<Position> {
 /**
  * provides a quick way to display all movements as positions
  */
+@Suppress("unused")
 fun MutableList<Movement>.displayAsPositions(startPos: Position) {
     var startPosCopy = startPos
     val result: MutableList<Position> = mutableListOf(startPos)
@@ -75,4 +77,7 @@ fun MutableList<Movement>.displayAsPositions(startPos: Position) {
         println("${it.bluePiecesAmount} ${it.greenPiecesAmount}")
         it.display()
     }
+    println()
+    println("finished output")
+    println()
 }

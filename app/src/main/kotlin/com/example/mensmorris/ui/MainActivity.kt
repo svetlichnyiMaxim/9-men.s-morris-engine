@@ -5,11 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ReportFragment.Companion.reportFragment
 import com.example.mensmorris.render
 import com.example.mensmorris.ui.screens.GameEndScreen.GameEnd
-import com.example.mensmorris.ui.screens.GameWithBotScreen
 import com.example.mensmorris.ui.screens.GameWithBotScreen.StartGameWithBot
 import com.example.mensmorris.ui.screens.GameWithFriendScreen.StartGameWithFriend
 import com.example.mensmorris.ui.screens.WelcomeScreen.StartWelcomeScreen

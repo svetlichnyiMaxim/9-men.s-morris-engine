@@ -34,7 +34,7 @@ object GameEndScreen {
     @Composable
     fun GameEnd() {
         stopBot()
-        moveHints.value.clear()
+        moveHints.value = arrayListOf()
         AppTheme {
             Locate(alignment = Alignment.Center) {
                 Box(

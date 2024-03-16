@@ -1,10 +1,11 @@
 package com.example.mensmorris.game
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
-import kotlin.coroutines.cancellation.CancellationException
 import kotlin.math.max
 
 /**
@@ -24,10 +25,16 @@ fun increaseDepth() {
 }
 
 /**
+ * our dispatcher for most of the coroutines
+ */
+@OptIn(ExperimentalCoroutinesApi::class)
+val defaultDispatcher = Dispatchers.Default.limitedParallelism(10)
+
+/**
  * starts async board analyze
  */
-fun startAsyncAnalyze() {
-    solvingJob = CoroutineScope(Dispatchers.Default).async {
+fun startAsyncAnalyze(dispatcher: CoroutineDispatcher = defaultDispatcher) {
+    solvingJob = CoroutineScope(dispatcher).async {
         startAnalyze()
     }
 }
@@ -40,7 +47,7 @@ fun startAnalyze() {
         return
     }
     hasCache = true
-    solveResult.value = pos.solve(depth.intValue.toUByte()).second ?: mutableListOf()
+    solveResult.value = pos.solve(depth.intValue.toUByte()).second
 }
 
 /**

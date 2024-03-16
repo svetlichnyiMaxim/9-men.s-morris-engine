@@ -9,26 +9,15 @@ package com.example.mensmorris.game
  * @param pieceToMove piece going to move next
  * @param removalCount amount of pieces to remove
  */
+@Suppress("EqualsOrHashCode")
 class Position(
     var positions: Array<Boolean?>,
     var freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
-    var greenPiecesAmount: UByte,
-    var bluePiecesAmount: UByte,
+    var greenPiecesAmount: UByte = (positions.count { it == true } + freePieces.first),
+    var bluePiecesAmount: UByte = (positions.count { it == false } + freePieces.second),
     var pieceToMove: Boolean,
     var removalCount: UByte = 0U
 ) {
-    constructor(
-        positions: Array<Boolean?>,
-        freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
-        pieceToMove: Boolean,
-        removalCount: UByte = 0U
-    ) : this(positions,
-        freePieces,
-        (positions.count { it == true } + freePieces.first),
-        (positions.count { it == false } + freePieces.second),
-        pieceToMove,
-        removalCount)
-
     /**
      * evaluates position
      * @return pair, where first is eval. for green and the second one for blue
@@ -46,15 +35,19 @@ class Position(
         val basicGreenEval = (greenPieces - bluePieces) * PIECE_COST
         val basicBlueEval = (bluePieces - greenPieces) * PIECE_COST
 
-        val unfinishedTriples = unfinishedTriples()
-        val greenUnfinishedTriplesEval =
-            (unfinishedTriples.first - unfinishedTriples.second * ENEMY_UNFINISHED_TRIPLES_COST) *
-                    UNFINISHED_TRIPLES_COST
-        val blueUnfinishedTriplesEval =
-            (unfinishedTriples.second - unfinishedTriples.first * ENEMY_UNFINISHED_TRIPLES_COST) *
-                    UNFINISHED_TRIPLES_COST
+        val (unfinishedTriples, findBlockedTriples) = triplesEvaluation()
 
-        val findBlockedTriples = findBlockedTriples()
+        val greenUnfinishedTriplesDelta =
+            (unfinishedTriples.first - unfinishedTriples.second * ENEMY_UNFINISHED_TRIPLES_COST)
+        val greenUnfinishedTriplesEval =
+            greenUnfinishedTriplesDelta * UNFINISHED_TRIPLES_COST
+
+
+        val blueUnfinishedTriplesDelta =
+            (unfinishedTriples.second - unfinishedTriples.first * ENEMY_UNFINISHED_TRIPLES_COST)
+        val blueUnfinishedTriplesEval =
+            blueUnfinishedTriplesDelta * UNFINISHED_TRIPLES_COST
+
         val greenPossibleTriplesEval =
             (findBlockedTriples.first - findBlockedTriples.second) * POSSIBLE_TRIPLE_COST
         val bluePossibleTriplesEval =
@@ -69,48 +62,52 @@ class Position(
     }
 
     /**
-     * @return amount of lines with only 1 missing piece for new removal (triple)
+     * @return pair of unfinished triples and blocked triples
      */
-    fun unfinishedTriples(): Pair<Int, Int> {
+    fun triplesEvaluation(): Pair<Pair<Int, Int>, Pair<Int, Int>> {
         var greenUnfinishedTriples = 0
         var blueUnfinishedTriples = 0
-        for (ints in triplesMap) {
-            // green
-            if (ints.none { positions[it] == false }
-                && ints.count { positions[it] == true } == 2) {
-                greenUnfinishedTriples++
-            }
-            // blue
-            if (ints.none { positions[it] == true }
-                && ints.count { positions[it] == false } == 2) {
-                blueUnfinishedTriples++
-            }
-        }
-        return Pair(greenUnfinishedTriples, blueUnfinishedTriples)
-    }
-
-    private fun findBlockedTriples(): Pair<Int, Int> {
         var greenBlockedTriples = 0
         var blueBlockedTriples = 0
         for (ints in triplesMap) {
-            // green
-            if (ints.count { positions[it] == false } == 1 &&
-                ints.count { positions[it] == true } == 2) {
+            var greenPieces = 0
+            var bluePieces = 0
+            ints.forEach {
+                when (positions[it]) {
+                    true -> {
+                        greenPieces++
+                    }
+
+                    false -> {
+                        bluePieces++
+                    }
+
+                    null -> {}
+                }
+            }
+            if (greenPieces == 2 && bluePieces == 0) {
+                greenUnfinishedTriples++
+            }
+            if (greenPieces == 0 && bluePieces == 2) {
+                blueUnfinishedTriples++
+            }
+            if (greenPieces == 2 && bluePieces == 1) {
                 greenBlockedTriples++
             }
-            // blue
-            if (ints.count { positions[it] == true } == 1 &&
-                ints.count { positions[it] == false } == 2) {
+            if (greenPieces == 1 && bluePieces == 2) {
                 blueBlockedTriples++
             }
         }
-        return Pair(greenBlockedTriples, blueBlockedTriples)
+        return Pair(
+            Pair(greenUnfinishedTriples, blueUnfinishedTriples),
+            Pair(greenBlockedTriples, blueBlockedTriples)
+        )
     }
 
     /**
      * @return true if game has ended
      */
-    fun gameEnded(): Boolean {
+    private fun gameEnded(): Boolean {
         return greenPiecesAmount < PIECES_TO_FLY || bluePiecesAmount < PIECES_TO_FLY
     }
 
@@ -121,18 +118,19 @@ class Position(
      */
     fun solve(
         depth: UByte
-    ): Pair<Pair<Int, Int>, MutableList<Movement>?> {
+    ): Pair<Pair<Int, Int>, MutableList<Movement>> {
         if (depth == 0.toUByte() || gameEnded()) {
             return Pair(evaluate(depth), mutableListOf())
         }
         // for all possible positions, we try to solve them
-        val positions = (generateMoves(depth).map {
+        val positions: MutableList<Pair<Pair<Int, Int>, MutableList<Movement>>> = mutableListOf()
+        generateMoves(depth).forEach {
             val result = it.producePosition(this).solve((depth - 1u).toUByte())
-            if (result.second != null) {
-                result.apply { this.second!!.add(it) }
-            }
-            result
-        }.filter { it.second != null })
+            if (depth != 1.toUByte() && result.second.isEmpty())
+                return@forEach
+            result.second.add(it)
+            positions.add(result)
+        }
         if (positions.isEmpty()) {
             // if we can't make a move, we lose
             return Pair(
@@ -140,7 +138,7 @@ class Position(
                     Pair(LOST_GAME_COST, Int.MAX_VALUE)
                 } else {
                     Pair(Int.MAX_VALUE, LOST_GAME_COST)
-                }, null
+                }, mutableListOf()
             )
         }
         return positions.maxBy {
@@ -163,18 +161,6 @@ class Position(
     }
 
     /**
-     * @param currentDepth the current depth we are at
-     * @param ignoreCache if we should ignore cache positions
-     * @return possible positions we can achieve in 1 move
-     */
-    fun generatePositions(currentDepth: UByte, ignoreCache: Boolean = false): List<Position> {
-        val generatedList = generateMoves(currentDepth, ignoreCache).map {
-            it.producePosition(this)
-        }
-        return generatedList
-    }
-
-    /**
      * @param move the last move we have performed
      * @return the amount of removes we need to perform
      */
@@ -189,7 +175,7 @@ class Position(
     /**
      * @return possible movements
      */
-    fun generateMoves(currentDepth: UByte, ignoreCache: Boolean = false): List<Movement> {
+    fun generateMoves(currentDepth: UByte = 0u, ignoreCache: Boolean = false): List<Movement> {
         val str = toString()
         if (!ignoreCache) {
             // check if we can abort calculation / use our previous result
@@ -367,8 +353,7 @@ class Position(
                 }
             }
         }
-        @Suppress("LongLine")
-        println(
+        @Suppress("LongLine") println(
             """
         Position(
             mutableListOf(
@@ -392,7 +377,7 @@ class Position(
         if (other !is Position) {
             return super.equals(other)
         }
-        for (i in 0..<positions.size) {
+        for (i in positions.indices) {
             if (positions[i] != other.positions[i]) {
                 return false
             }
@@ -409,46 +394,6 @@ class Position(
                 true -> "1"
                 false -> "0"
             }
-        } + " " + freePieces.first + " " + freePieces.second
+        } + freePieces.first + freePieces.second
     }
 }
-
-/**
- * provides a clean way to access need element of the pair
- */
-operator fun <A> Pair<A, A>.get(first: Boolean): A {
-    return if (first) this.first
-    else this.second
-}
-
-private operator fun Int.plus(uInt: UInt): UInt {
-    return (this + uInt.toInt()).toUInt()
-}
-
-private operator fun Int.plus(uByte: UByte): UByte {
-    return (this + uByte.toInt()).toUByte()
-}
-
-/**
- * circle unicode symbol
- * linux only
- */
-const val CIRCLE: String = "\uD83D\uDD35"
-
-/**
- * blue color
- * linux only
- */
-const val BLUE_COLOR: String = "\u001B[34m"
-
-/**
- * green color
- * linux only
- */
-const val GREEN_COLOR: String = "\u001B[32m"
-
-/**
- * resets to default color
- * linux only
- */
-const val NONE_COLOR: String = "\u001B[90m"
