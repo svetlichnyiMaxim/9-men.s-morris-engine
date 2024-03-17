@@ -1,5 +1,7 @@
 package com.example.mensmorris.game
 
+import com.example.mensmorris.game.CacheUtils.selectedButton
+import com.example.mensmorris.game.GameUtils.pos
 import com.example.mensmorris.ui.Screen
 import com.example.mensmorris.ui.currentScreen
 import java.util.Stack
@@ -33,7 +35,7 @@ fun processMove(move: Movement) {
     pos = move.producePosition(pos).copy()
     resetAnalyze()
     saveMove(pos)
-    if (pos.gameState() == GameState.End) {
+    if (pos.gameState() == GameUtils.GameState.End) {
         currentScreen = Screen.EndGameScreen
     }
 }

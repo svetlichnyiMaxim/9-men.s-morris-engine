@@ -17,12 +17,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.R
-import com.example.mensmorris.game.gameStartPosition
-import com.example.mensmorris.game.moveHints
+import com.example.mensmorris.game.CacheUtils.moveHints
+import com.example.mensmorris.game.CacheUtils.occurredPositions
+import com.example.mensmorris.game.CacheUtils.selectedButton
+import com.example.mensmorris.game.GameUtils.gameStartPosition
+import com.example.mensmorris.game.GameUtils.pos
 import com.example.mensmorris.game.movesHistory
-import com.example.mensmorris.game.occurredPositions
-import com.example.mensmorris.game.pos
-import com.example.mensmorris.game.selectedButton
 import com.example.mensmorris.game.undoneMoveHistory
 import com.example.mensmorris.ui.AppTheme
 import com.example.mensmorris.ui.BUTTON_WIDTH

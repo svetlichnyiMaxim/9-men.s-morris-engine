@@ -1,5 +1,7 @@
 package com.example.mensmorris.game
 
+import com.example.mensmorris.game.CacheUtils.occurredPositions
+
 /**
  * used for storing position data
  * @param positions all pieces
@@ -126,8 +128,9 @@ class Position(
         val positions: MutableList<Pair<Pair<Int, Int>, MutableList<Movement>>> = mutableListOf()
         generateMoves(depth).forEach {
             val result = it.producePosition(this).solve((depth - 1u).toUByte())
-            if (depth != 1.toUByte() && result.second.isEmpty())
+            if (depth != 1.toUByte() && result.second.isEmpty()) {
                 return@forEach
+            }
             result.second.add(it)
             positions.add(result)
         }
@@ -189,23 +192,23 @@ class Position(
             }
         }
         val generatedList = when (gameState()) {
-            GameState.Placement -> {
+            GameUtils.GameState.Placement -> {
                 generatePlacementMovements()
             }
 
-            GameState.End -> {
+            GameUtils.GameState.End -> {
                 listOf()
             }
 
-            GameState.Flying -> {
+            GameUtils.GameState.Flying -> {
                 generateFlyingMovements()
             }
 
-            GameState.Normal -> {
+            GameUtils.GameState.Normal -> {
                 generateNormalMovements()
             }
 
-            GameState.Removing -> {
+            GameUtils.GameState.Removing -> {
                 generateRemovalMoves()
             }
         }
@@ -274,26 +277,26 @@ class Position(
     /**
      * @return state of the game
      */
-    fun gameState(): GameState {
+    fun gameState(): GameUtils.GameState {
         return when {
             (gameEnded()) -> {
-                GameState.End
+                GameUtils.GameState.End
             }
 
             (removalCount > 0U) -> {
-                GameState.Removing
+                GameUtils.GameState.Removing
             }
 
             (freePieces[pieceToMove] > 0U) -> {
-                GameState.Placement
+                GameUtils.GameState.Placement
             }
 
             ((pieceToMove && greenPiecesAmount == PIECES_TO_FLY) ||
                     (!pieceToMove && bluePiecesAmount == PIECES_TO_FLY)) -> {
-                GameState.Flying
+                GameUtils.GameState.Flying
             }
 
-            else -> GameState.Normal
+            else -> GameUtils.GameState.Normal
         }
     }
 

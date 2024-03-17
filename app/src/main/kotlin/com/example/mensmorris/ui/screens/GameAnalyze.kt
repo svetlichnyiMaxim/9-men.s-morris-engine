@@ -17,11 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.mensmorris.game.CacheUtils.solveResult
+import com.example.mensmorris.game.GameUtils.depth
+import com.example.mensmorris.game.GameUtils.pos
 import com.example.mensmorris.game.decreaseDepth
-import com.example.mensmorris.game.depth
 import com.example.mensmorris.game.increaseDepth
-import com.example.mensmorris.game.pos
-import com.example.mensmorris.game.solveResult
 import com.example.mensmorris.game.startAsyncAnalyze
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard

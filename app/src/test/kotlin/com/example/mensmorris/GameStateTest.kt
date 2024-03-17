@@ -1,10 +1,10 @@
 package com.example.mensmorris
 
 import com.example.mensmorris.game.BLUE_
-import com.example.mensmorris.game.GameState
 import com.example.mensmorris.game.Position
 import com.example.mensmorris.game.EMPTY
 import com.example.mensmorris.game.GREEN
+import com.example.mensmorris.game.GameUtils
 import junit.framework.TestCase
 import org.junit.Test
 
@@ -26,6 +26,6 @@ class GameStateTest {
 
     @Test
     fun `game state test 1`() {
-        TestCase.assertEquals(position.gameState(), GameState.Normal)
+        TestCase.assertEquals(position.gameState(), GameUtils.GameState.Normal)
     }
 }

@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mensmorris.game.moveHints
-import com.example.mensmorris.game.pos
-import com.example.mensmorris.game.stopBot
+import com.example.mensmorris.game.CacheUtils.moveHints
+import com.example.mensmorris.game.GameUtils.pos
+import com.example.mensmorris.game.GameUtils.stopBot
 import com.example.mensmorris.ui.AppTheme
 import com.example.mensmorris.ui.BUTTON_WIDTH
 import com.example.mensmorris.ui.DrawBoard

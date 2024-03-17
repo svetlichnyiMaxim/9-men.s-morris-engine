@@ -20,12 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import com.example.mensmorris.game.CacheUtils.moveHints
+import com.example.mensmorris.game.CacheUtils.selectedButton
+import com.example.mensmorris.game.GameUtils.colorMap
+import com.example.mensmorris.game.GameUtils.handleClick
+import com.example.mensmorris.game.GameUtils.pos
 import com.example.mensmorris.game.Position
-import com.example.mensmorris.game.colorMap
-import com.example.mensmorris.game.handleClick
-import com.example.mensmorris.game.moveHints
-import com.example.mensmorris.game.pos
-import com.example.mensmorris.game.selectedButton
 
 /**
  * provides a quicker way for setting element position
