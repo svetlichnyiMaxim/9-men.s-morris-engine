@@ -19,16 +19,16 @@ object GameUtils {
      */
     val gameStartPosition = Position(
         // @formatter:off
-    arrayOf(
-        EMPTY,                  EMPTY,                  EMPTY,
-                EMPTY,          EMPTY,          EMPTY,
-                        EMPTY,  EMPTY,  EMPTY,
-        EMPTY,  EMPTY,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
-                        EMPTY,  EMPTY,  EMPTY,
-                EMPTY,          EMPTY,          EMPTY,
-        EMPTY,                  EMPTY,                  EMPTY
-    ),
-    // @formatter:on
+        arrayOf(
+            EMPTY,                  EMPTY,                  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+            EMPTY,  EMPTY,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
+                            EMPTY,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  EMPTY,                  EMPTY
+        ),
+        // @formatter:on
         Pair(8u, 8u), pieceToMove = true
     )
 
@@ -139,7 +139,7 @@ object GameUtils {
     /**
      * finds pieces we should highlight
      */
-    fun handleHighLighting() {
+    private fun handleHighLighting() {
         pos.generateMoves(0u, true).let { moves ->
             when (pos.gameState()) {
                 GameState.Placement -> {
@@ -182,7 +182,7 @@ object GameUtils {
      * handles selection of the piece to move
      * @param elementIndex tested candidate
      */
-    fun pieceToMoveSelector(elementIndex: Int) {
+    private fun pieceToMoveSelector(elementIndex: Int) {
         if (pos.positions[elementIndex] != null) {
             selectedButton.value = elementIndex
         } else {
