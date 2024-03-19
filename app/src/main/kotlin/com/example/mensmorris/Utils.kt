@@ -2,9 +2,6 @@ package com.example.mensmorris
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
-import com.example.mensmorris.game.Movement
-import com.example.mensmorris.game.Position
-import com.example.mensmorris.ui.mainActivity
 
 /**
  * provides a quicker way for setting current windows
@@ -48,7 +45,7 @@ operator fun <T> Triple<T, T, T>.get(index: Int): T {
  * converts all movements to positions
  */
 @Suppress("unused")
-fun MutableList<Movement>.toPositions(startPos: Position): List<Position> {
+fun List<Movement>.toPositions(startPos: Position): List<Position> {
     var startPosCopy = startPos
     val result: MutableList<Position> = mutableListOf(startPos)
     this@toPositions.asReversed().forEach {

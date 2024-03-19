@@ -1,7 +1,7 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.resetAnalyze
 import com.example.mensmorris.positions.Copy
+import com.example.mensmorris.utils.AnalyzeUtils.resetAnalyze
 import org.junit.Test
 
 class CopyTest : Copy() {

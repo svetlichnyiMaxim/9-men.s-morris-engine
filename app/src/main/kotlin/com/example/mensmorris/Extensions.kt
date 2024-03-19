@@ -1,4 +1,4 @@
-package com.example.mensmorris.game
+package com.example.mensmorris
 
 /**
  * provides a clean way to access need element of the pair

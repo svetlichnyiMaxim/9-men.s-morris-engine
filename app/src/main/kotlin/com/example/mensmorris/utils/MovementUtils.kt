@@ -1,9 +1,12 @@
-package com.example.mensmorris.game
+package com.example.mensmorris.utils
 
-import com.example.mensmorris.game.CacheUtils.selectedButton
-import com.example.mensmorris.game.GameUtils.pos
-import com.example.mensmorris.ui.Screen
-import com.example.mensmorris.ui.currentScreen
+import com.example.mensmorris.Movement
+import com.example.mensmorris.Position
+import com.example.mensmorris.utils.AnalyzeUtils.resetAnalyze
+import com.example.mensmorris.utils.CacheUtils.selectedButton
+import com.example.mensmorris.utils.GameUtils.pos
+import com.example.mensmorris.Screen
+import com.example.mensmorris.currentScreen
 import java.util.Stack
 
 /**
@@ -36,6 +39,6 @@ fun processMove(move: Movement) {
     resetAnalyze()
     saveMove(pos)
     if (pos.gameState() == GameUtils.GameState.End) {
-        currentScreen = Screen.EndGameScreen
+        currentScreen.value = Screen.EndGame
     }
 }

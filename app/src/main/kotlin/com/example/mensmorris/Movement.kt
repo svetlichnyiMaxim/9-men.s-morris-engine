@@ -1,10 +1,11 @@
-package com.example.mensmorris.game
+package com.example.mensmorris
 
 /**
  * used to store movement
  * @param startIndex index of place a piece moves from
  * @param endIndex index of place a piece moves to
  */
+@Suppress("EqualsOrHashCode")
 class Movement(val startIndex: Int?, val endIndex: Int?) {
     /**
      * @param pos position we have a more for

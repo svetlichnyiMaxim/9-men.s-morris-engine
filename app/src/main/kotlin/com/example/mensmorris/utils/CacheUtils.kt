@@ -1,7 +1,9 @@
-package com.example.mensmorris.game
+package com.example.mensmorris.utils
 
 import androidx.compose.runtime.mutableStateOf
-import com.example.mensmorris.game.GameUtils.gameStartPosition
+import com.example.mensmorris.Movement
+import com.example.mensmorris.utils.CoroutineUtils.updateSolvingJob
+import com.example.mensmorris.utils.GameUtils.gameStartPosition
 
 /**
  * provides caching utils
@@ -15,7 +17,7 @@ object CacheUtils {
     /**
      * used to check if need to reset our cache or it already is
      */
-    var hasCache = false
+    var hasCacheWithDepth = false
 
     /**
      * resets all cached positions depth
@@ -23,7 +25,7 @@ object CacheUtils {
      */
     fun wipeCachedPositions() {
         occurredPositions.clear()
-        hasCache = false
+        hasCacheWithDepth = false
     }
 
     /**
@@ -31,13 +33,22 @@ object CacheUtils {
      * which prevents engine from skipping important moves which have occurred in previous analyzes
      */
     fun resetCachedPositions() {
-        if (!hasCache) {
+        if (!hasCacheWithDepth) {
             return
         }
         occurredPositions.forEach {
             occurredPositions[it.key] = Pair(it.value.first, 0u)
         }
-        hasCache = false
+        hasCacheWithDepth = false
+    }
+
+    /**
+     * starts async board analyze
+     */
+    fun startAsyncAnalyze() {
+        updateSolvingJob {
+            AnalyzeUtils.startAnalyze()
+        }
     }
 
     /**

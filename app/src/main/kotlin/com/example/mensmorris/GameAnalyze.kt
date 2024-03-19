@@ -1,4 +1,4 @@
-package com.example.mensmorris.ui.screens
+package com.example.mensmorris
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,15 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.mensmorris.game.CacheUtils.solveResult
-import com.example.mensmorris.game.GameUtils.depth
-import com.example.mensmorris.game.GameUtils.pos
-import com.example.mensmorris.game.decreaseDepth
-import com.example.mensmorris.game.increaseDepth
-import com.example.mensmorris.game.startAsyncAnalyze
-import com.example.mensmorris.ui.BUTTON_WIDTH
-import com.example.mensmorris.ui.DrawBoard
-import com.example.mensmorris.ui.Locate
+import com.example.mensmorris.utils.AnalyzeUtils.decreaseDepth
+import com.example.mensmorris.utils.AnalyzeUtils.increaseDepth
+import com.example.mensmorris.utils.CacheUtils.solveResult
+import com.example.mensmorris.utils.CacheUtils.startAsyncAnalyze
+import com.example.mensmorris.utils.GameUtils.depth
+import com.example.mensmorris.utils.GameUtils.pos
 
 /**
  * draws ui elements for accessing game analyzes
@@ -79,11 +76,9 @@ fun DrawBestLine() {
                     .verticalScroll(rememberScrollState())
                     .weight(1f, false)
             ) {
-                var previousPos = pos
-                for (i in 0..<solveResult.value.size) {
+                solveResult.value.toPositions(pos).forEach {
                     Row {
-                        previousPos = solveResult.value[i].producePosition(previousPos)
-                        DrawBoard(previousPos)
+                        GameBoard(it, {}, {}).Draw()
                     }
                 }
             }

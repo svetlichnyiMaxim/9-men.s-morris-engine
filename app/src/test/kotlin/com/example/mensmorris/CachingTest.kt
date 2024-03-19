@@ -1,8 +1,7 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.CacheUtils.occurredPositions
-import com.example.mensmorris.game.CacheUtils.wipeCachedPositions
-import com.example.mensmorris.game.Position
+import com.example.mensmorris.utils.CacheUtils.occurredPositions
+import com.example.mensmorris.utils.CacheUtils.wipeCachedPositions
 import com.example.mensmorris.positions.Caching
 import junit.framework.TestCase
 import org.junit.Test

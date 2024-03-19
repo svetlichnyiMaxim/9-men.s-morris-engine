@@ -1,10 +1,6 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.BLUE_
-import com.example.mensmorris.game.Position
-import com.example.mensmorris.game.EMPTY
-import com.example.mensmorris.game.GREEN
-import com.example.mensmorris.game.GameUtils
+import com.example.mensmorris.utils.GameUtils
 import junit.framework.TestCase
 import org.junit.Test
 

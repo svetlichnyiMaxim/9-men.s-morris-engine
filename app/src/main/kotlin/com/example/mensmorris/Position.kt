@@ -1,6 +1,7 @@
-package com.example.mensmorris.game
+package com.example.mensmorris
 
-import com.example.mensmorris.game.CacheUtils.occurredPositions
+import com.example.mensmorris.utils.CacheUtils.occurredPositions
+import com.example.mensmorris.utils.GameUtils
 
 /**
  * used for storing position data

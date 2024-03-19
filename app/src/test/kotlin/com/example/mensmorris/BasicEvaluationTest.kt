@@ -1,6 +1,5 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.game.LOST_GAME_COST
 import com.example.mensmorris.positions.BasicEvaluation
 import junit.framework.TestCase
 import org.junit.Test
