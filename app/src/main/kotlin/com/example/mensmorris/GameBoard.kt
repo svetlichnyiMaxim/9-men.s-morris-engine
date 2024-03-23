@@ -248,9 +248,7 @@ class GameBoard(
                     if (CacheUtils.selectedButton.value == elementIndex) {
                         0.6f
                     } else {
-                        if (position.positions[elementIndex] == null) {
-                            pos.copy()
-                            CacheUtils.gamePosition.value.copy()
+                        if (pos.positions[elementIndex] == null) {
                             0f
                         } else 1f
                     }
@@ -259,7 +257,7 @@ class GameBoard(
             .size(BUTTON_WIDTH)
             .background(Color.Transparent, CircleShape),
             colors = ButtonDefaults.buttonColors(
-                containerColor = GameUtils.colorMap(position.positions[elementIndex])
+                containerColor = GameUtils.colorMap(pos.positions[elementIndex])
             ),
             shape = CircleShape,
             onClick = {
