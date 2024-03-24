@@ -1,4 +1,4 @@
-package com.example.mensmorris
+package com.example.mensmorris.gameBoard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +15,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -23,10 +25,12 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.mensmorris.GameClickHandler.handleClick
+import com.example.mensmorris.BUTTON_WIDTH
+import com.example.mensmorris.Locate
+import com.example.mensmorris.Position
+import com.example.mensmorris.R
 import com.example.mensmorris.utils.CacheUtils
 import com.example.mensmorris.utils.GameUtils
-import com.example.mensmorris.utils.GameUtils.pos
 import com.example.mensmorris.utils.movesHistory
 import com.example.mensmorris.utils.undoneMoveHistory
 
@@ -37,16 +41,19 @@ class GameBoard(
     /**
      * stores current position
      */
-    var position: Position = pos,
+    override var position: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
     /**
      * what will happen if we click some circle
      */
-    var onClick: (Int) -> Unit = { handleClick(it) },
+    var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit,
     /**
      * what we should additionally do on undo
      */
     var onUndo: () -> Unit = {}
-) {
+) : GameClickHandler(position) {
+    private fun onClickResponse(index: Int) {
+        onClick(index) { handleClick(it) }
+    }
 
     /**
      * there are ways not to hard code this, but it looses a lot of readability
@@ -228,7 +235,7 @@ class GameBoard(
             Alignment.CenterVertically,
         ) {
             for (i in range) {
-                CircledButton(elementIndex = i, onClick)
+                CircledButton(elementIndex = i) { onClickResponse(it) }
             }
         }
     }
@@ -248,7 +255,7 @@ class GameBoard(
                     if (CacheUtils.selectedButton.value == elementIndex) {
                         0.6f
                     } else {
-                        if (pos.positions[elementIndex] == null) {
+                        if (position.value.positions[elementIndex] == null) {
                             0f
                         } else 1f
                     }
@@ -257,7 +264,7 @@ class GameBoard(
             .size(BUTTON_WIDTH)
             .background(Color.Transparent, CircleShape),
             colors = ButtonDefaults.buttonColors(
-                containerColor = GameUtils.colorMap(pos.positions[elementIndex])
+                containerColor = GameUtils.colorMap(position.value.positions[elementIndex])
             ),
             shape = CircleShape,
             onClick = {
@@ -276,7 +283,7 @@ class GameBoard(
                     if (!movesHistory.empty()) {
                         undoneMoveHistory.push(movesHistory.peek())
                         movesHistory.pop()
-                        pos = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
+                        position.value = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
                         CacheUtils.moveHints.value = arrayListOf()
                         CacheUtils.selectedButton.value = null
                         onUndo()
@@ -293,7 +300,7 @@ class GameBoard(
                     if (!undoneMoveHistory.empty()) {
                         movesHistory.push(undoneMoveHistory.peek())
                         undoneMoveHistory.pop()
-                        pos = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
+                        position.value = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
                         CacheUtils.moveHints.value = arrayListOf()
                         CacheUtils.selectedButton.value = null
                         onUndo()

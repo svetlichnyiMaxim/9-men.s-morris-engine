@@ -1,6 +1,6 @@
 package com.example.mensmorris.screens
 
-import com.example.mensmorris.GameBoard
+import com.example.mensmorris.gameBoard.GameBoard
 
 /**
  * extends game screen model

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -19,11 +20,9 @@ import com.example.mensmorris.utils.CoroutineUtils.updateBotJob
 import com.example.mensmorris.utils.GameUtils
 import com.example.mensmorris.utils.GameUtils.gameStartPosition
 import com.example.mensmorris.utils.GameUtils.pos
-import com.example.mensmorris.utils.processMove
 import com.example.mensmorris.AppTheme
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.GameBoard
-import com.example.mensmorris.GameClickHandler.handleClick
+import com.example.mensmorris.gameBoard.GameBoard
 import com.example.mensmorris.Locate
 import com.example.mensmorris.screens.GameScreenModel
 import kotlinx.coroutines.delay
@@ -34,8 +33,8 @@ import kotlinx.coroutines.delay
 object GameWithBotScreen : GameScreenModel {
     override var gameBoard: GameBoard =
         GameBoard(
-            position = pos,
-            onClick = { performClickResponse(it) },
+            position = mutableStateOf(gameStartPosition),
+            onClick = { index, func -> response(index, func) },
             onUndo = { launchBot() }
         )
 
@@ -66,7 +65,7 @@ object GameWithBotScreen : GameScreenModel {
                     delay(750)
                     start = false
                 }
-                processMove(solveResult.value.last())
+                gameBoard.processMove(solveResult.value.last())
                 resetCachedPositions()
             }
         }
@@ -75,10 +74,11 @@ object GameWithBotScreen : GameScreenModel {
     /**
      * performs needed actions after click
      * @param index index of the clicked element
+     * @param func function that handles our click
      */
-    private fun performClickResponse(index: Int) {
+    private fun response(index: Int, func: (index: Int) -> Unit) {
         if (pos.pieceToMove) {
-            handleClick(index)
+            func(index)
             launchBot()
         }
     }

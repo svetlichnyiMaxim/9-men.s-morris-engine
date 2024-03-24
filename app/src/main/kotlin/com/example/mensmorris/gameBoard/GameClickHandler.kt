@@ -1,33 +1,45 @@
-package com.example.mensmorris
+package com.example.mensmorris.gameBoard
 
+import androidx.compose.runtime.MutableState
+import com.example.mensmorris.Movement
+import com.example.mensmorris.Position
+import com.example.mensmorris.Screen
+import com.example.mensmorris.currentScreen
+import com.example.mensmorris.moveProvider
+import com.example.mensmorris.utils.AnalyzeUtils
 import com.example.mensmorris.utils.CacheUtils
 import com.example.mensmorris.utils.GameUtils
-import com.example.mensmorris.utils.processMove
+import com.example.mensmorris.utils.saveMove
 
 /**
  * handles clicks on the board
  */
-object GameClickHandler {
+open class GameClickHandler(
+    /**
+     * our position
+     */
+    open val position: MutableState<Position>
+) {
     /**
      * handles click on the pieces
      * @param elementIndex element that got clicked
      */
     fun handleClick(elementIndex: Int) {
-        when (GameUtils.pos.gameState()) {
+        when (position.value.gameState()) {
             GameUtils.GameState.Placement -> {
-                if (GameUtils.pos.positions[elementIndex] == null) {
+                if (position.value.positions[elementIndex] == null) {
                     processMove(Movement(null, elementIndex))
                 }
             }
 
             GameUtils.GameState.Normal -> {
                 if (CacheUtils.selectedButton.value == null) {
-                    if (GameUtils.pos.positions[elementIndex] == GameUtils.pos.pieceToMove) {
+                    if (position.value.positions[elementIndex] == position.value.pieceToMove) {
                         CacheUtils.selectedButton.value = elementIndex
                     }
                 } else {
                     if (moveProvider[CacheUtils.selectedButton.value!!]!!.filter { endIndex ->
-                            GameUtils.pos.positions[endIndex] == null
+                            position.value.positions[endIndex] == null
                         }.contains(elementIndex)) {
                         processMove(Movement(CacheUtils.selectedButton.value, elementIndex))
                     } else {
@@ -38,10 +50,10 @@ object GameClickHandler {
 
             GameUtils.GameState.Flying -> {
                 if (CacheUtils.selectedButton.value == null) {
-                    if (GameUtils.pos.positions[elementIndex] == GameUtils.pos.pieceToMove)
+                    if (position.value.positions[elementIndex] == position.value.pieceToMove)
                         CacheUtils.selectedButton.value = elementIndex
                 } else {
-                    if (GameUtils.pos.positions[elementIndex] == null) {
+                    if (position.value.positions[elementIndex] == null) {
                         processMove(Movement(CacheUtils.selectedButton.value, elementIndex))
                     } else {
                         GameUtils.pieceToMoveSelector(elementIndex)
@@ -50,7 +62,7 @@ object GameClickHandler {
             }
 
             GameUtils.GameState.Removing -> {
-                if (GameUtils.pos.positions[elementIndex] == !GameUtils.pos.pieceToMove) {
+                if (position.value.positions[elementIndex] == !position.value.pieceToMove) {
                     processMove(Movement(elementIndex, null))
                 }
             }
@@ -66,8 +78,8 @@ object GameClickHandler {
      * finds pieces we should highlight
      */
     private fun handleHighLighting() {
-        GameUtils.pos.generateMoves(0u, true).let { moves ->
-            when (GameUtils.pos.gameState()) {
+        position.value.generateMoves(0u, true).let { moves ->
+            when (position.value.gameState()) {
                 GameUtils.GameState.Placement -> {
                     CacheUtils.moveHints.value = moves.map { it.endIndex!! }.toMutableList()
                 }
@@ -101,6 +113,19 @@ object GameClickHandler {
                 GameUtils.GameState.End -> {
                 }
             }
+        }
+    }
+
+    /**
+     * processes selected movement
+     */
+    fun processMove(move: Movement) {
+        CacheUtils.selectedButton.value = null
+        position.value = move.producePosition(position.value).copy()
+        AnalyzeUtils.resetAnalyze()
+        saveMove(position.value)
+        if (position.value.gameState() == GameUtils.GameState.End) {
+            currentScreen.value = Screen.EndGame
         }
     }
 }
