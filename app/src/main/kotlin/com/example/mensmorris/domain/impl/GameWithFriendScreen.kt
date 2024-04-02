@@ -1,4 +1,4 @@
-package com.example.mensmorris.screens.impl
+package com.example.mensmorris.domain.impl
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,7 @@ import com.example.mensmorris.DrawGameAnalyze
 import com.example.mensmorris.gameBoard.GameBoard
 import com.example.mensmorris.Locate
 import com.example.mensmorris.render
-import com.example.mensmorris.screens.GameScreenModel
+import com.example.mensmorris.domain.GameScreenModel
 import com.example.mensmorris.utils.CacheUtils.resetCachedPositions
 import com.example.mensmorris.utils.GameUtils.gameStartPosition
 import com.example.mensmorris.utils.GameUtils.pos

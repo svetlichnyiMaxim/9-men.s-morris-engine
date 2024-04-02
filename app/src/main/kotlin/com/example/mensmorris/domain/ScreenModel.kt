@@ -1,4 +1,4 @@
-package com.example.mensmorris.screens
+package com.example.mensmorris.domain
 
 import androidx.compose.runtime.Composable
 
@@ -12,15 +12,4 @@ interface ScreenModel {
      */
     @Composable
     fun InvokeRender()
-
-    /**
-     * invokes backend part
-     * launched with coroutine
-     */
-    fun invokeBackend()
-
-    /**
-     * clears the scene when leaving the screen
-     */
-    fun clearTheScene()
 }

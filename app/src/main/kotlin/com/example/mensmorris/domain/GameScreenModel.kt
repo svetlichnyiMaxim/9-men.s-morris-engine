@@ -1,4 +1,4 @@
-package com.example.mensmorris.screens
+package com.example.mensmorris.domain
 
 import com.example.mensmorris.gameBoard.GameBoard
 

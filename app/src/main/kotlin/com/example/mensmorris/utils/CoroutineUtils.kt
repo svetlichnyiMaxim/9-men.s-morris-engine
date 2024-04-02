@@ -22,8 +22,8 @@ object CoroutineUtils {
      * updates solving job
      */
     inline fun updateSolvingJob(
-        dispatcher: CoroutineDispatcher = defaultDispatcher,
-        crossinline func: () -> Unit
+            dispatcher: CoroutineDispatcher = defaultDispatcher,
+            crossinline func: () -> Unit
     ) {
         solvingJob = CoroutineScope(dispatcher).async {
             func()
@@ -34,8 +34,8 @@ object CoroutineUtils {
      * updates solving job
      */
     inline fun updateBotJob(
-        dispatcher: CoroutineDispatcher = defaultDispatcher,
-        crossinline func: suspend CoroutineScope.() -> Unit
+            dispatcher: CoroutineDispatcher = defaultDispatcher,
+            crossinline func: suspend CoroutineScope.() -> Unit
     ) {
         botJob = CoroutineScope(dispatcher).async {
             func()

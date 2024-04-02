@@ -1,4 +1,4 @@
-package com.example.mensmorris.screens.impl
+package com.example.mensmorris.domain.impl
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,15 +21,16 @@ import com.example.mensmorris.gameBoard.GameBoard
 import com.example.mensmorris.Locate
 import com.example.mensmorris.Screen
 import com.example.mensmorris.currentScreen
-import com.example.mensmorris.screens.GameScreenModel
+import com.example.mensmorris.domain.GameScreenModel
 import com.example.mensmorris.utils.CacheUtils.moveHints
 import com.example.mensmorris.utils.GameUtils.pos
 
 /**
  * screen that is shown at the end
  */
-object GameEndScreen : GameScreenModel {
-    override var gameBoard: GameBoard = GameBoard(mutableStateOf(pos), { _, _ -> }, {})
+class GameEndScreen(
+        override var gameBoard: GameBoard = GameBoard(mutableStateOf(pos), { _, _ -> }, {})
+) : GameScreenModel {
 
     @Composable
     override fun InvokeRender() {
@@ -39,10 +40,6 @@ object GameEndScreen : GameScreenModel {
         }
     }
 
-    override fun invokeBackend() {
-        moveHints.value = arrayListOf()
-    }
-
     /**
      * draws screen after the game has ended
      */
@@ -50,38 +47,38 @@ object GameEndScreen : GameScreenModel {
     private fun DrawButtons() {
         Locate(alignment = Alignment.Center) {
             Box(
-                modifier = Modifier
-                    .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
-                    .fillMaxSize(),
-                Alignment.Center
+                    modifier = Modifier
+                            .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
+                            .fillMaxSize(),
+                    Alignment.Center
             ) {
                 Text(fontSize = 30.sp, text = "Game has ended")
             }
             Locate(Alignment.TopStart) {
                 Box(
-                    modifier = Modifier
-                        .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Green, CircleShape),
-                    Alignment.Center
+                        modifier = Modifier
+                                .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
+                                .background(Color.Green, CircleShape),
+                        Alignment.Center
                 ) {
                     Text(color = Color.Blue, text = pos.freePieces.first.toString())
                 }
             }
             Locate(Alignment.TopEnd) {
                 Box(
-                    modifier = Modifier
-                        .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Blue, CircleShape),
-                    Alignment.Center
+                        modifier = Modifier
+                                .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
+                                .background(Color.Blue, CircleShape),
+                        Alignment.Center
                 ) {
                     Text(color = Color.Green, text = pos.freePieces.second.toString())
                 }
             }
             Box(
-                modifier = Modifier
-                    .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
-                    .fillMaxSize(),
-                Alignment.Center
+                    modifier = Modifier
+                            .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
+                            .fillMaxSize(),
+                    Alignment.Center
             ) {
                 Button(onClick = {
                     currentScreen.value = Screen.Welcome
@@ -90,9 +87,5 @@ object GameEndScreen : GameScreenModel {
                 }
             }
         }
-    }
-
-    override fun clearTheScene() {
-        //TODO("Not yet implemented")
     }
 }

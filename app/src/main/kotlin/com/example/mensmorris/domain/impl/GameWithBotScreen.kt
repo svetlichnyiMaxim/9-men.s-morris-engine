@@ -1,4 +1,4 @@
-package com.example.mensmorris.screens.impl
+package com.example.mensmorris.domain.impl
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,19 +24,13 @@ import com.example.mensmorris.AppTheme
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.gameBoard.GameBoard
 import com.example.mensmorris.Locate
-import com.example.mensmorris.screens.GameScreenModel
+import com.example.mensmorris.domain.GameScreenModel
 import kotlinx.coroutines.delay
 
 /**
  * Game main screen
  */
-object GameWithBotScreen : GameScreenModel {
-    override var gameBoard: GameBoard =
-        GameBoard(
-            position = mutableStateOf(gameStartPosition),
-            onClick = { index, func -> response(index, func) },
-            onUndo = { launchBot() }
-        )
+class GameWithBotScreen(override var gameBoard: GameBoard) : GameScreenModel {
 
     @Composable
     override fun InvokeRender() {
@@ -47,67 +41,23 @@ object GameWithBotScreen : GameScreenModel {
         }
     }
 
-    override fun invokeBackend() {
-        pos = gameStartPosition
-        occurredPositions.clear()
-    }
-
-    /**
-     * launches bot actions against player
-     */
-    private fun launchBot() {
-        stopBot()
-        var start = true
-        updateBotJob {
-            while (!pos.pieceToMove && pos.gameState() != GameUtils.GameState.End) {
-                startAnalyze()
-                if (start) {
-                    delay(750)
-                    start = false
-                }
-                gameBoard.processMove(solveResult.value.last())
-                resetCachedPositions()
-            }
-        }
-    }
-
-    /**
-     * performs needed actions after click
-     * @param index index of the clicked element
-     * @param func function that handles our click
-     */
-    private fun response(index: Int, func: (index: Int) -> Unit) {
-        if (pos.pieceToMove) {
-            func(index)
-            launchBot()
-        }
-    }
-
     @Composable
     private fun DrawPieceCount() {
         Locate(Alignment.TopStart) {
-            Box(
-                modifier = Modifier
+            Box(modifier = Modifier
                     .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
                     .background(Color.Green, CircleShape)
-                    .alpha(if (pos.freePieces.first == 0.toUByte()) 0f else 1f), Alignment.Center
-            ) {
+                    .alpha(if (pos.freePieces.first == 0.toUByte()) 0f else 1f), Alignment.Center) {
                 Text(color = Color.Blue, text = pos.freePieces.first.toString())
             }
         }
         Locate(Alignment.TopEnd) {
-            Box(
-                modifier = Modifier
+            Box(modifier = Modifier
                     .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
                     .background(Color.Blue, CircleShape)
-                    .alpha(if (pos.freePieces.second == 0.toUByte()) 0f else 1f), Alignment.Center
-            ) {
+                    .alpha(if (pos.freePieces.second == 0.toUByte()) 0f else 1f), Alignment.Center) {
                 Text(color = Color.Green, text = pos.freePieces.second.toString())
             }
         }
-    }
-
-    override fun clearTheScene() {
-        stopBot()
     }
 }

@@ -9,11 +9,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.utils.CoroutineUtils
-import com.example.mensmorris.screens.impl.GameEndScreen
-import com.example.mensmorris.screens.impl.GameWithBotScreen
-import com.example.mensmorris.screens.impl.GameWithFriendScreen
-import com.example.mensmorris.screens.ScreenModel
-import com.example.mensmorris.screens.impl.WelcomeScreen
+import com.example.mensmorris.domain.impl.GameWithBotScreen
+import com.example.mensmorris.domain.impl.GameWithFriendScreen
+import com.example.mensmorris.domain.impl.WelcomeScreen
+import com.example.mensmorris.model.ModelModel
+import com.example.mensmorris.model.impl.GameEndModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 
@@ -81,7 +81,7 @@ enum class Screen(
     /**
      * used for launching a proper screen
      */
-    var screen: ScreenModel
+    var model: ModelModel
 ) {
     /**
      * screen everything starts from
@@ -101,5 +101,5 @@ enum class Screen(
     /**
      * when the game has ended
      */
-    EndGame(GameEndScreen)
+    EndGame(GameEndModel())
 }

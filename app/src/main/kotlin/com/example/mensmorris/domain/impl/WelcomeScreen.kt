@@ -1,4 +1,4 @@
-package com.example.mensmorris.screens.impl
+package com.example.mensmorris.domain.impl
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +12,7 @@ import com.example.mensmorris.AppTheme
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.Screen
 import com.example.mensmorris.currentScreen
-import com.example.mensmorris.screens.ScreenModel
+import com.example.mensmorris.domain.ScreenModel
 
 /**
  * this screen is shown at the start of the game
