@@ -1,15 +1,15 @@
 package com.example.mensmorris.model.impl
 
-import androidx.compose.runtime.Composable
+import com.example.mensmorris.data.impl.WelcomeData
+import com.example.mensmorris.domain.ScreenModel
+import com.example.mensmorris.domain.impl.WelcomeScreen
 import com.example.mensmorris.model.ModelModel
 
+/**
+ * welcome model
+ * called when app is launched
+ */
 class WelcomeModel : ModelModel {
-    override fun invokeBackend() {
-        TODO("Not yet implemented")
-    }
-
-    @Composable
-    override fun invokeRender() {
-        TODO("Not yet implemented")
-    }
+    override var render: ScreenModel = WelcomeScreen()
+    override val data = WelcomeData()
 }

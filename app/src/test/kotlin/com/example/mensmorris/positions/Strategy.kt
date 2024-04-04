@@ -3,8 +3,8 @@ package com.example.mensmorris.positions
 import com.example.mensmorris.BLUE_
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.GREEN
-import com.example.mensmorris.Movement
-import com.example.mensmorris.Position
+import com.example.mensmorris.common.Movement
+import com.example.mensmorris.common.Position
 
 open class Strategy {
     internal val position1 = Position(

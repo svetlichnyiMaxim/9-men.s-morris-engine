@@ -1,6 +1,7 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.utils.GameUtils
+import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.utils.GameUtils
 import junit.framework.TestCase
 import org.junit.Test
 

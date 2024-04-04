@@ -1,7 +1,8 @@
-package com.example.mensmorris
+package com.example.mensmorris.common
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import com.example.mensmorris.mainActivity
 
 /**
  * provides a quicker way for setting current windows

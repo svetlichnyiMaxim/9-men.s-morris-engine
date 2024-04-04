@@ -15,21 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mensmorris.AppTheme
+import com.example.mensmorris.common.AppTheme
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.gameBoard.GameBoard
-import com.example.mensmorris.Locate
+import com.example.mensmorris.common.Locate
 import com.example.mensmorris.Screen
 import com.example.mensmorris.currentScreen
 import com.example.mensmorris.domain.GameScreenModel
-import com.example.mensmorris.utils.CacheUtils.moveHints
-import com.example.mensmorris.utils.GameUtils.pos
+import com.example.mensmorris.common.gameBoard.GameBoard
+import com.example.mensmorris.common.utils.GameUtils.pos
 
 /**
  * screen that is shown at the end
  */
 class GameEndScreen(
-        override var gameBoard: GameBoard = GameBoard(mutableStateOf(pos), { _, _ -> }, {})
+    override var gameBoard: GameBoard = GameBoard(mutableStateOf(pos), { _, _ -> }, {})
 ) : GameScreenModel {
 
     @Composable
@@ -47,38 +46,36 @@ class GameEndScreen(
     private fun DrawButtons() {
         Locate(alignment = Alignment.Center) {
             Box(
-                    modifier = Modifier
-                            .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
-                            .fillMaxSize(),
-                    Alignment.Center
+                modifier = Modifier
+                    .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
+                    .fillMaxSize(),
+                Alignment.Center
             ) {
                 Text(fontSize = 30.sp, text = "Game has ended")
             }
             Locate(Alignment.TopStart) {
                 Box(
-                        modifier = Modifier
-                                .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
-                                .background(Color.Green, CircleShape),
-                        Alignment.Center
+                    modifier = Modifier
+                        .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
+                        .background(Color.Green, CircleShape), Alignment.Center
                 ) {
                     Text(color = Color.Blue, text = pos.freePieces.first.toString())
                 }
             }
             Locate(Alignment.TopEnd) {
                 Box(
-                        modifier = Modifier
-                                .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
-                                .background(Color.Blue, CircleShape),
-                        Alignment.Center
+                    modifier = Modifier
+                        .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
+                        .background(Color.Blue, CircleShape), Alignment.Center
                 ) {
                     Text(color = Color.Green, text = pos.freePieces.second.toString())
                 }
             }
             Box(
-                    modifier = Modifier
-                            .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
-                            .fillMaxSize(),
-                    Alignment.Center
+                modifier = Modifier
+                    .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
+                    .fillMaxSize(),
+                Alignment.Center
             ) {
                 Button(onClick = {
                     currentScreen.value = Screen.Welcome

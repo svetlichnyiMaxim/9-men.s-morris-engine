@@ -1,4 +1,4 @@
-package com.example.mensmorris.gameBoard
+package com.example.mensmorris.common.gameBoard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,27 +26,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.Locate
-import com.example.mensmorris.Position
+import com.example.mensmorris.common.Locate
+import com.example.mensmorris.common.Position
 import com.example.mensmorris.R
-import com.example.mensmorris.utils.CacheUtils
-import com.example.mensmorris.utils.GameUtils
-import com.example.mensmorris.utils.movesHistory
-import com.example.mensmorris.utils.undoneMoveHistory
+import com.example.mensmorris.common.utils.CacheUtils
+import com.example.mensmorris.common.utils.GameUtils
+import com.example.mensmorris.common.utils.movesHistory
+import com.example.mensmorris.common.utils.undoneMoveHistory
 
 /**
  * Proves a useful way to draw boards
  */
 class GameBoard(
-        /**
+    /**
          * stores current position
          */
         override var position: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
-        /**
+    /**
          * what will happen if we click some circle
          */
         var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit,
-        /**
+    /**
          * what we should additionally do on undo
          */
         var onUndo: () -> Unit = {}

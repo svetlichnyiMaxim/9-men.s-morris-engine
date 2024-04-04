@@ -1,15 +1,15 @@
-package com.example.mensmorris.gameBoard
+package com.example.mensmorris.common.gameBoard
 
 import androidx.compose.runtime.MutableState
-import com.example.mensmorris.Movement
-import com.example.mensmorris.Position
+import com.example.mensmorris.common.Movement
+import com.example.mensmorris.common.Position
 import com.example.mensmorris.Screen
 import com.example.mensmorris.currentScreen
-import com.example.mensmorris.moveProvider
-import com.example.mensmorris.utils.AnalyzeUtils
-import com.example.mensmorris.utils.CacheUtils
-import com.example.mensmorris.utils.GameUtils
-import com.example.mensmorris.utils.saveMove
+import com.example.mensmorris.common.moveProvider
+import com.example.mensmorris.common.utils.AnalyzeUtils
+import com.example.mensmorris.common.utils.CacheUtils
+import com.example.mensmorris.common.utils.GameUtils
+import com.example.mensmorris.common.utils.saveMove
 
 /**
  * handles clicks on the board

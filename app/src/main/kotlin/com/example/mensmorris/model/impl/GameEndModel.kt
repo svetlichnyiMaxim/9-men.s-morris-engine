@@ -1,25 +1,14 @@
 package com.example.mensmorris.model.impl
 
-import androidx.compose.runtime.Composable
 import com.example.mensmorris.data.impl.GameEndData
+import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.GameEndScreen
 import com.example.mensmorris.model.ModelModel
-import com.example.mensmorris.utils.CoroutineUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
 
+/**
+ * game end model
+ */
 class GameEndModel : ModelModel {
-    val render = GameEndScreen()
-    val data = GameEndData()
-
-    override fun invokeBackend() {
-        CoroutineScope(CoroutineUtils.defaultDispatcher).async {
-            data.invokeBackend()
-        }
-    }
-
-    @Composable
-    override fun invokeRender() {
-        render.InvokeRender()
-    }
+    override var render: ScreenModel = GameEndScreen()
+    override val data = GameEndData()
 }

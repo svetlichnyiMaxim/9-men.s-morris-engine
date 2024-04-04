@@ -1,12 +1,12 @@
-package com.example.mensmorris.utils
+package com.example.mensmorris.common.utils
 
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.EMPTY
-import com.example.mensmorris.Position
-import com.example.mensmorris.utils.AnalyzeUtils.resetAnalyze
-import com.example.mensmorris.utils.CacheUtils.gamePosition
-import com.example.mensmorris.utils.CacheUtils.selectedButton
+import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.utils.AnalyzeUtils.resetAnalyze
+import com.example.mensmorris.common.utils.CacheUtils.gamePosition
+import com.example.mensmorris.common.utils.CacheUtils.selectedButton
 
 /**
  * provides useful utils for game

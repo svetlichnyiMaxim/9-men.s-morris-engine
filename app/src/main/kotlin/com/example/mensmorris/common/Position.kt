@@ -1,7 +1,19 @@
-package com.example.mensmorris
+package com.example.mensmorris.common
 
-import com.example.mensmorris.utils.CacheUtils.occurredPositions
-import com.example.mensmorris.utils.GameUtils
+import com.example.mensmorris.BLUE_COLOR
+import com.example.mensmorris.CIRCLE
+import com.example.mensmorris.ENEMY_UNFINISHED_TRIPLES_COST
+import com.example.mensmorris.GREEN_COLOR
+import com.example.mensmorris.LOST_GAME_COST
+import com.example.mensmorris.NONE_COLOR
+import com.example.mensmorris.PIECES_TO_FLY
+import com.example.mensmorris.PIECE_COST
+import com.example.mensmorris.POSSIBLE_TRIPLE_COST
+import com.example.mensmorris.UNFINISHED_TRIPLES_COST
+import com.example.mensmorris.common.utils.CacheUtils.occurredPositions
+import com.example.mensmorris.common.utils.GameUtils
+import com.example.mensmorris.get
+import com.example.mensmorris.plus
 
 /**
  * used for storing position data

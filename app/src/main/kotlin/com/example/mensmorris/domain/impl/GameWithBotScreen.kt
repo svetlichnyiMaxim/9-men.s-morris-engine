@@ -6,26 +6,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import com.example.mensmorris.utils.AnalyzeUtils.startAnalyze
-import com.example.mensmorris.utils.CacheUtils.occurredPositions
-import com.example.mensmorris.utils.CacheUtils.resetCachedPositions
-import com.example.mensmorris.utils.CacheUtils.solveResult
-import com.example.mensmorris.utils.CoroutineUtils.stopBot
-import com.example.mensmorris.utils.CoroutineUtils.updateBotJob
-import com.example.mensmorris.utils.GameUtils
-import com.example.mensmorris.utils.GameUtils.gameStartPosition
-import com.example.mensmorris.utils.GameUtils.pos
-import com.example.mensmorris.AppTheme
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.gameBoard.GameBoard
-import com.example.mensmorris.Locate
+import com.example.mensmorris.common.AppTheme
+import com.example.mensmorris.common.Locate
+import com.example.mensmorris.common.gameBoard.GameBoard
+import com.example.mensmorris.common.utils.GameUtils.pos
 import com.example.mensmorris.domain.GameScreenModel
-import kotlinx.coroutines.delay
 
 /**
  * Game main screen
@@ -44,18 +34,22 @@ class GameWithBotScreen(override var gameBoard: GameBoard) : GameScreenModel {
     @Composable
     private fun DrawPieceCount() {
         Locate(Alignment.TopStart) {
-            Box(modifier = Modifier
+            Box(
+                modifier = Modifier
                     .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
                     .background(Color.Green, CircleShape)
-                    .alpha(if (pos.freePieces.first == 0.toUByte()) 0f else 1f), Alignment.Center) {
+                    .alpha(if (pos.freePieces.first == 0.toUByte()) 0f else 1f), Alignment.Center
+            ) {
                 Text(color = Color.Blue, text = pos.freePieces.first.toString())
             }
         }
         Locate(Alignment.TopEnd) {
-            Box(modifier = Modifier
+            Box(
+                modifier = Modifier
                     .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
                     .background(Color.Blue, CircleShape)
-                    .alpha(if (pos.freePieces.second == 0.toUByte()) 0f else 1f), Alignment.Center) {
+                    .alpha(if (pos.freePieces.second == 0.toUByte()) 0f else 1f), Alignment.Center
+            ) {
                 Text(color = Color.Green, text = pos.freePieces.second.toString())
             }
         }

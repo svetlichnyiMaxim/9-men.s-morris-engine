@@ -1,10 +1,10 @@
-package com.example.mensmorris.utils
+package com.example.mensmorris.common.utils
 
-import com.example.mensmorris.utils.CacheUtils.hasCacheWithDepth
-import com.example.mensmorris.utils.CacheUtils.resetCachedPositions
-import com.example.mensmorris.utils.CacheUtils.solveResult
-import com.example.mensmorris.utils.GameUtils.depth
-import com.example.mensmorris.utils.GameUtils.pos
+import com.example.mensmorris.common.utils.CacheUtils.hasCacheWithDepth
+import com.example.mensmorris.common.utils.CacheUtils.resetCachedPositions
+import com.example.mensmorris.common.utils.CacheUtils.solveResult
+import com.example.mensmorris.common.utils.GameUtils.depth
+import com.example.mensmorris.common.utils.GameUtils.pos
 import kotlin.math.max
 
 /**

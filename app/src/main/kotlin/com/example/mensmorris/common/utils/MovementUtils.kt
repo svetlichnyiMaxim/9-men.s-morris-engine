@@ -1,6 +1,6 @@
-package com.example.mensmorris.utils
+package com.example.mensmorris.common.utils
 
-import com.example.mensmorris.Position
+import com.example.mensmorris.common.Position
 import java.util.Stack
 
 /**

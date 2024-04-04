@@ -1,5 +1,6 @@
 package com.example.mensmorris
 
+import com.example.mensmorris.common.Position
 import junit.framework.TestCase
 import org.junit.Test
 

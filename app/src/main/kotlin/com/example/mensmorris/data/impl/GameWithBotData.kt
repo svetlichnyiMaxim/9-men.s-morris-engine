@@ -1,26 +1,33 @@
 package com.example.mensmorris.data.impl
 
-import com.example.mensmorris.Position
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import com.example.mensmorris.common.gameBoard.GameBoard
+import com.example.mensmorris.common.utils.AnalyzeUtils
+import com.example.mensmorris.common.utils.CacheUtils
+import com.example.mensmorris.common.utils.CoroutineUtils
+import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
-import com.example.mensmorris.data.PosInterface
-import com.example.mensmorris.gameBoard.GameBoard
-import com.example.mensmorris.utils.AnalyzeUtils
-import com.example.mensmorris.utils.CacheUtils
-import com.example.mensmorris.utils.CoroutineUtils
-import com.example.mensmorris.utils.GameUtils
 import kotlinx.coroutines.delay
 
-class GameWithBotData(override val gameBoard: GameBoard) : DataModel, GameBoardInterface {
-    //,
-    //                onClick = { index, func -> response(index, func) }, onUndo = { launchBot() })
+/**
+ * data for game with bot screen
+ */
+class GameWithBotData : DataModel, GameBoardInterface {
+    override val gameBoard by mutableStateOf(
+        GameBoard(position = mutableStateOf(GameUtils.gameStartPosition),
+            onClick = { index, func -> response(index, func) },
+            onUndo = {})
+    )
+
     /**
      * performs needed actions after click
      * @param index index of the clicked element
      * @param func function that handles our click
      */
     private fun response(index: Int, func: (index: Int) -> Unit) {
-        if (GameUtils.pos.pieceToMove) {
+        if (gameBoard.position.value.pieceToMove) {
             func(index)
             launchBot()
         }
@@ -41,8 +48,9 @@ class GameWithBotData(override val gameBoard: GameBoard) : DataModel, GameBoardI
     private fun launchBot() {
         CoroutineUtils.stopBot()
         var start = true
+        val gameboard = gameBoard.position.value
         CoroutineUtils.updateBotJob {
-            while (!GameUtils.pos.pieceToMove && GameUtils.pos.gameState() != GameUtils.GameState.End) {
+            while (!gameboard.pieceToMove && gameboard.gameState() != GameUtils.GameState.End) {
                 AnalyzeUtils.startAnalyze()
                 if (start) {
                     delay(750)

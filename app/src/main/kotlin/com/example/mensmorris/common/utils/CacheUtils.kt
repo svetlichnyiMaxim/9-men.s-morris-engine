@@ -1,9 +1,9 @@
-package com.example.mensmorris.utils
+package com.example.mensmorris.common.utils
 
 import androidx.compose.runtime.mutableStateOf
-import com.example.mensmorris.Movement
-import com.example.mensmorris.utils.CoroutineUtils.updateSolvingJob
-import com.example.mensmorris.utils.GameUtils.gameStartPosition
+import com.example.mensmorris.common.Movement
+import com.example.mensmorris.common.utils.CoroutineUtils.updateSolvingJob
+import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
 
 /**
  * provides caching utils

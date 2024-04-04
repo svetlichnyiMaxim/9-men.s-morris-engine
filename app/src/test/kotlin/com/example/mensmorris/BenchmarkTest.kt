@@ -1,7 +1,7 @@
 package com.example.mensmorris
 
 import com.example.mensmorris.positions.Benchmark
-import com.example.mensmorris.utils.CacheUtils.occurredPositions
+import com.example.mensmorris.common.utils.CacheUtils.occurredPositions
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 

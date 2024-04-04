@@ -1,4 +1,4 @@
-package com.example.mensmorris
+package com.example.mensmorris.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,13 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.mensmorris.gameBoard.GameBoard
-import com.example.mensmorris.utils.AnalyzeUtils.decreaseDepth
-import com.example.mensmorris.utils.AnalyzeUtils.increaseDepth
-import com.example.mensmorris.utils.CacheUtils.solveResult
-import com.example.mensmorris.utils.CacheUtils.startAsyncAnalyze
-import com.example.mensmorris.utils.GameUtils.depth
-import com.example.mensmorris.utils.GameUtils.pos
+import com.example.mensmorris.BUTTON_WIDTH
+import com.example.mensmorris.common.gameBoard.GameBoard
+import com.example.mensmorris.common.utils.AnalyzeUtils.decreaseDepth
+import com.example.mensmorris.common.utils.AnalyzeUtils.increaseDepth
+import com.example.mensmorris.common.utils.CacheUtils.solveResult
+import com.example.mensmorris.common.utils.CacheUtils.startAsyncAnalyze
+import com.example.mensmorris.common.utils.GameUtils.depth
+import com.example.mensmorris.common.utils.GameUtils.pos
 
 /**
  * draws ui elements for accessing game analyzes

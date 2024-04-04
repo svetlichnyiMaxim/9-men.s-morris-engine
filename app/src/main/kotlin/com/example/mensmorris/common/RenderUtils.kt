@@ -1,4 +1,4 @@
-package com.example.mensmorris
+package com.example.mensmorris.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

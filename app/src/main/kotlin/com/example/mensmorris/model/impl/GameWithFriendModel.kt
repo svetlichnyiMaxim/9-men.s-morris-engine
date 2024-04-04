@@ -1,25 +1,19 @@
 package com.example.mensmorris.model.impl
 
-import androidx.compose.runtime.Composable
-import com.example.mensmorris.data.impl.GameEndData
-import com.example.mensmorris.domain.impl.GameEndScreen
+import com.example.mensmorris.data.impl.GameWithFriendData
+import com.example.mensmorris.domain.ScreenModel
+import com.example.mensmorris.domain.impl.GameWithFriendScreen
 import com.example.mensmorris.model.ModelModel
-import com.example.mensmorris.utils.CoroutineUtils
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
 
+/**
+ * game with friend model
+ */
 class GameWithFriendModel : ModelModel {
-    val render = GameEndScreen()
-    val data = GameEndData()
+    override var render: ScreenModel
+    override val data = GameWithFriendData()
 
-    override fun invokeBackend() {
-        CoroutineScope(CoroutineUtils.defaultDispatcher).async {
-            data.invokeBackend()
-        }
-    }
-
-    @Composable
-    override fun invokeRender() {
-        render.InvokeRender()
+    init {
+        val gameBoard = data.gameBoard
+        render = GameWithFriendScreen(gameBoard)
     }
 }

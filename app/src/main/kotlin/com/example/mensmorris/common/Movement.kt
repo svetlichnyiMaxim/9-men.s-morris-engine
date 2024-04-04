@@ -1,4 +1,4 @@
-package com.example.mensmorris
+package com.example.mensmorris.common
 
 /**
  * used to store movement

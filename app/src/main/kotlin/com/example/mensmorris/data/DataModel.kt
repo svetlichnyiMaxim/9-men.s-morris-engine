@@ -1,5 +1,8 @@
 package com.example.mensmorris.data
 
+/**
+ * model we use for all data providing classes
+ */
 interface DataModel {
     /**
      * invokes backend part

@@ -8,14 +8,12 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
-import com.example.mensmorris.utils.CoroutineUtils
-import com.example.mensmorris.domain.impl.GameWithBotScreen
-import com.example.mensmorris.domain.impl.GameWithFriendScreen
-import com.example.mensmorris.domain.impl.WelcomeScreen
+import com.example.mensmorris.common.render
 import com.example.mensmorris.model.ModelModel
 import com.example.mensmorris.model.impl.GameEndModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import com.example.mensmorris.model.impl.GameWithBotModel
+import com.example.mensmorris.model.impl.GameWithFriendModel
+import com.example.mensmorris.model.impl.WelcomeModel
 
 /**
  * shows how thick our pieces & board will be
@@ -61,14 +59,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ScreenSwitcher(currentScreenValue: MutableState<Screen> = currentScreen) {
     DisposableEffect(key1 = currentScreenValue) {
-        CoroutineScope(CoroutineUtils.defaultDispatcher).async {
-            currentScreen.value.screen.invokeBackend()
-        }
+        currentScreen.value.model.invokeBackend()
         render {
-            currentScreen.value.screen.InvokeRender()
+            currentScreen.value.model.InvokeRender()
         }
         onDispose {
-            currentScreen.value.screen.clearTheScene()
+            currentScreen.value.model.shutDownBackend()
             previousScreen = currentScreen.value
         }
     }
@@ -86,17 +82,17 @@ enum class Screen(
     /**
      * screen everything starts from
      */
-    Welcome(WelcomeScreen),
+    Welcome(WelcomeModel()),
 
     /**
      * just a normal game
      */
-    GameWithFriend(GameWithFriendScreen),
+    GameWithFriend(GameWithFriendModel()),
 
     /**
      * no friends :(
      */
-    GameWithBot(GameWithBotScreen),
+    GameWithBot(GameWithBotModel()),
 
     /**
      * when the game has ended
