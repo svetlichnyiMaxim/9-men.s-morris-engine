@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.utils.CacheUtils
-import com.example.mensmorris.common.utils.CoroutineUtils
-import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.data.DataModel
 import kotlin.math.max
 
@@ -31,16 +29,20 @@ class GameAnalyzeData(
      */
     val solveResult: MutableLiveData<List<Movement>> = MutableLiveData()
 
-    override fun invokeBackend() {}
+    override suspend fun invokeBackend() {
+        TODO("Not yet implemented")
+    }
 
-    override fun clearTheScene() {}
+    override fun clearTheScene() {
+        TODO("Not yet implemented")
+    }
 
     /**
      * decreases search depth
      */
     fun decreaseDepth() {
-        depth.intValue = max(0, GameUtils.depth.intValue - 1)
-        resetAnalyze()
+        depth.intValue = max(0, depth.intValue - 1)
+        stopAnalyze()
     }
 
     /**
@@ -48,7 +50,7 @@ class GameAnalyzeData(
      */
     fun increaseDepth() {
         depth.intValue++
-        resetAnalyze()
+        stopAnalyze()
     }
 
     /**
@@ -59,15 +61,15 @@ class GameAnalyzeData(
             return
         }
         CacheUtils.hasCacheWithDepth = true
-        solveResult.value = pos.value!!.solve(depth.intValue.toUByte()).second
+        val solveResultValue = pos.value!!.solve(depth.intValue.toUByte()).second
+        solveResult.value = solveResultValue
     }
 
     /**
      * hides analyze gui and delete it's result
      */
-    private fun resetAnalyze() {
-        CoroutineUtils.stopBot()
+    private fun stopAnalyze() {
         CacheUtils.resetCachedPositions()
-        CacheUtils.solveResult.value = mutableListOf()
+        solveResult.value = mutableListOf()
     }
 }

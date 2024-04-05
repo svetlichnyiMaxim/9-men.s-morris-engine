@@ -60,6 +60,9 @@ class GameBoard(
      */
     var selectedButton = mutableStateOf<Int?>(null)
 
+    /**
+     * handles game clicks
+     */
     val gameClickHandler = GameClickHandler(pos, moveHints, selectedButton)
 
     constructor(pos: Position) : this(mutableStateOf(pos), { _, _ -> }, {})

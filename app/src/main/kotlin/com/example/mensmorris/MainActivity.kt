@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun ScreenSwitcher(currentScreenValue: MutableState<Screen> = currentScreen) {
     DisposableEffect(key1 = currentScreenValue) {
-        currentScreen.value.model.invokeBackend()
         render {
+            currentScreen.value.model.invokeBackend()
             currentScreen.value.model.InvokeRender()
         }
         onDispose {

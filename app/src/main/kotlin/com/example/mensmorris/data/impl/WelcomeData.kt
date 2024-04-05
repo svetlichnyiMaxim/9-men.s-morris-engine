@@ -6,7 +6,7 @@ import com.example.mensmorris.data.DataModel
  * data for welcome screen
  */
 class WelcomeData : DataModel {
-    override fun invokeBackend() {
+    override suspend fun invokeBackend() {
         // TODO("Not yet implemented")
     }
 

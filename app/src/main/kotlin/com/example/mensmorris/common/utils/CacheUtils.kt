@@ -9,6 +9,12 @@ import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
  * provides caching utils
  */
 object CacheUtils {
+    /**
+     * position
+     * stores when needed
+     * @see GameEndData
+     * TODO: remove this
+     */
     var position: Position = gameStartPosition
 
     /**
@@ -43,9 +49,4 @@ object CacheUtils {
         }
         hasCacheWithDepth = false
     }
-
-    /**
-     * used for storing our game analyzes result
-     */
-    var solveResult = mutableStateOf<List<Movement>>(mutableListOf())
 }

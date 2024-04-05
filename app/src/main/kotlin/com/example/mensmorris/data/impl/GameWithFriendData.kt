@@ -18,7 +18,7 @@ open class GameWithFriendData : DataModel, GameBoardInterface {
             onUndo = {})
     )
 
-    override fun invokeBackend() {
+    override suspend fun invokeBackend() {
         CacheUtils.resetCachedPositions()
     }
 

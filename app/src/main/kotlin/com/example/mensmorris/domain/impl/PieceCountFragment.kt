@@ -14,10 +14,17 @@ import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.common.Locate
 import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.domain.ScreenModel
 
-class PieceCountFragment(val pos: MutableState<Position>) : ScreenModel {
+/**
+ * shows how many pieces we still have
+ */
+class PieceCountFragment(
+    /**
+     * our position
+     */
+    val pos: MutableState<Position>
+) : ScreenModel {
     @Composable
     override fun InvokeRender() {
         Locate(Alignment.TopStart) {
@@ -25,7 +32,8 @@ class PieceCountFragment(val pos: MutableState<Position>) : ScreenModel {
                 modifier = Modifier
                     .size(BUTTON_WIDTH * if (pos.value.pieceToMove) 1.5f else 1f)
                     .background(Color.Green, CircleShape)
-                    .alpha(if (pos.value.freePieces.first == 0.toUByte()) 0f else 1f), Alignment.Center
+                    .alpha(if (pos.value.freePieces.first == 0.toUByte()) 0f else 1f),
+                Alignment.Center
             ) {
                 Text(color = Color.Blue, text = pos.value.freePieces.first.toString())
             }
@@ -35,7 +43,8 @@ class PieceCountFragment(val pos: MutableState<Position>) : ScreenModel {
                 modifier = Modifier
                     .size(BUTTON_WIDTH * if (!pos.value.pieceToMove) 1.5f else 1f)
                     .background(Color.Blue, CircleShape)
-                    .alpha(if (pos.value.freePieces.second == 0.toUByte()) 0f else 1f), Alignment.Center
+                    .alpha(if (pos.value.freePieces.second == 0.toUByte()) 0f else 1f),
+                Alignment.Center
             ) {
                 Text(color = Color.Green, text = pos.value.freePieces.second.toString())
             }

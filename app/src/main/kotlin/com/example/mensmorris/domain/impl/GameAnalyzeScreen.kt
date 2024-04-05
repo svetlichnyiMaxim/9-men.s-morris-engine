@@ -27,11 +27,29 @@ import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.domain.ScreenModel
 
+/**
+ * game analyzing screen
+ */
 class GameAnalyzeScreen(
+    /**
+     * list of positions to display
+     */
     val positions: MutableState<List<Position>>,
+    /**
+     * current search depth
+     */
     val depth: MutableIntState,
+    /**
+     * gets called on depth change
+     */
     val increaseDepth: () -> Unit,
+    /**
+     * gets called on depth change
+     */
     val decreaseDepth: () -> Unit,
+    /**
+     * gets called when "start analyze" button it pressed
+     */
     val startAnalyze: () -> Unit
 ) : ScreenModel {
 

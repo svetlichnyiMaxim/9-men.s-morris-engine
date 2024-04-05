@@ -4,7 +4,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.utils.AnalyzeUtils.resetAnalyze
 
 /**
  * provides useful utils for game
@@ -77,14 +76,4 @@ object GameUtils {
          */
         Removing
     }
-
-    /**
-     * depth our engine works at
-     * @note >= 7 causes OOM
-     */
-    var depth = mutableIntStateOf(3)
-        set(value) {
-            resetAnalyze()
-            field = value
-        }
 }

@@ -3,7 +3,7 @@ package com.example.mensmorris.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
-import com.example.mensmorris.common.utils.CoroutineUtils
+import com.example.mensmorris.common.utils.defaultDispatcher
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.domain.ScreenModel
 import kotlinx.coroutines.CoroutineScope
@@ -28,7 +28,7 @@ interface ViewModelInterface {
      * starts backend tasks
      */
     fun invokeBackend() {
-        CoroutineScope(CoroutineUtils.defaultDispatcher).async {
+        CoroutineScope(defaultDispatcher).async {
             data.invokeBackend()
         }
     }
@@ -48,6 +48,9 @@ interface ViewModelInterface {
         render.InvokeRender()
     }
 
+    /**
+     * invokes render and backend using DisposableEffect
+     */
     @Composable
     fun <T> Invoke(value: MutableState<T>) {
         this@ViewModelInterface.InvokeRender()

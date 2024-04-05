@@ -5,7 +5,7 @@ import com.example.mensmorris.Screen
 import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.moveProvider
-import com.example.mensmorris.common.utils.AnalyzeUtils
+import com.example.mensmorris.common.utils.CacheUtils
 import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.common.utils.saveMove
 import com.example.mensmorris.currentScreen
@@ -18,8 +18,16 @@ open class GameClickHandler(
      * our position
      */
     open val pos: MutableState<Position>,
-    val moveHints: MutableState<List<Int>>,
-    val selectedButton: MutableState<Int?>
+    /**
+     * move hints
+     * list of all possible places you can move
+     */
+    private val moveHints: MutableState<List<Int>>,
+    /**
+     * selected button
+     * usually it is the last one clicked
+     */
+    private val selectedButton: MutableState<Int?>
 ) {
 
     /**
@@ -123,7 +131,7 @@ open class GameClickHandler(
     fun processMove(move: Movement) {
         selectedButton.value = null
         pos.value = move.producePosition(pos.value).copy()
-        AnalyzeUtils.resetAnalyze()
+        CacheUtils.resetCachedPositions()
         saveMove(pos.value)
         if (pos.value.gameState() == GameUtils.GameState.End) {
             currentScreen.value = Screen.EndGame
