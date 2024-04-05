@@ -26,9 +26,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.BUTTON_WIDTH
+import com.example.mensmorris.R
 import com.example.mensmorris.common.Locate
 import com.example.mensmorris.common.Position
-import com.example.mensmorris.R
 import com.example.mensmorris.common.utils.CacheUtils
 import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.common.utils.movesHistory
@@ -39,17 +39,17 @@ import com.example.mensmorris.common.utils.undoneMoveHistory
  */
 class GameBoard(
     /**
-         * stores current position
-         */
-        override var position: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
+     * stores current position
+     */
+    override var position: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
     /**
-         * what will happen if we click some circle
-         */
-        var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit,
+     * what will happen if we click some circle
+     */
+    var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit,
     /**
-         * what we should additionally do on undo
-         */
-        var onUndo: () -> Unit = {}
+     * what we should additionally do on undo
+     */
+    var onUndo: () -> Unit = {}
 ) : GameClickHandler(position) {
     private fun onClickResponse(index: Int) {
         onClick(index) { handleClick(it) }
@@ -61,7 +61,7 @@ class GameBoard(
     @Composable
     private fun DrawCircles() {
         Column(
-                modifier = Modifier.size(BUTTON_WIDTH * 7, BUTTON_WIDTH * 7)
+            modifier = Modifier.size(BUTTON_WIDTH * 7, BUTTON_WIDTH * 7)
         ) {
             RowOfCircles(0, 2, 0..2)
             RowOfCircles(1, 1, 3..5)
@@ -79,21 +79,21 @@ class GameBoard(
     @Composable
     private fun DrawVerticalShadows() {
         Row(
-                modifier = Modifier.size(BUTTON_WIDTH * 7, BUTTON_WIDTH * 7)
+            modifier = Modifier.size(BUTTON_WIDTH * 7, BUTTON_WIDTH * 7)
         ) {
             VerticalShadow(0.25f, 0.25f)
             VerticalShadow(1.25f, 1.25f)
             VerticalShadow(2.25f, 2.25f)
             Column(
-                    modifier = Modifier
-                            .padding(
-                                    top = BUTTON_WIDTH * 0.25f, bottom = BUTTON_WIDTH * 0.25f
-                            )
-                            .height(BUTTON_WIDTH * 7)
-                            .width(BUTTON_WIDTH),
-                    verticalArrangement = Arrangement.spacedBy(
-                            BUTTON_WIDTH * 1.5f, Alignment.CenterVertically
+                modifier = Modifier
+                    .padding(
+                        top = BUTTON_WIDTH * 0.25f, bottom = BUTTON_WIDTH * 0.25f
                     )
+                    .height(BUTTON_WIDTH * 7)
+                    .width(BUTTON_WIDTH),
+                verticalArrangement = Arrangement.spacedBy(
+                    BUTTON_WIDTH * 1.5f, Alignment.CenterVertically
+                )
             ) {
                 VerticalShadow(0f, 0f, 2.5f, 2.5f)
                 VerticalShadow(0f, 0f, 2.5f, 2.5f)
@@ -107,21 +107,21 @@ class GameBoard(
     @Composable
     private fun DrawHorizontalShadows() {
         Column(
-                modifier = Modifier.size(BUTTON_WIDTH * 7, BUTTON_WIDTH * 7)
+            modifier = Modifier.size(BUTTON_WIDTH * 7, BUTTON_WIDTH * 7)
         ) {
             HorizontalShadow(0.25f, 0.25f)
             HorizontalShadow(1.25f, 1.25f)
             HorizontalShadow(2.25f, 2.25f)
             Row(
-                    modifier = Modifier
-                            .padding(
-                                    start = BUTTON_WIDTH * 0.25f, end = BUTTON_WIDTH * 0.25f
-                            )
-                            .height(BUTTON_WIDTH)
-                            .width(BUTTON_WIDTH * 7),
-                    horizontalArrangement = Arrangement.spacedBy(
-                            BUTTON_WIDTH * 1.5f, Alignment.CenterHorizontally
+                modifier = Modifier
+                    .padding(
+                        start = BUTTON_WIDTH * 0.25f, end = BUTTON_WIDTH * 0.25f
                     )
+                    .height(BUTTON_WIDTH)
+                    .width(BUTTON_WIDTH * 7),
+                horizontalArrangement = Arrangement.spacedBy(
+                    BUTTON_WIDTH * 1.5f, Alignment.CenterHorizontally
+                )
             ) {
                 HorizontalShadow(0f, 0f, 2.5f, 2.5f)
                 HorizontalShadow(0f, 0f, 2.5f, 2.5f)
@@ -134,62 +134,62 @@ class GameBoard(
 
     @Composable
     private fun VerticalShadow(
-            paddingLeft: Float,
-            paddingRight: Float,
-            length1: Float = 7f,
-            length2: Float = (7 - (paddingLeft + paddingRight))
+        paddingLeft: Float,
+        paddingRight: Float,
+        length1: Float = 7f,
+        length2: Float = (7 - (paddingLeft + paddingRight))
     ) {
         Box(
-                modifier = Modifier
-                        .height(BUTTON_WIDTH * length1)
-                        .width(BUTTON_WIDTH * 1f)
-                        .padding(
-                                top = BUTTON_WIDTH * paddingLeft,
-                                start = BUTTON_WIDTH * 0.25f,
-                                end = BUTTON_WIDTH * 0.25f,
-                                bottom = BUTTON_WIDTH * paddingRight
-                        )
+            modifier = Modifier
+                .height(BUTTON_WIDTH * length1)
+                .width(BUTTON_WIDTH * 1f)
+                .padding(
+                    top = BUTTON_WIDTH * paddingLeft,
+                    start = BUTTON_WIDTH * 0.25f,
+                    end = BUTTON_WIDTH * 0.25f,
+                    bottom = BUTTON_WIDTH * paddingRight
+                )
         ) {
             Box(
-                    modifier = Modifier
-                            .alpha(0.5f)
-                            .height(BUTTON_WIDTH * length2)
-                            .width(BUTTON_WIDTH * 0.5f)
-                            .shadow(
-                                    elevation = 10.dp, shape = RoundedCornerShape(8.dp)
-                            )
-                            .background(Color.DarkGray)
+                modifier = Modifier
+                    .alpha(0.5f)
+                    .height(BUTTON_WIDTH * length2)
+                    .width(BUTTON_WIDTH * 0.5f)
+                    .shadow(
+                        elevation = 10.dp, shape = RoundedCornerShape(8.dp)
+                    )
+                    .background(Color.DarkGray)
             ) {}
         }
     }
 
     @Composable
     private fun HorizontalShadow(
-            paddingLeft: Float,
-            paddingRight: Float,
-            length1: Float = 7f,
-            length2: Float = (7 - (paddingLeft + paddingRight))
+        paddingLeft: Float,
+        paddingRight: Float,
+        length1: Float = 7f,
+        length2: Float = (7 - (paddingLeft + paddingRight))
     ) {
         Box(
-                modifier = Modifier
-                        .height(BUTTON_WIDTH * 1f)
-                        .width(BUTTON_WIDTH * length1)
-                        .padding(
-                                top = BUTTON_WIDTH * 0.25f,
-                                start = BUTTON_WIDTH * paddingLeft,
-                                end = BUTTON_WIDTH * paddingRight,
-                                bottom = BUTTON_WIDTH * 0.25f
-                        )
+            modifier = Modifier
+                .height(BUTTON_WIDTH * 1f)
+                .width(BUTTON_WIDTH * length1)
+                .padding(
+                    top = BUTTON_WIDTH * 0.25f,
+                    start = BUTTON_WIDTH * paddingLeft,
+                    end = BUTTON_WIDTH * paddingRight,
+                    bottom = BUTTON_WIDTH * 0.25f
+                )
         ) {
             Box(
-                    modifier = Modifier
-                            .alpha(0.5f)
-                            .height(BUTTON_WIDTH * 0.5f)
-                            .width(BUTTON_WIDTH * length2)
-                            .shadow(
-                                    elevation = 10.dp, shape = RoundedCornerShape(8.dp)
-                            )
-                            .background(Color.DarkGray)
+                modifier = Modifier
+                    .alpha(0.5f)
+                    .height(BUTTON_WIDTH * 0.5f)
+                    .width(BUTTON_WIDTH * length2)
+                    .shadow(
+                        elevation = 10.dp, shape = RoundedCornerShape(8.dp)
+                    )
+                    .background(Color.DarkGray)
             ) {}
         }
     }
@@ -202,13 +202,13 @@ class GameBoard(
     ) {
         Locate(Alignment.TopCenter) {
             Box(
-                    modifier = Modifier
-                            .padding(BUTTON_WIDTH)
-                            .clip(RoundedCornerShape(15))
-                            .width(BUTTON_WIDTH * 9)
-                            .height(BUTTON_WIDTH * 9)
-                            .background(Color(0xFF8F8F8F)),
-                    Alignment.Center,
+                modifier = Modifier
+                    .padding(BUTTON_WIDTH)
+                    .clip(RoundedCornerShape(15))
+                    .width(BUTTON_WIDTH * 9)
+                    .height(BUTTON_WIDTH * 9)
+                    .background(Color(0xFF8F8F8F)),
+                Alignment.Center,
             ) {
                 DrawCircles()
                 DrawHorizontalShadows()
@@ -225,14 +225,14 @@ class GameBoard(
      */
     @Composable
     private fun RowOfCircles(
-            padding: Int, gap: Int, range: IntRange
+        padding: Int, gap: Int, range: IntRange
     ) {
         Row(
-                modifier = Modifier.padding(start = BUTTON_WIDTH * padding),
-                horizontalArrangement = Arrangement.spacedBy(
-                        BUTTON_WIDTH * gap, Alignment.CenterHorizontally
-                ),
-                Alignment.CenterVertically,
+            modifier = Modifier.padding(start = BUTTON_WIDTH * padding),
+            horizontalArrangement = Arrangement.spacedBy(
+                BUTTON_WIDTH * gap, Alignment.CenterHorizontally
+            ),
+            Alignment.CenterVertically,
         ) {
             for (i in range) {
                 CircledButton(elementIndex = i) { onClickResponse(it) }
@@ -248,28 +248,28 @@ class GameBoard(
     @Composable
     private fun CircledButton(elementIndex: Int, onClick: (Int) -> Unit) {
         Button(modifier = Modifier
-                .alpha(
-                        if (CacheUtils.moveHints.value.contains(elementIndex)) {
-                            0.7f
-                        } else {
-                            if (CacheUtils.selectedButton.value == elementIndex) {
-                                0.6f
-                            } else {
-                                if (position.value.positions[elementIndex] == null) {
-                                    0f
-                                } else 1f
-                            }
-                        }
-                )
-                .size(BUTTON_WIDTH)
-                .background(Color.Transparent, CircleShape),
-                colors = ButtonDefaults.buttonColors(
-                        containerColor = GameUtils.colorMap(position.value.positions[elementIndex])
-                ),
-                shape = CircleShape,
-                onClick = {
-                    onClick(elementIndex)
-                }) {}
+            .alpha(
+                if (CacheUtils.moveHints.value.contains(elementIndex)) {
+                    0.7f
+                } else {
+                    if (CacheUtils.selectedButton.value == elementIndex) {
+                        0.6f
+                    } else {
+                        if (position.value.positions[elementIndex] == null) {
+                            0f
+                        } else 1f
+                    }
+                }
+            )
+            .size(BUTTON_WIDTH)
+            .background(Color.Transparent, CircleShape),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = GameUtils.colorMap(position.value.positions[elementIndex])
+            ),
+            shape = CircleShape,
+            onClick = {
+                onClick(elementIndex)
+            }) {}
     }
 
     /**
@@ -279,37 +279,37 @@ class GameBoard(
     fun RenderUndoRedo() {
         Locate(Alignment.BottomStart) {
             Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
-                    onClick = {
-                        if (!movesHistory.empty()) {
-                            undoneMoveHistory.push(movesHistory.peek())
-                            movesHistory.pop()
-                            position.value = movesHistory.lastOrNull()
-                                    ?: GameUtils.gameStartPosition
-                            CacheUtils.moveHints.value = arrayListOf()
-                            CacheUtils.selectedButton.value = null
-                            onUndo()
-                        }
-                    }) {
+                onClick = {
+                    if (!movesHistory.empty()) {
+                        undoneMoveHistory.push(movesHistory.peek())
+                        movesHistory.pop()
+                        position.value = movesHistory.lastOrNull()
+                            ?: GameUtils.gameStartPosition
+                        CacheUtils.moveHints.value = arrayListOf()
+                        CacheUtils.selectedButton.value = null
+                        onUndo()
+                    }
+                }) {
                 Icon(
-                        painter = painterResource(id = R.drawable.forward), "undo"
+                    painter = painterResource(id = R.drawable.forward), "undo"
                 )
             }
         }
         Locate(Alignment.BottomEnd) {
             Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
-                    onClick = {
-                        if (!undoneMoveHistory.empty()) {
-                            movesHistory.push(undoneMoveHistory.peek())
-                            undoneMoveHistory.pop()
-                            position.value = movesHistory.lastOrNull()
-                                    ?: GameUtils.gameStartPosition
-                            CacheUtils.moveHints.value = arrayListOf()
-                            CacheUtils.selectedButton.value = null
-                            onUndo()
-                        }
-                    }) {
+                onClick = {
+                    if (!undoneMoveHistory.empty()) {
+                        movesHistory.push(undoneMoveHistory.peek())
+                        undoneMoveHistory.pop()
+                        position.value = movesHistory.lastOrNull()
+                            ?: GameUtils.gameStartPosition
+                        CacheUtils.moveHints.value = arrayListOf()
+                        CacheUtils.selectedButton.value = null
+                        onUndo()
+                    }
+                }) {
                 Icon(
-                        painter = painterResource(id = R.drawable.back), "redo"
+                    painter = painterResource(id = R.drawable.back), "redo"
                 )
             }
         }

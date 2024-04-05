@@ -3,12 +3,12 @@ package com.example.mensmorris.data.impl
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import com.example.mensmorris.common.gameBoard.GameBoard
-import com.example.mensmorris.common.utils.AnalyzeUtils
 import com.example.mensmorris.common.utils.CacheUtils
 import com.example.mensmorris.common.utils.CoroutineUtils
 import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
+import com.example.mensmorris.model.impl.GameAnalyzeViewModel
 import kotlinx.coroutines.delay
 
 /**
@@ -20,6 +20,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
             onClick = { index, func -> response(index, func) },
             onUndo = {})
     )
+    val analyze = GameAnalyzeViewModel(gameBoard.position)
 
     /**
      * performs needed actions after click
@@ -51,12 +52,12 @@ class GameWithBotData : DataModel, GameBoardInterface {
         val gameboard = gameBoard.position.value
         CoroutineUtils.updateBotJob {
             while (!gameboard.pieceToMove && gameboard.gameState() != GameUtils.GameState.End) {
-                AnalyzeUtils.startAnalyze()
+                analyze.data.startAnalyze()
                 if (start) {
                     delay(750)
                     start = false
                 }
-                gameBoard.processMove(CacheUtils.solveResult.value.last())
+                gameBoard.processMove(analyze.data.solveResult.value.last())
                 CacheUtils.resetCachedPositions()
             }
         }

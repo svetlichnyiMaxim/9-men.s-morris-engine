@@ -15,12 +15,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.common.AppTheme
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.common.DrawGameAnalyze
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.Locate
 import com.example.mensmorris.common.render
 import com.example.mensmorris.domain.GameScreenModel
 import com.example.mensmorris.common.utils.GameUtils.pos
+import com.example.mensmorris.model.impl.GameAnalyzeViewModel
 
 /**
  * Game main screen
@@ -65,7 +65,10 @@ class GameWithFriendScreen(override var gameBoard: GameBoard) : GameScreenModel 
                 .padding(0.dp, BUTTON_WIDTH * 10.5f, 0.dp, 0.dp)
                 .fillMaxSize()
         ) {
-            DrawGameAnalyze()
+            GameAnalyzeViewModel(gameBoard.position).let {
+                it.SolveResultPresenter()
+                it.invoke(value = gameBoard.position)
+            }
         }
     }
 }

@@ -8,12 +8,13 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.mensmorris.common.render
-import com.example.mensmorris.model.ModelModel
-import com.example.mensmorris.model.impl.GameEndModel
-import com.example.mensmorris.model.impl.GameWithBotModel
-import com.example.mensmorris.model.impl.GameWithFriendModel
-import com.example.mensmorris.model.impl.WelcomeModel
+import com.example.mensmorris.model.ViewModelInterface
+import com.example.mensmorris.model.impl.GameEndViewModel
+import com.example.mensmorris.model.impl.GameWithBotViewModel
+import com.example.mensmorris.model.impl.GameWithFriendViewModel
+import com.example.mensmorris.model.impl.WelcomeViewModel
 
 /**
  * shows how thick our pieces & board will be
@@ -77,25 +78,25 @@ enum class Screen(
     /**
      * used for launching a proper screen
      */
-    var model: ModelModel
+    var model: ViewModelInterface
 ) {
     /**
      * screen everything starts from
      */
-    Welcome(WelcomeModel()),
+    Welcome(WelcomeViewModel()),
 
     /**
      * just a normal game
      */
-    GameWithFriend(GameWithFriendModel()),
+    GameWithFriend(GameWithFriendViewModel()),
 
     /**
      * no friends :(
      */
-    GameWithBot(GameWithBotModel()),
+    GameWithBot(GameWithBotViewModel()),
 
     /**
      * when the game has ended
      */
-    EndGame(GameEndModel())
+    EndGame(GameEndViewModel())
 }

@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.utils.CacheUtils
-import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
@@ -20,7 +19,6 @@ open class GameWithFriendData : DataModel, GameBoardInterface {
     )
 
     override fun invokeBackend() {
-        GameUtils.pos = gameStartPosition
         CacheUtils.resetCachedPositions()
     }
 

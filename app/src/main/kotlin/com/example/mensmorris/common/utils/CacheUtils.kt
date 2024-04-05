@@ -2,7 +2,6 @@ package com.example.mensmorris.common.utils
 
 import androidx.compose.runtime.mutableStateOf
 import com.example.mensmorris.common.Movement
-import com.example.mensmorris.common.utils.CoroutineUtils.updateSolvingJob
 import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
 
 /**
@@ -40,15 +39,6 @@ object CacheUtils {
             occurredPositions[it.key] = Pair(it.value.first, 0u)
         }
         hasCacheWithDepth = false
-    }
-
-    /**
-     * starts async board analyze
-     */
-    fun startAsyncAnalyze() {
-        updateSolvingJob {
-            AnalyzeUtils.startAnalyze()
-        }
     }
 
     /**
