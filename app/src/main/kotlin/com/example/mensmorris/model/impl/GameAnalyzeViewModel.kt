@@ -1,6 +1,5 @@
 package com.example.mensmorris.model.impl
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.mensmorris.common.Position
@@ -10,20 +9,28 @@ import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.GameAnalyzeScreen
 import com.example.mensmorris.model.ViewModelInterface
 
-class GameAnalyzeViewModel(val position: MutableState<Position>) : ViewModelInterface {
+/**
+ * game analyze model
+ */
+class GameAnalyzeViewModel(
+    /**
+     * winning positions consequence
+     */
+    val position: MutableState<Position>
+) : ViewModelInterface {
     override var render: ScreenModel
     override val data = GameAnalyzeData(position)
 
-    val positionsToDisplay: MutableState<List<Position>> = mutableStateOf(listOf())
+    private val positionsToDisplay: MutableState<List<Position>> = mutableStateOf(listOf())
 
-    // TODO: this solution is shit find normal way
-    @Composable
-    fun SolveResultPresenter() {
-        val solveResult = data.solveResult.value
-        positionsToDisplay.value = solveResult.toPositions(position.value)
+    private fun solveResultObserver() {
+        data.solveResult.observeForever {
+            positionsToDisplay.value = it.toPositions(position.value)
+        }
     }
 
     init {
+        solveResultObserver()
         render = GameAnalyzeScreen(positionsToDisplay,
             data.depth,
             { data.increaseDepth() },

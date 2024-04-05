@@ -28,7 +28,7 @@ import com.example.mensmorris.common.utils.GameUtils.pos
  * screen that is shown at the end
  */
 class GameEndScreen(
-    override var gameBoard: GameBoard = GameBoard(mutableStateOf(pos), { _, _ -> }, {})
+        override var gameBoard: GameBoard = GameBoard(mutableStateOf(pos), { _, _ -> }, {})
 ) : GameScreenModel {
 
     @Composable
@@ -45,38 +45,28 @@ class GameEndScreen(
     @Composable
     private fun DrawButtons() {
         Locate(alignment = Alignment.Center) {
-            Box(
-                modifier = Modifier
+            Box(modifier = Modifier
                     .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
-                    .fillMaxSize(),
-                Alignment.Center
-            ) {
+                    .fillMaxSize(), Alignment.Center) {
                 Text(fontSize = 30.sp, text = "Game has ended")
             }
             Locate(Alignment.TopStart) {
-                Box(
-                    modifier = Modifier
+                Box(modifier = Modifier
                         .size(BUTTON_WIDTH * if (pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Green, CircleShape), Alignment.Center
-                ) {
+                        .background(Color.Green, CircleShape), Alignment.Center) {
                     Text(color = Color.Blue, text = pos.freePieces.first.toString())
                 }
             }
             Locate(Alignment.TopEnd) {
-                Box(
-                    modifier = Modifier
+                Box(modifier = Modifier
                         .size(BUTTON_WIDTH * if (!pos.pieceToMove) 1.5f else 1f)
-                        .background(Color.Blue, CircleShape), Alignment.Center
-                ) {
+                        .background(Color.Blue, CircleShape), Alignment.Center) {
                     Text(color = Color.Green, text = pos.freePieces.second.toString())
                 }
             }
-            Box(
-                modifier = Modifier
+            Box(modifier = Modifier
                     .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
-                    .fillMaxSize(),
-                Alignment.Center
-            ) {
+                    .fillMaxSize(), Alignment.Center) {
                 Button(onClick = {
                     currentScreen.value = Screen.Welcome
                 }) {

@@ -3,7 +3,6 @@ package com.example.mensmorris.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
-import com.example.mensmorris.common.render
 import com.example.mensmorris.common.utils.CoroutineUtils
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.domain.ScreenModel
@@ -50,12 +49,10 @@ interface ViewModelInterface {
     }
 
     @Composable
-    fun <T> invoke(value: MutableState<T>) {
+    fun <T> Invoke(value: MutableState<T>) {
+        this@ViewModelInterface.InvokeRender()
         DisposableEffect(key1 = value) {
             this@ViewModelInterface.invokeBackend()
-            render {
-                this@ViewModelInterface.InvokeRender()
-            }
             onDispose {
                 this@ViewModelInterface.shutDownBackend()
             }

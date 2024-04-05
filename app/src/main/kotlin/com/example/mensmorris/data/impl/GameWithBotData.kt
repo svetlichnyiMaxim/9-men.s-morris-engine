@@ -20,7 +20,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
             onClick = { index, func -> response(index, func) },
             onUndo = {})
     )
-    val analyze = GameAnalyzeViewModel(gameBoard.position)
+    private val analyze = GameAnalyzeViewModel(gameBoard.position)
 
     /**
      * performs needed actions after click
@@ -57,7 +57,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
                     delay(750)
                     start = false
                 }
-                gameBoard.processMove(analyze.data.solveResult.value.last())
+                gameBoard.processMove(analyze.data.solveResult.value!!.last())
                 CacheUtils.resetCachedPositions()
             }
         }

@@ -3,7 +3,7 @@ package com.example.mensmorris.data.impl
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.utils.CacheUtils
@@ -12,10 +12,25 @@ import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.data.DataModel
 import kotlin.math.max
 
-class GameAnalyzeData(val position: MutableState<Position>) : DataModel {
+/**
+ * data for game analyze
+ */
+class GameAnalyzeData(
+    /**
+     * position in our analyze
+     */
+    val position: MutableState<Position>
+) : DataModel {
 
+    /**
+     * search depth
+     */
     val depth: MutableIntState = mutableIntStateOf(3)
-    val solveResult: MutableState<List<Movement>> = mutableStateOf(listOf())
+
+    /**
+     * result of position analyze (best move)
+     */
+    var solveResult: MutableLiveData<List<Movement>> = MutableLiveData()
 
     override fun invokeBackend() {}
 
@@ -45,8 +60,7 @@ class GameAnalyzeData(val position: MutableState<Position>) : DataModel {
             return
         }
         CacheUtils.hasCacheWithDepth = true
-        solveResult.value =
-            position.value.solve(depth.intValue.toUByte()).second
+        solveResult.value = position.value.solve(depth.intValue.toUByte()).second
     }
 
     /**
