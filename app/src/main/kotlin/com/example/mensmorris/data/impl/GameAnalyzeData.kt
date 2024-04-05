@@ -12,14 +12,14 @@ import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.data.DataModel
 import kotlin.math.max
 
-abstract class GameAnalyzeData(val position: MutableState<Position>) : DataModel {
+class GameAnalyzeData(val position: MutableState<Position>) : DataModel {
 
     val depth: MutableIntState = mutableIntStateOf(3)
     val solveResult: MutableState<List<Movement>> = mutableStateOf(listOf())
 
-    abstract override fun invokeBackend()
+    override fun invokeBackend() {}
 
-    abstract override fun clearTheScene()
+    override fun clearTheScene() {}
 
     /**
      * decreases search depth
