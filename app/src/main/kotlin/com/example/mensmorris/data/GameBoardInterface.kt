@@ -1,5 +1,6 @@
 package com.example.mensmorris.data
 
+import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.common.gameBoard.GameBoard
 
 /**
@@ -10,5 +11,5 @@ interface GameBoardInterface {
      * our game board
      * usually used for rendering
      */
-    val gameBoard: GameBoard
+    val gameBoard: MutableLiveData<GameBoard>
 }

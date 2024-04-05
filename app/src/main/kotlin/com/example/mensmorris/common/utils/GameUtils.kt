@@ -5,8 +5,6 @@ import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.utils.AnalyzeUtils.resetAnalyze
-import com.example.mensmorris.common.utils.CacheUtils.gamePosition
-import com.example.mensmorris.common.utils.CacheUtils.selectedButton
 
 /**
  * provides useful utils for game
@@ -27,7 +25,7 @@ object GameUtils {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        Pair(8u, 8u), pieceToMove = true
+        Pair(6u, 6u), pieceToMove = true
     )
 
     /**
@@ -79,28 +77,6 @@ object GameUtils {
          */
         Removing
     }
-
-    /**
-     * handles selection of the piece to move
-     * @param elementIndex tested candidate
-     */
-    fun pieceToMoveSelector(elementIndex: Int) {
-        if (pos.positions[elementIndex] != null) {
-            selectedButton.value = elementIndex
-        } else {
-            selectedButton.value = null
-        }
-    }
-
-
-    /**
-     * provides a quick access to game position value
-     */
-    var pos
-        inline get() = gamePosition.value
-        inline set(newPos) {
-            gamePosition.value = newPos
-        }
 
     /**
      * depth our engine works at

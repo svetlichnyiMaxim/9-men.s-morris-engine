@@ -14,6 +14,6 @@ class GameWithBotViewModel : ViewModelInterface {
 
     init {
         val gameBoard = data.gameBoard
-        render = GameWithBotScreen(gameBoard)
+        render = GameWithBotScreen(gameBoard.value!!)
     }
 }

@@ -47,6 +47,9 @@ operator fun <T> Triple<T, T, T>.get(index: Int): T {
  */
 @Suppress("unused")
 fun List<Movement>.toPositions(startPos: Position): List<Position> {
+    if (this.isEmpty()) {
+        return mutableListOf()
+    }
     var startPosCopy = startPos
     val result: MutableList<Position> = mutableListOf(startPos)
     this@toPositions.asReversed().forEach {

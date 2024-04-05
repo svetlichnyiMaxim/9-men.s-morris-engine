@@ -14,6 +14,6 @@ class GameWithFriendViewModel : ViewModelInterface {
 
     init {
         val gameBoard = data.gameBoard
-        render = GameWithFriendScreen(gameBoard)
+        render = GameWithFriendScreen(gameBoard.value!!)
     }
 }

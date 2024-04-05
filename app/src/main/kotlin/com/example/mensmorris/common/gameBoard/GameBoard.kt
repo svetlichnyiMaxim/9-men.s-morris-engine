@@ -29,7 +29,6 @@ import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.R
 import com.example.mensmorris.common.Locate
 import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.utils.CacheUtils
 import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.common.utils.movesHistory
 import com.example.mensmorris.common.utils.undoneMoveHistory
@@ -41,7 +40,7 @@ class GameBoard(
     /**
      * stores current position
      */
-    override var position: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
+    var pos: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
     /**
      * what will happen if we click some circle
      */
@@ -50,9 +49,26 @@ class GameBoard(
      * what we should additionally do on undo
      */
     var onUndo: () -> Unit = {}
-) : GameClickHandler(position) {
+) {
+    /**
+     * stores all pieces which can be moved (used for highlighting)
+     */
+    var moveHints = mutableStateOf(listOf<Int>())
+
+    /**
+     * used for storing info of the previous (valid one) clicked button
+     */
+    var selectedButton = mutableStateOf<Int?>(null)
+
+    val gameClickHandler = GameClickHandler(pos, moveHints, selectedButton)
+
+    constructor(pos: Position) : this(mutableStateOf(pos), { _, _ -> }, {})
+
     private fun onClickResponse(index: Int) {
-        onClick(index) { handleClick(it) }
+        onClick(index) {
+            gameClickHandler.handleClick(it)
+            gameClickHandler.handleHighLighting()
+        }
     }
 
     /**
@@ -249,13 +265,13 @@ class GameBoard(
     private fun CircledButton(elementIndex: Int, onClick: (Int) -> Unit) {
         Button(modifier = Modifier
             .alpha(
-                if (CacheUtils.moveHints.value.contains(elementIndex)) {
+                if (moveHints.value.contains(elementIndex)) {
                     0.7f
                 } else {
-                    if (CacheUtils.selectedButton.value == elementIndex) {
+                    if (selectedButton.value == elementIndex) {
                         0.6f
                     } else {
-                        if (position.value.positions[elementIndex] == null) {
+                        if (pos.value.positions[elementIndex] == null) {
                             0f
                         } else 1f
                     }
@@ -264,7 +280,7 @@ class GameBoard(
             .size(BUTTON_WIDTH)
             .background(Color.Transparent, CircleShape),
             colors = ButtonDefaults.buttonColors(
-                containerColor = GameUtils.colorMap(position.value.positions[elementIndex])
+                containerColor = GameUtils.colorMap(pos.value.positions[elementIndex])
             ),
             shape = CircleShape,
             onClick = {
@@ -283,10 +299,9 @@ class GameBoard(
                     if (!movesHistory.empty()) {
                         undoneMoveHistory.push(movesHistory.peek())
                         movesHistory.pop()
-                        position.value = movesHistory.lastOrNull()
-                            ?: GameUtils.gameStartPosition
-                        CacheUtils.moveHints.value = arrayListOf()
-                        CacheUtils.selectedButton.value = null
+                        pos.value = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
+                        moveHints.value = arrayListOf()
+                        selectedButton.value = null
                         onUndo()
                     }
                 }) {
@@ -301,10 +316,9 @@ class GameBoard(
                     if (!undoneMoveHistory.empty()) {
                         movesHistory.push(undoneMoveHistory.peek())
                         undoneMoveHistory.pop()
-                        position.value = movesHistory.lastOrNull()
-                            ?: GameUtils.gameStartPosition
-                        CacheUtils.moveHints.value = arrayListOf()
-                        CacheUtils.selectedButton.value = null
+                        pos.value = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
+                        moveHints.value = arrayListOf()
+                        selectedButton.value = null
                         onUndo()
                     }
                 }) {

@@ -2,6 +2,7 @@ package com.example.mensmorris.model.impl
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.toPositions
 import com.example.mensmorris.data.impl.GameAnalyzeData
@@ -16,16 +17,22 @@ class GameAnalyzeViewModel(
     /**
      * winning positions consequence
      */
-    val position: MutableState<Position>
+    val pos: MutableLiveData<Position>
 ) : ViewModelInterface {
+    constructor(pos: MutableState<Position>) : this(MutableLiveData(pos.value))
+
     override var render: ScreenModel
-    override val data = GameAnalyzeData(position)
+    override val data = GameAnalyzeData(pos)
 
     private val positionsToDisplay: MutableState<List<Position>> = mutableStateOf(listOf())
 
     private fun solveResultObserver() {
+        pos.observeForever {
+            // we reset our analyze thing when position changes
+            data.solveResult.value = listOf()
+        }
         data.solveResult.observeForever {
-            positionsToDisplay.value = it.toPositions(position.value)
+            positionsToDisplay.value = it.toPositions(pos.value!!)
         }
     }
 

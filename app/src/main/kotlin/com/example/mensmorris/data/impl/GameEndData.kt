@@ -1,14 +1,16 @@
 package com.example.mensmorris.data.impl
 
+import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.common.utils.CacheUtils
 
 /**
  * data for game end screen
  */
-class GameEndData : DataModel {
+class GameEndData(var gameBoard: GameBoard) : DataModel {
     override fun invokeBackend() {
-        CacheUtils.moveHints.value = arrayListOf()
+        gameBoard.moveHints.value = arrayListOf()
     }
 
     override fun clearTheScene() {
