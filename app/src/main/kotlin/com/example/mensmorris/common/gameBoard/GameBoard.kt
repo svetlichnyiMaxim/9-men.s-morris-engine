@@ -58,7 +58,7 @@ class GameBoard(
     /**
      * used for storing info of the previous (valid one) clicked button
      */
-    var selectedButton = mutableStateOf<Int?>(null)
+    private var selectedButton = mutableStateOf<Int?>(null)
 
     /**
      * handles game clicks
