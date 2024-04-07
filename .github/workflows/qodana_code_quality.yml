@@ -7,15 +7,6 @@ on:
       - master
       - 1.1
 
-name: Qodana
-on:
-  workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
-      - 'releases/*'
-
 jobs:
   qodana:
     runs-on: ubuntu-latest
