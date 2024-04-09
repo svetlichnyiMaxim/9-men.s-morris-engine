@@ -72,20 +72,6 @@ jobs:
             --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
             --out ${{ env.path_to_release }}/app-release-signed.apk \
             ${{ env.path_to_release }}/app-release.apk
-          
-          
-          apksigner sign \
-            --ks ~/keystore.jks \
-            --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
-            --out $-{{ env.path_to_debug }}/app-debug-signed.apk \
-            ${{ env.path_to_debug }}/app-debug.apk
-
-      # Upload Artifact Build
-      - name: Upload APK Debug - ${{ env.repository_name }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ env.date_today }} - ${{ env.repository_name }} - APK debug
-          path: ${{ env.path_to_debug }}/app-debug-signed.apk
 
       - name: Upload APK Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v3
