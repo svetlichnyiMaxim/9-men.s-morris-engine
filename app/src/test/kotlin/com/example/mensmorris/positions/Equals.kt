@@ -6,7 +6,7 @@ import com.example.mensmorris.GREEN
 import com.example.mensmorris.common.Position
 
 open class Equals {
-    open val position = Position(
+    internal val position = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -21,7 +21,7 @@ open class Equals {
         pieceToMove = true
     )
 
-    open val position2 = Position(
+    internal val position2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,

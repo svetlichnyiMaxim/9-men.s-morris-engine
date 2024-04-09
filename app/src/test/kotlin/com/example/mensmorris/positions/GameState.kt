@@ -6,7 +6,7 @@ import com.example.mensmorris.GREEN
 import com.example.mensmorris.common.Position
 
 open class GameState {
-    open val position = Position(
+    internal val position = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  BLUE_,                  EMPTY,
