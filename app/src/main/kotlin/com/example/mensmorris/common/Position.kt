@@ -2,6 +2,7 @@ package com.example.mensmorris.common
 
 import com.example.mensmorris.BLUE_COLOR
 import com.example.mensmorris.CIRCLE
+import com.example.mensmorris.DEPTH_COST
 import com.example.mensmorris.ENEMY_UNFINISHED_TRIPLES_COST
 import com.example.mensmorris.GREEN_COLOR
 import com.example.mensmorris.LOST_GAME_COST
@@ -43,10 +44,12 @@ class Position(
      */
     fun evaluate(depth: UByte = 0u): Pair<Int, Int> {
         if (greenPiecesAmount < PIECES_TO_FLY) {
-            return Pair(LOST_GAME_COST, Int.MAX_VALUE)
+            val depthCost = depth.toInt() * DEPTH_COST
+            return Pair(LOST_GAME_COST + depthCost, Int.MAX_VALUE - depthCost)
         }
         if (bluePiecesAmount < PIECES_TO_FLY) {
-            return Pair(Int.MAX_VALUE, LOST_GAME_COST)
+            val depthCost = depth.toInt() * DEPTH_COST
+            return Pair(Int.MAX_VALUE - depthCost, LOST_GAME_COST + depthCost)
         }
         var greenEvaluation = 0
         var blueEvaluation = 0
@@ -431,7 +434,7 @@ class Position(
      * TODO: rewite UNIT tests for this
      * (1){pieceToMove}(1){removalCount}(24){positions}(3){freePieces.first}(3){freePieces.second}
      */
-    fun longHashCode(): Long {
+    private fun longHashCode(): Long {
         var result = 0L
         // 3^30 = 205891132094649
         result += removalCount * 205891132094649

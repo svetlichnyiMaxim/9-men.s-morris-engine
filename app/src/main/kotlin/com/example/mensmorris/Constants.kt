@@ -5,6 +5,8 @@ package com.example.mensmorris
  */
 const val PIECE_COST = 1_000
 
+const val DEPTH_COST = 1
+
 /**
  * how much danger enemy unfinished triples are
  */
