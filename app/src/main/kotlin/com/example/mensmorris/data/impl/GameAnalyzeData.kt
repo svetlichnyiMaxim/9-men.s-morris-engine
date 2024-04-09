@@ -62,7 +62,7 @@ class GameAnalyzeData(
         }
         CacheUtils.hasCacheWithDepth = true
         val solveResultValue = pos.value!!.solve(depth.intValue.toUByte()).second
-        solveResult.value = solveResultValue
+        solveResult.postValue(solveResultValue)
     }
 
     /**

@@ -5,14 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.utils.CacheUtils
 import com.example.mensmorris.common.utils.GameUtils
-import com.example.mensmorris.common.utils.defaultDispatcher
+import com.example.mensmorris.common.utils.botScope
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
 import com.example.mensmorris.model.impl.GameAnalyzeViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * data for game with bot screen
@@ -56,7 +56,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
      * launches bot actions against player
      */
     private suspend fun launchBot() {
-        CoroutineScope(defaultDispatcher).async {
+        CoroutineScope(botScope).launch {
             while (true) {
                 if (!gameBoard.value!!.pos.value.pieceToMove
                     && gameBoard.value!!.pos.value.gameState() != GameUtils.GameState.End

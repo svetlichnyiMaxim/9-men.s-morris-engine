@@ -19,10 +19,14 @@ import com.example.mensmorris.plus
  * used for storing position data
  * @param positions all pieces
  * @param freePieces pieces we can still place: first - green, second - blue
+ * both should be <= 8
+ * @see longHashCode
  * @param greenPiecesAmount used for fast evaluation & game state checker (stores green pieces)
  * @param bluePiecesAmount used for fast evaluation & game state checker (stores blue pieces)
  * @param pieceToMove piece going to move next
  * @param removalCount amount of pieces to remove
+ * always <= 2
+ * @see longHashCode
  */
 @Suppress("EqualsOrHashCode")
 class Position(
@@ -31,7 +35,7 @@ class Position(
     var greenPiecesAmount: UByte = (positions.count { it == true } + freePieces.first),
     var bluePiecesAmount: UByte = (positions.count { it == false } + freePieces.second),
     var pieceToMove: Boolean,
-    var removalCount: UByte = 0U
+    var removalCount: Byte = 0
 ) {
     /**
      * evaluates position
@@ -44,34 +48,30 @@ class Position(
         if (bluePiecesAmount < PIECES_TO_FLY) {
             return Pair(Int.MAX_VALUE, LOST_GAME_COST)
         }
+        var greenEvaluation = 0
+        var blueEvaluation = 0
+
         val greenPieces = (greenPiecesAmount.toInt() + if (pieceToMove) removalCount.toInt() else 0)
         val bluePieces = (bluePiecesAmount.toInt() + if (!pieceToMove) removalCount.toInt() else 0)
 
-        val basicGreenEval = (greenPieces - bluePieces) * PIECE_COST
-        val basicBlueEval = (bluePieces - greenPieces) * PIECE_COST
+        greenEvaluation += (greenPieces - bluePieces) * PIECE_COST
+        blueEvaluation += (bluePieces - greenPieces) * PIECE_COST
 
         val (unfinishedTriples, findBlockedTriples) = triplesEvaluation()
 
         val greenUnfinishedTriplesDelta =
             (unfinishedTriples.first - unfinishedTriples.second * ENEMY_UNFINISHED_TRIPLES_COST)
-        val greenUnfinishedTriplesEval =
-            greenUnfinishedTriplesDelta * UNFINISHED_TRIPLES_COST
+        greenEvaluation += greenUnfinishedTriplesDelta * UNFINISHED_TRIPLES_COST
 
 
         val blueUnfinishedTriplesDelta =
             (unfinishedTriples.second - unfinishedTriples.first * ENEMY_UNFINISHED_TRIPLES_COST)
-        val blueUnfinishedTriplesEval =
-            blueUnfinishedTriplesDelta * UNFINISHED_TRIPLES_COST
+        blueEvaluation += blueUnfinishedTriplesDelta * UNFINISHED_TRIPLES_COST
 
-        val greenPossibleTriplesEval =
+        greenEvaluation +=
             (findBlockedTriples.first - findBlockedTriples.second) * POSSIBLE_TRIPLE_COST
-        val bluePossibleTriplesEval =
+        blueEvaluation +=
             (findBlockedTriples.second - findBlockedTriples.first) * POSSIBLE_TRIPLE_COST
-
-        val greenEvaluation =
-            (basicGreenEval + greenUnfinishedTriplesEval + greenPossibleTriplesEval + depth.toInt())
-        val blueEvaluation =
-            (basicBlueEval + blueUnfinishedTriplesEval + bluePossibleTriplesEval + depth.toInt())
 
         return Pair(greenEvaluation, blueEvaluation)
     }
@@ -180,19 +180,19 @@ class Position(
      * @param move the last move we have performed
      * @return the amount of removes we need to perform
      */
-    fun removalAmount(move: Movement): UByte {
-        if (move.endIndex == null) return 0U
+    fun removalAmount(move: Movement): Byte {
+        if (move.endIndex == null) return 0
 
         return removeChecker[move.endIndex]!!.count { list ->
             list.all { positions[it] == pieceToMove }
-        }.toUByte()
+        }.toByte()
     }
 
     /**
      * @return possible movements
      */
     fun generateMoves(currentDepth: UByte = 0u, ignoreCache: Boolean = false): List<Movement> {
-        val str = toString()
+        val str = longHashCode()
         if (!ignoreCache) {
             // check if we can abort calculation / use our previous result
             occurredPositions[str]?.let {
@@ -296,7 +296,7 @@ class Position(
                 GameUtils.GameState.End
             }
 
-            (removalCount > 0U) -> {
+            (removalCount > 0) -> {
                 GameUtils.GameState.Removing
             }
 
@@ -383,12 +383,16 @@ class Position(
             ),
             freePieces = Pair(${freePieces.first}u, ${freePieces.second}u),
             pieceToMove = ${pieceToMove},
-            removalCount = ${removalCount}u
+            removalCount = $removalCount
         )
         """.trimIndent()
         )
     }
 
+    /**
+     * this function is needed for unit tests
+     * especially needed is comparison with other positions
+     */
     override fun equals(other: Any?): Boolean {
         if (other !is Position) {
             return super.equals(other)
@@ -401,6 +405,12 @@ class Position(
         return freePieces == other.freePieces && pieceToMove == other.pieceToMove
     }
 
+    /**
+     * used for caching, replaces hashcode
+     * this "hash" function has no collisions
+     * each result is 28 symbols long
+     * TODO: rewrite it
+     */
     override fun toString(): String {
         return (if (pieceToMove) "1" else "0") + removalCount.toString() + positions.joinToString(
             separator = ""
@@ -411,5 +421,35 @@ class Position(
                 false -> "0"
             }
         } + freePieces.first + freePieces.second
+    }
+
+    /**
+     * used for caching, replaces hashcode
+     * this "hash" function has no collisions
+     * each result is 31 symbols long
+     * TODO: try to compress it
+     * TODO: rewite UNIT tests for this
+     * (1){pieceToMove}(1){removalCount}(24){positions}(3){freePieces.first}(3){freePieces.second}
+     */
+    fun longHashCode(): Long {
+        var result = 0L
+        // 3^30 = 205891132094649
+        result += removalCount * 205891132094649
+        //3^29 = 68630377364883
+        var pow329 = 68630377364883
+        positions.forEach {
+            result += when (it) {
+                null -> 2
+                true -> 1
+                false -> 0
+            } * pow329
+            pow329 /= 3
+        }
+        result += freePieces.first.toString(3).toInt() * 9
+        result += freePieces.second.toString(3).toInt() * 1
+        if (pieceToMove) {
+            result *= -1
+        }
+        return result
     }
 }

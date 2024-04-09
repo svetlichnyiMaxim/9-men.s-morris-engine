@@ -19,7 +19,7 @@ open class MoveGeneration {
             EMPTY,                  EMPTY,                  GREEN
         ),
         // @formatter:on
-        freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0u
+        freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0
     )
 
     internal val position1Result = mutableListOf(
@@ -56,7 +56,7 @@ open class MoveGeneration {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        freePieces = Pair(6u, 6u), pieceToMove = true, removalCount = 0u
+        freePieces = Pair(6u, 6u), pieceToMove = true, removalCount = 0
     )
 
     internal val position2Result = mutableListOf(
@@ -93,7 +93,7 @@ open class MoveGeneration {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        freePieces = Pair(5u, 6u), pieceToMove = true, removalCount = 1u
+        freePieces = Pair(5u, 6u), pieceToMove = true, removalCount = 1
     )
 
     internal val position3Result = mutableListOf(
@@ -114,7 +114,7 @@ open class MoveGeneration {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        freePieces = Pair(5u, 5u), pieceToMove = false, removalCount = 0u
+        freePieces = Pair(5u, 5u), pieceToMove = false, removalCount = 0
     )
 
     internal val position4Result = mutableListOf(
@@ -151,7 +151,7 @@ open class MoveGeneration {
             EMPTY,                  BLUE_,                  GREEN
         ),
         // @formatter:on
-        freePieces = Pair(0u, 0u), pieceToMove = false, removalCount = 0u
+        freePieces = Pair(0u, 0u), pieceToMove = false, removalCount = 0
     )
 
     internal val position5Result = mutableListOf(
@@ -223,7 +223,7 @@ open class MoveGeneration {
             EMPTY,                  BLUE_,                  GREEN
         ),
         // @formatter:on
-        freePieces = Pair(0u, 0u), pieceToMove = false, removalCount = 0u
+        freePieces = Pair(0u, 0u), pieceToMove = false, removalCount = 0
     )
 
     internal val position6Result = mutableListOf(

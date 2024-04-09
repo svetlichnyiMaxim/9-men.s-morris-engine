@@ -1,6 +1,5 @@
 package com.example.mensmorris.common.utils
 
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.common.Position

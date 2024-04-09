@@ -81,6 +81,7 @@ open class GameClickHandler(
                 currentScreen.value = Screen.EndGame
             }
         }
+        CacheUtils.hasCacheWithDepth = false
     }
 
     /**

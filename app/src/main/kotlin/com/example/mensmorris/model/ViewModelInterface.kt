@@ -3,15 +3,14 @@ package com.example.mensmorris.model
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
-import com.example.mensmorris.common.utils.defaultDispatcher
+import com.example.mensmorris.common.utils.backendScope
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.domain.ScreenModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 /**
- * model for our models
- * TODO: rename this
+ * model for our view models
  */
 interface ViewModelInterface {
     /**
@@ -28,7 +27,7 @@ interface ViewModelInterface {
      * starts backend tasks
      */
     fun invokeBackend() {
-        CoroutineScope(defaultDispatcher).async {
+        CoroutineScope(backendScope).launch {
             data.invokeBackend()
         }
     }

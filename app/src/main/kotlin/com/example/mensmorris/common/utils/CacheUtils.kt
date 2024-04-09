@@ -1,9 +1,10 @@
 package com.example.mensmorris.common.utils
 
-import androidx.compose.runtime.mutableStateOf
 import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
+import com.example.mensmorris.data.impl.GameEndData
+import java.util.Hashtable
 
 /**
  * provides caching utils
@@ -20,7 +21,7 @@ object CacheUtils {
     /**
      * we store occurred positions here which massively increases speed
      */
-    val occurredPositions: HashMap<String, Pair<List<Movement>, UByte>> = hashMapOf()
+    val occurredPositions: MutableMap<Long, Pair<List<Movement>, UByte>> = mutableMapOf()
 
     /**
      * used to check if need to reset our cache or it already is
@@ -44,8 +45,8 @@ object CacheUtils {
         if (!hasCacheWithDepth) {
             return
         }
-        occurredPositions.forEach {
-            occurredPositions[it.key] = Pair(it.value.first, 0u)
+        occurredPositions.forEach { (key, value) ->
+            occurredPositions[key] = Pair(value.first, 0u)
         }
         hasCacheWithDepth = false
     }

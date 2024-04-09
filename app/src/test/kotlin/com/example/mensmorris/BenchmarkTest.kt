@@ -16,25 +16,26 @@ class BenchmarkTest : Benchmark() {
             }
             timeSum += time
             occurredPositions.clear()
+            println(time)
         }
         val average = timeSum / tries
         // TODO: replace with JMH tests
-        println(average)
+        println("average - $average")
         //TestCase.assertTrue(average <= 8_000L)
     }
 
     /*
-7541
-5821
 6222
-5445
-6389
-5787
-6349
-5757
-5541
-5810
-average - 6066
+5411
+5372
+5223
+5259
+5288
+5307
+5614
+5325
+5305
+average - 5432
      */
 
     @Test
@@ -47,24 +48,25 @@ average - 6066
             }
             timeSum += time
             occurredPositions.clear()
+            println(time)
         }
         val average = timeSum / tries
         // TODO: replace with JMH tests
-        println(average)
+        println("average - $average")
         //TestCase.assertTrue(average <= 2_000L)
     }
 
     /*
-1367
-879
-856
-871
+1455
 837
-848
-844
-866
-855
-880
-average - 910
+828
+830
+793
+810
+813
+836
+801
+787
+average - 879
      */
 }

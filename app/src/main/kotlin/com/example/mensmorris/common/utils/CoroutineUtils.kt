@@ -4,7 +4,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 /**
- * our dispatcher for most of the coroutines
+ * our dispatcher for starting data class in mvvvm
+ */
+val backendScope = Dispatchers.Default
+
+/**
+ * our dispatcher for starting bot in mvvvm
+ */
+val botScope = Dispatchers.Default
+
+/**
+ * our dispatcher for starting bot in mvvvm
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-val defaultDispatcher = Dispatchers.IO//.limitedParallelism(10)
+val liveDataScope = Dispatchers.Default.limitedParallelism(1)

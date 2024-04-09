@@ -8,7 +8,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.example.mensmorris.common.render
 import com.example.mensmorris.model.ViewModelInterface
 import com.example.mensmorris.model.impl.GameEndViewModel

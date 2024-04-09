@@ -41,12 +41,16 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
             copy.positions[startIndex] = null
         }
         copy.removalCount = copy.removalAmount(this)
-        if (copy.removalCount == 0.toUByte()) {
+        if (copy.removalCount == 0.toByte()) {
             copy.pieceToMove = !copy.pieceToMove
         }
         return copy
     }
 
+    /**
+     * adds method for checking if movements are equal
+     * used for test
+     */
     override fun equals(other: Any?): Boolean {
         if (other is Movement) {
             return this.startIndex == other.startIndex && this.endIndex == other.endIndex
@@ -54,6 +58,9 @@ class Movement(val startIndex: Int?, val endIndex: Int?) {
         return super.equals(other)
     }
 
+    /**
+     * provides a human-readable output of the class content
+     */
     override fun toString(): String {
         return "Movement($startIndex, $endIndex)"
     }

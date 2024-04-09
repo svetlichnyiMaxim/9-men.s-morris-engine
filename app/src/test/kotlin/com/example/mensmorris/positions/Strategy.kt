@@ -19,7 +19,7 @@ open class Strategy {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        freePieces = Pair(0u, 0u), pieceToMove = true, removalCount = 0u
+        freePieces = Pair(0u, 0u), pieceToMove = true, removalCount = 0
     )
 
     val correctResult1 = Pair(
@@ -38,7 +38,7 @@ open class Strategy {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0u
+        freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0
     )
 
     val correctResult2 = Pair(
@@ -60,7 +60,7 @@ open class Strategy {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        freePieces = Pair(5u, 5u), pieceToMove = false, removalCount = 0u
+        freePieces = Pair(5u, 5u), pieceToMove = false, removalCount = 0
     )
 
     val correctResult3 = Pair(
