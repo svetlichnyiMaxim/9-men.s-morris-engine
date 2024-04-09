@@ -1,22 +1,16 @@
-name: Generated APK AAB (Upload - Create Artifact To Github Action)
+name: Generate APK
 
 env:
   path_to_release: app/build/outputs/apk/release
 
   path_to_debug: app/build/outputs/apk/debug
-  # The name of the Play Store
-  playstore_name: Nine mens morris
+  # The name of the app
+  apk_name: NineMensMorris
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
-  push:
-    branches: [ "1.1" ]
-  pull_request:
-    branches: [ "1.1" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+  pull_request:
+  push:
 
 jobs:
   build:
@@ -32,13 +26,15 @@ jobs:
 
       # Set Repository Name As Env Variable
       - name: Set repository name as env variable
-        run: echo "repository_name=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+        run: |
+          echo "repository_name=$(echo '${{ github.repository }}' \
+            | awk -F '/' '{print $2}')" >> $GITHUB_ENV
 
       - name: Set Up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '20'
-          distribution: 'zulu'
+          java-version: '19'
+          distribution: 'corretto'
           cache: 'gradle'
 
       - name: Change wrapper permissions
@@ -71,18 +67,26 @@ jobs:
       # Sign apk
       - name: Sign apk
         run: |
-          apksigner sign --ks ~/keystore.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out ${{ env.path_to_release }}/app-release-signed.apk  ${{ env.path_to_release }}/app-release.apk
-          apksigner sign --ks ~/keystore.jks --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} --out ${{ env.path_to_debug }}/app-debug-signed.apk  ${{ env.path_to_debug }}/app-debug.apk
+          apksigner sign \
+            --ks ~/keystore.jks \
+            --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+            --out ${{ env.path_to_release }}/app-release-signed.apk \
+            ${{ env.path_to_release }}/app-release.apk
+          
+          
+          apksigner sign \
+            --ks ~/keystore.jks \
+            --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
+            --out $-{{ env.path_to_debug }}/app-debug-signed.apk \
+            ${{ env.path_to_debug }}/app-debug.apk
 
       # Upload Artifact Build
-      # Noted For Output [main_project_module]/build/outputs/apk/debug/
       - name: Upload APK Debug - ${{ env.repository_name }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.date_today }} - ${{ env.repository_name }} - APK debug
           path: ${{ env.path_to_debug }}/app-debug-signed.apk
 
-      # Noted For Output [main_project_module]/build/outputs/apk/release/
       - name: Upload APK Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v3
         with:

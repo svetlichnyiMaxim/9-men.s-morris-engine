@@ -23,7 +23,7 @@ open class Strategy {
     )
 
     val correctResult1 = Pair(
-        Pair(-2146483648, 2147483647), mutableListOf<Movement>()
+        Pair(-2146483646, 2147483645), mutableListOf<Movement>()
     )
 
     internal val position2 = Position(

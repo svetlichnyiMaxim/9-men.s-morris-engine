@@ -5,6 +5,9 @@ package com.example.mensmorris
  */
 const val PIECE_COST = 1_000
 
+/**
+ * cost of additional moves (unnecessary) in winning positions
+ */
 const val DEPTH_COST = 1
 
 /**
