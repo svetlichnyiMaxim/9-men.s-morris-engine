@@ -10,11 +10,11 @@ open class Memory {
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  BLUE_,
-            EMPTY,          EMPTY,          EMPTY,
-            EMPTY,  EMPTY,  BLUE_,
+                    EMPTY,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  BLUE_,
             EMPTY,  EMPTY,  GREEN,          EMPTY,  EMPTY,  EMPTY,
-            GREEN,  EMPTY,  EMPTY,
-            EMPTY,          EMPTY,          EMPTY,
+                            GREEN,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          EMPTY,
             EMPTY,                  EMPTY,                  GREEN
         ),
         // @formatter:on

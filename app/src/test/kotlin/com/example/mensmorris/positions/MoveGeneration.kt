@@ -106,11 +106,11 @@ open class MoveGeneration {
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  EMPTY,
-            EMPTY,          EMPTY,          EMPTY,
-            GREEN,  EMPTY,  GREEN,
+                    EMPTY,          EMPTY,          EMPTY,
+                            GREEN,  EMPTY,  GREEN,
             EMPTY,  EMPTY,  BLUE_,          EMPTY,  EMPTY,  EMPTY,
-            BLUE_,  EMPTY,  EMPTY,
-            EMPTY,          EMPTY,          BLUE_,
+                            BLUE_,  EMPTY,  EMPTY,
+                    EMPTY,          EMPTY,          BLUE_,
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
