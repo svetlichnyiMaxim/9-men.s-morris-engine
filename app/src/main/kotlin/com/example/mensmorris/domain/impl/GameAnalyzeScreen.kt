@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.common.Locate
 import com.example.mensmorris.common.Position
@@ -38,7 +39,7 @@ class GameAnalyzeScreen(
     /**
      * current search depth
      */
-    val depth: MutableIntState,
+    private val depth: MutableIntState,
     /**
      * gets called on depth change
      */
@@ -51,7 +52,7 @@ class GameAnalyzeScreen(
      * gets called when "start analyze" button it pressed
      */
     val startAnalyze: () -> Unit
-) : ScreenModel {
+) : ViewModel(), ScreenModel {
 
     @Composable
     override fun InvokeRender() {

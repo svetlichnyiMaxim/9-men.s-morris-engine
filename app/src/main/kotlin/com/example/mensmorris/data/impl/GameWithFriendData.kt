@@ -1,8 +1,10 @@
 package com.example.mensmorris.data.impl
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.utils.CacheUtils
+import com.example.mensmorris.common.utils.GameUtils
 import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
@@ -10,7 +12,7 @@ import com.example.mensmorris.data.GameBoardInterface
 /**
  * data for game with friend screen
  */
-open class GameWithFriendData : DataModel, GameBoardInterface {
+class GameWithFriendData(override val viewModel: ViewModel) : DataModel, GameBoardInterface {
     override val gameBoard = GameBoard(pos = mutableStateOf(gameStartPosition),
         onClick = { index, func -> func(index) },
         onUndo = {})
@@ -22,5 +24,6 @@ open class GameWithFriendData : DataModel, GameBoardInterface {
 
     override fun clearTheScene() {
         CacheUtils.position = gameBoard.pos.value
+        gameBoard.pos.value = gameStartPosition
     }
 }

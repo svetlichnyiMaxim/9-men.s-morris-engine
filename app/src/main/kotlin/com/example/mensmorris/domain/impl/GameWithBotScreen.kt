@@ -1,6 +1,7 @@
 package com.example.mensmorris.domain.impl
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.AppTheme
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.domain.GameScreenModel
@@ -8,7 +9,7 @@ import com.example.mensmorris.domain.GameScreenModel
 /**
  * Game main screen
  */
-class GameWithBotScreen(override var gameBoard: GameBoard) : GameScreenModel {
+class GameWithBotScreen(override var gameBoard: GameBoard) : ViewModel(), GameScreenModel {
 
     private val pieceCountFragment = PieceCountFragment(gameBoard.pos)
 

@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.Screen
 import com.example.mensmorris.common.AppTheme
@@ -17,7 +18,7 @@ import com.example.mensmorris.domain.ScreenModel
 /**
  * this screen is shown at the start of the game
  */
-class WelcomeScreen : ScreenModel {
+class WelcomeScreen : ViewModel(), ScreenModel {
     /**
      * draws game modes options
      */

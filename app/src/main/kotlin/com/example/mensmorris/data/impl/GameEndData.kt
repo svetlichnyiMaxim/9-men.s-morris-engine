@@ -1,5 +1,6 @@
 package com.example.mensmorris.data.impl
 
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.data.DataModel
 
@@ -10,7 +11,7 @@ class GameEndData(
     /**
      * our game board
      */
-    var gameBoard: GameBoard
+    var gameBoard: GameBoard, override val viewModel: ViewModel
 ) : DataModel {
     override suspend fun invokeBackend() {
         gameBoard.moveHints.value = arrayListOf()

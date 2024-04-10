@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.common.Locate
 import com.example.mensmorris.common.Position
@@ -24,7 +25,7 @@ class PieceCountFragment(
      * our position
      */
     val pos: MutableState<Position>
-) : ScreenModel {
+) : ViewModel(), ScreenModel {
     @Composable
     override fun InvokeRender() {
         Locate(Alignment.TopStart) {

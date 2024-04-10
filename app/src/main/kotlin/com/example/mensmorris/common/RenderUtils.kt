@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 inline fun Locate(alignment: Alignment, function: () -> Unit) {
     Box(
         modifier = Modifier
-            .fillMaxSize(), alignment
+            , alignment
     ) {
         function()
     }

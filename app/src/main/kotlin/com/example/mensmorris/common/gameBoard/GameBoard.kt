@@ -40,7 +40,7 @@ class GameBoard(
     /**
      * stores current position
      */
-    var pos: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
+    override var pos: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
     /**
      * what will happen if we click some circle
      */
@@ -49,28 +49,25 @@ class GameBoard(
      * what we should additionally do on undo
      */
     var onUndo: () -> Unit = {}
-) {
-    /**
-     * stores all pieces which can be moved (used for highlighting)
-     */
-    var moveHints = mutableStateOf(listOf<Int>())
+) : GameClickHandler(pos, moveHints, selectedButton) {
+    companion object {
+        /**
+         * stores all pieces which can be moved (used for highlighting)
+         */
+        private var moveHints: MutableState<List<Int>> = mutableStateOf(listOf())
 
-    /**
-     * used for storing info of the previous (valid one) clicked button
-     */
-    private var selectedButton = mutableStateOf<Int?>(null)
-
-    /**
-     * handles game clicks
-     */
-    val gameClickHandler = GameClickHandler(pos, moveHints, selectedButton)
+        /**
+         * used for storing info of the previous (valid one) clicked button
+         */
+        private var selectedButton = mutableStateOf<Int?>(null)
+    }
 
     constructor(pos: Position) : this(mutableStateOf(pos), { _, _ -> }, {})
 
     private fun onClickResponse(index: Int) {
         onClick(index) {
-            gameClickHandler.handleClick(it)
-            gameClickHandler.handleHighLighting()
+            handleClick(it)
+            handleHighLighting()
         }
     }
 
@@ -309,7 +306,7 @@ class GameBoard(
                     }
                 }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.forward), "undo"
+                    painter = painterResource(id = R.drawable.redoMove), "undo"
                 )
             }
         }
@@ -326,7 +323,7 @@ class GameBoard(
                     }
                 }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.back), "redo"
+                    painter = painterResource(id = R.drawable.undoMove), "redo"
                 )
             }
         }

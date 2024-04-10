@@ -1,6 +1,7 @@
 package com.example.mensmorris.data.impl
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.utils.CacheUtils
 import com.example.mensmorris.common.utils.GameUtils
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 /**
  * data for game with bot screen
  */
-class GameWithBotData : DataModel, GameBoardInterface {
+class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardInterface {
     override val gameBoard = GameBoard(pos = mutableStateOf(GameUtils.gameStartPosition),
         onClick = { index, func -> response(index, func) },
         onUndo = {}
@@ -51,6 +52,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
     override fun clearTheScene() {
         solvingJob?.cancel()
         CacheUtils.position = gameBoard.pos.value
+        gameBoard.pos.value = GameUtils.gameStartPosition
     }
 
     /**
@@ -67,7 +69,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
                     // TODO: fix this it is going to shoot at your leg soon
                     GlobalScope.launch(Dispatchers.Main) {
                         analyze.data.solveResult.value = solveResultValue
-                        gameBoard.gameClickHandler.processMove(analyze.data.solveResult.value!!.last())
+                        gameBoard.processMove(analyze.data.solveResult.value!!.last())
                         CacheUtils.resetCachedPositions()
                     }
                 }

@@ -83,14 +83,3 @@ fun MutableList<Movement>.displayAsPositions(startPos: Position) {
     println("finished output")
     println()
 }
-
-/**
- * custom mutable live data implementation
- * @param function function that gets called during setValue method
- */
-class CustomMutableLiveData<T>(var function: () -> Unit) : MutableLiveData<T>() {
-    override fun setValue(value: T) {
-        function()
-        super.setValue(value)
-    }
-}

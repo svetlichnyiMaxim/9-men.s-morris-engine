@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.Screen
 import com.example.mensmorris.common.AppTheme
@@ -27,7 +28,7 @@ import com.example.mensmorris.domain.GameScreenModel
  */
 class GameEndScreen(
     override var gameBoard: GameBoard
-) : GameScreenModel {
+) : ViewModel(), GameScreenModel {
 
     private val pos = gameBoard.pos
 

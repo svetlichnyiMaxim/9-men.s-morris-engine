@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.utils.CacheUtils
@@ -17,7 +18,7 @@ class GameAnalyzeData(
     /**
      * position in our analyze
      */
-    val pos: MutableState<Position>
+    val pos: MutableState<Position>, override val viewModel: ViewModel
 ) : DataModel {
 
     /**

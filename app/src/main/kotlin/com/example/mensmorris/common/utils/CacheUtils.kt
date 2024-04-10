@@ -4,7 +4,6 @@ import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
 import com.example.mensmorris.data.impl.GameEndData
-import java.util.Hashtable
 
 /**
  * provides caching utils

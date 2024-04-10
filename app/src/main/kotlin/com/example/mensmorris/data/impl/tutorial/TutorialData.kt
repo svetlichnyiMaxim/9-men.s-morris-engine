@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import com.example.mensmorris.data.DataModel
 
 /**
- * TODO: find use for this class
+ * used for storing tutorials data (completion progress)
  */
-class IndicatorsTutorialData(override val viewModel: ViewModel) : DataModel {
+class TutorialData(override val viewModel: ViewModel) : DataModel {
     override suspend fun invokeBackend() {
         TODO("Not yet implemented")
     }

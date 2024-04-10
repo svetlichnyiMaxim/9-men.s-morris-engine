@@ -3,17 +3,18 @@ package com.example.mensmorris
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import com.example.mensmorris.common.render
-import com.example.mensmorris.model.ViewModelInterface
+import com.example.mensmorris.model.impl.tutorial.ViewModelInterface
 import com.example.mensmorris.model.impl.GameEndViewModel
 import com.example.mensmorris.model.impl.GameWithBotViewModel
 import com.example.mensmorris.model.impl.GameWithFriendViewModel
 import com.example.mensmorris.model.impl.WelcomeViewModel
+import kotlinx.coroutines.launch
 
 /**
  * shows how thick our pieces & board will be
@@ -48,24 +49,19 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         mainActivity = this
         mainActivity.setContent {
-            ScreenSwitcher()
-        }
-    }
-}
-
-/**
- * provides a quicker & better way for switching screens than setTheme { }
- */
-@Composable
-fun ScreenSwitcher(currentScreenValue: MutableState<Screen> = currentScreen) {
-    DisposableEffect(key1 = currentScreenValue) {
-        render {
-            currentScreen.value.model.invokeBackend()
-            currentScreen.value.model.InvokeRender()
-        }
-        onDispose {
-            currentScreen.value.model.shutDownBackend()
-            previousScreen = currentScreen.value
+            DisposableEffect(key1 = currentScreen) {
+                lifecycleScope.launch {
+                    render {
+                        currentScreen.value.viewModel.invokeBackend()
+                        currentScreen.value.viewModel.InvokeRender()
+                    }
+                }
+                onDispose {
+                    // TODO: this isn't working find why and fix
+                    currentScreen.value.viewModel.shutDownBackend()
+                    previousScreen = currentScreen.value
+                }
+            }
         }
     }
 }
@@ -77,7 +73,7 @@ enum class Screen(
     /**
      * used for launching a proper screen
      */
-    var model: ViewModelInterface
+    var viewModel: ViewModelInterface
 ) {
     /**
      * screen everything starts from

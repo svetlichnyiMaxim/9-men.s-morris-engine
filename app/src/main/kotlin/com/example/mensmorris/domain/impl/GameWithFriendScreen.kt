@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.common.AppTheme
 import com.example.mensmorris.common.gameBoard.GameBoard
@@ -17,7 +18,7 @@ import com.example.mensmorris.model.impl.GameAnalyzeViewModel
 /**
  * Game main screen
  */
-class GameWithFriendScreen(override var gameBoard: GameBoard) : GameScreenModel {
+class GameWithFriendScreen(override var gameBoard: GameBoard) : ViewModel(), GameScreenModel {
 
     private val pieceCountFragment = PieceCountFragment(gameBoard.pos)
 
