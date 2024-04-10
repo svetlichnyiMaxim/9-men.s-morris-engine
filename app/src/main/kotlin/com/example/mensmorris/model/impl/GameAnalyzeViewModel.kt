@@ -8,7 +8,7 @@ import com.example.mensmorris.common.toPositions
 import com.example.mensmorris.data.impl.GameAnalyzeData
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.GameAnalyzeScreen
-import com.example.mensmorris.model.impl.tutorial.ViewModelInterface
+import com.example.mensmorris.model.ViewModelInterface
 
 /**
  * game analyze model

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.mensmorris.data.impl.WelcomeData
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.WelcomeScreen
-import com.example.mensmorris.model.impl.tutorial.ViewModelInterface
+import com.example.mensmorris.model.ViewModelInterface
 
 /**
  * welcome model

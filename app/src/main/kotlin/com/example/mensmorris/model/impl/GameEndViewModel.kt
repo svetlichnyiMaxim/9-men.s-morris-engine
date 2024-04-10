@@ -7,7 +7,6 @@ import com.example.mensmorris.data.impl.GameEndData
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.GameEndScreen
 import com.example.mensmorris.model.ViewModelInterface
-import com.example.mensmorris.model.impl.tutorial.ViewModelInterface
 
 /**
  * game end model

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.mensmorris.data.impl.GameWithFriendData
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.GameWithFriendScreen
-import com.example.mensmorris.model.impl.tutorial.ViewModelInterface
+import com.example.mensmorris.model.ViewModelInterface
 
 /**
  * game with friend model
