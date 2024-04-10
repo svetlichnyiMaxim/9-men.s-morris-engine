@@ -1,6 +1,7 @@
 package com.example.mensmorris.data.impl
 
 import androidx.compose.runtime.MutableIntState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.common.Movement
@@ -16,7 +17,7 @@ class GameAnalyzeData(
     /**
      * position in our analyze
      */
-    val pos: MutableLiveData<Position>
+    val pos: MutableState<Position>
 ) : DataModel {
 
     /**
@@ -27,7 +28,7 @@ class GameAnalyzeData(
     /**
      * result of position analyze (best move)
      */
-    val solveResult: MutableLiveData<List<Movement>> = MutableLiveData()
+    val solveResult: MutableLiveData<List<Movement>> = MutableLiveData(listOf())
 
     override suspend fun invokeBackend() {
         // TODO: Not yet implemented
@@ -69,7 +70,7 @@ class GameAnalyzeData(
             return null
         }
         CacheUtils.hasCacheWithDepth = true
-        return pos.value!!.solve(depth.intValue.toUByte()).second
+        return pos.value.solve(depth.intValue.toUByte()).second
     }
 
     /**
