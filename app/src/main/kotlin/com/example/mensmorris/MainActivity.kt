@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.example.mensmorris.common.render
+import com.example.mensmorris.model.ViewModelInterface
 import com.example.mensmorris.model.impl.GameEndViewModel
 import com.example.mensmorris.model.impl.GameWithBotViewModel
 import com.example.mensmorris.model.impl.GameWithFriendViewModel

@@ -306,7 +306,7 @@ class GameBoard(
                     }
                 }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.redoMove), "undo"
+                    painter = painterResource(id = R.drawable.redo_move), "undo"
                 )
             }
         }
@@ -323,7 +323,7 @@ class GameBoard(
                     }
                 }) {
                 Icon(
-                    painter = painterResource(id = R.drawable.undoMove), "redo"
+                    painter = painterResource(id = R.drawable.undo_move), "redo"
                 )
             }
         }
