@@ -10,6 +10,9 @@ import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
 import com.example.mensmorris.model.impl.GameAnalyzeViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -55,15 +58,20 @@ class GameWithBotData : DataModel, GameBoardInterface {
     /**
      * launches bot actions against player
      */
+    @OptIn(DelicateCoroutinesApi::class)
     private suspend fun launchBot() {
         CoroutineScope(botScope).launch {
             while (true) {
                 if (!gameBoard.value!!.pos.value.pieceToMove
                     && gameBoard.value!!.pos.value.gameState() != GameUtils.GameState.End
                 ) {
-                    analyze.data.startAnalyze()
-                    gameBoard.value!!.gameClickHandler.processMove(analyze.data.solveResult.value!!.last())
-                    CacheUtils.resetCachedPositions()
+                    val solveResultValue = analyze.data.getAnalyzeResult()
+                    // TODO: fix this it is going to shoot at your leg soon
+                    GlobalScope.launch(Dispatchers.Main) {
+                        analyze.data.solveResult.value = solveResultValue
+                        gameBoard.value!!.gameClickHandler.processMove(analyze.data.solveResult.value!!.last())
+                        CacheUtils.resetCachedPositions()
+                    }
                 }
                 delay(500)
             }

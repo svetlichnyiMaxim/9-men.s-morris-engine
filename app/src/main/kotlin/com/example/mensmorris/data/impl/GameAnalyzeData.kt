@@ -30,11 +30,11 @@ class GameAnalyzeData(
     val solveResult: MutableLiveData<List<Movement>> = MutableLiveData()
 
     override suspend fun invokeBackend() {
-        TODO("Not yet implemented")
+        // TODO: Not yet implemented
     }
 
     override fun clearTheScene() {
-        TODO("Not yet implemented")
+        // TODO: Not yet implemented
     }
 
     /**
@@ -57,12 +57,16 @@ class GameAnalyzeData(
      * starts board analyze
      */
     fun startAnalyze() {
-        if (CacheUtils.hasCacheWithDepth) {
-            return
+        val solveResultValue = getAnalyzeResult() ?: return
+        solveResult.postValue(solveResultValue)
+    }
+
+    fun getAnalyzeResult(ignoreCache: Boolean = false): MutableList<Movement>? {
+        if (CacheUtils.hasCacheWithDepth && !ignoreCache) {
+            return null
         }
         CacheUtils.hasCacheWithDepth = true
-        val solveResultValue = pos.value!!.solve(depth.intValue.toUByte()).second
-        solveResult.postValue(solveResultValue)
+        return pos.value!!.solve(depth.intValue.toUByte()).second
     }
 
     /**

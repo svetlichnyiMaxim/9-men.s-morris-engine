@@ -81,7 +81,6 @@ open class GameClickHandler(
                 currentScreen.value = Screen.EndGame
             }
         }
-        CacheUtils.hasCacheWithDepth = false
     }
 
     /**
@@ -137,5 +136,6 @@ open class GameClickHandler(
         if (pos.value.gameState() == GameUtils.GameState.End) {
             currentScreen.value = Screen.EndGame
         }
+        CacheUtils.hasCacheWithDepth = false
     }
 }
