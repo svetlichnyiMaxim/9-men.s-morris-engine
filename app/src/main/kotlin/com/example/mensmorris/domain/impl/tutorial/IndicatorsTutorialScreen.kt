@@ -1,5 +1,7 @@
 package com.example.mensmorris.domain.impl.tutorial
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -9,6 +11,7 @@ import com.example.mensmorris.GREEN
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.domain.ScreenModel
+import com.example.mensmorris.domain.impl.PieceCountFragment
 
 class IndicatorsTutorialScreen : ScreenModel {
     private val position = Position(
@@ -28,13 +31,21 @@ class IndicatorsTutorialScreen : ScreenModel {
 
     private val gameBoard = GameBoard(position)
 
+    private val pieceCountFragment = PieceCountFragment(gameBoard.pos)
+
     @Composable
     override fun InvokeRender() {
         // TOOD: add animations
-        gameBoard.RenderUndoRedo()
-        gameBoard.Draw()
-        Text(text = "Circle at the top shows how many piece you have left")
-        Text(text = "Circle size shows whose turn it is")
+        Column {
+            Row {
+                gameBoard.Draw()
+                pieceCountFragment.InvokeRender()
+            }
+            Row {
+                Text(text = "Circle at the top shows how many piece you have left")
+                Text(text = "Circle size shows whose turn it is")
+            }
+        }
     }
 }
 

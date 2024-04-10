@@ -2,6 +2,7 @@ package com.example.mensmorris.common
 
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.mainActivity
 
 /**
@@ -81,4 +82,15 @@ fun MutableList<Movement>.displayAsPositions(startPos: Position) {
     println()
     println("finished output")
     println()
+}
+
+/**
+ * custom mutable live data implementation
+ * @param function function that gets called during setValue method
+ */
+class CustomMutableLiveData<T>(var function: () -> Unit) : MutableLiveData<T>() {
+    override fun setValue(value: T) {
+        function()
+        super.setValue(value)
+    }
 }
