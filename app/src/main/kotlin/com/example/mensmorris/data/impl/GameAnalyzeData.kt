@@ -61,6 +61,9 @@ class GameAnalyzeData(
         solveResult.postValue(solveResultValue)
     }
 
+    /**
+     * gets analyze result (winning sequence)
+     */
     fun getAnalyzeResult(ignoreCache: Boolean = false): MutableList<Movement>? {
         if (CacheUtils.hasCacheWithDepth && !ignoreCache) {
             return null

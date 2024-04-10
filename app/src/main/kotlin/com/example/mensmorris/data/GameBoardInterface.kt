@@ -11,5 +11,5 @@ interface GameBoardInterface {
      * our game board
      * usually used for rendering
      */
-    val gameBoard: MutableLiveData<GameBoard>
+    val gameBoard: GameBoard
 }

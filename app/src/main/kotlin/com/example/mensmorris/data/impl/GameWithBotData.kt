@@ -1,7 +1,6 @@
 package com.example.mensmorris.data.impl
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.MutableLiveData
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.utils.CacheUtils
 import com.example.mensmorris.common.utils.GameUtils
@@ -21,12 +20,11 @@ import kotlinx.coroutines.launch
  * data for game with bot screen
  */
 class GameWithBotData : DataModel, GameBoardInterface {
-    override val gameBoard = MutableLiveData(
-        GameBoard(pos = mutableStateOf(GameUtils.gameStartPosition),
-            onClick = { index, func -> response(index, func) },
-            onUndo = {})
+    override val gameBoard = GameBoard(pos = mutableStateOf(GameUtils.gameStartPosition),
+        onClick = { index, func -> response(index, func) },
+        onUndo = {}
     )
-    private val analyze = GameAnalyzeViewModel(gameBoard.value!!.pos)
+    private val analyze = GameAnalyzeViewModel(gameBoard.pos)
 
     /**
      * used for storing our analyze coroutine
@@ -40,7 +38,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
      * @param func function that handles our click
      */
     private fun response(index: Int, func: (index: Int) -> Unit) {
-        if (gameBoard.value!!.pos.value.pieceToMove) {
+        if (gameBoard.pos.value.pieceToMove) {
             func(index)
         }
     }
@@ -52,7 +50,7 @@ class GameWithBotData : DataModel, GameBoardInterface {
 
     override fun clearTheScene() {
         solvingJob?.cancel()
-        CacheUtils.position = gameBoard.value!!.pos.value
+        CacheUtils.position = gameBoard.pos.value
     }
 
     /**
@@ -62,14 +60,14 @@ class GameWithBotData : DataModel, GameBoardInterface {
     private suspend fun launchBot() {
         CoroutineScope(botScope).launch {
             while (true) {
-                if (!gameBoard.value!!.pos.value.pieceToMove
-                    && gameBoard.value!!.pos.value.gameState() != GameUtils.GameState.End
+                if (!gameBoard.pos.value.pieceToMove
+                    && gameBoard.pos.value.gameState() != GameUtils.GameState.End
                 ) {
                     val solveResultValue = analyze.data.getAnalyzeResult()
                     // TODO: fix this it is going to shoot at your leg soon
                     GlobalScope.launch(Dispatchers.Main) {
                         analyze.data.solveResult.value = solveResultValue
-                        gameBoard.value!!.gameClickHandler.processMove(analyze.data.solveResult.value!!.last())
+                        gameBoard.gameClickHandler.processMove(analyze.data.solveResult.value!!.last())
                         CacheUtils.resetCachedPositions()
                     }
                 }

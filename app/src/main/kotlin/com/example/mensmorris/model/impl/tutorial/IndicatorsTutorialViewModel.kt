@@ -12,3 +12,4 @@ class IndicatorsTutorialViewModel : ViewModelInterface {
 
     override val data: DataModel = IndicatorsTutorialData()
 }
+
