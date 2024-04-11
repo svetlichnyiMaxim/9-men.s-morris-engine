@@ -14,6 +14,7 @@ import com.example.mensmorris.model.impl.GameEndViewModel
 import com.example.mensmorris.model.impl.GameWithBotViewModel
 import com.example.mensmorris.model.impl.GameWithFriendViewModel
 import com.example.mensmorris.model.impl.WelcomeViewModel
+import com.example.mensmorris.model.impl.tutorial.TutorialViewModel
 import kotlinx.coroutines.launch
 
 /**

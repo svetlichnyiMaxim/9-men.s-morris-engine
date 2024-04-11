@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -293,7 +294,11 @@ class GameBoard(
      */
     @Composable
     fun RenderUndoRedo() {
-        Locate(Alignment.BottomStart) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+                    Alignment.BottomStart
+        ) {
             Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
                 onClick = {
                     if (!movesHistory.empty()) {
@@ -310,7 +315,11 @@ class GameBoard(
                 )
             }
         }
-        Locate(Alignment.BottomEnd) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            Alignment.BottomEnd
+        ) {
             Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
                 onClick = {
                     if (!undoneMoveHistory.empty()) {

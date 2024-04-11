@@ -16,8 +16,7 @@ import androidx.compose.ui.graphics.Color
 @Composable
 inline fun Locate(alignment: Alignment, function: () -> Unit) {
     Box(
-        modifier = Modifier
-            , alignment
+        modifier = Modifier, alignment
     ) {
         function()
     }
