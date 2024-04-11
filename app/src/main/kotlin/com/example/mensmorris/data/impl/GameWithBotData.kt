@@ -69,6 +69,7 @@ class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardI
                     // TODO: fix this it is going to shoot at your leg soon
                     GlobalScope.launch(Dispatchers.Main) {
                         analyze.data.solveResult.value = solveResultValue
+                        // TODO: fix this, it might cause npe
                         gameBoard.processMove(analyze.data.solveResult.value!!.last())
                         CacheUtils.resetCachedPositions()
                     }

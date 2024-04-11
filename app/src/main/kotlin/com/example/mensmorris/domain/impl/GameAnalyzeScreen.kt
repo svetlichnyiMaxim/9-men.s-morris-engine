@@ -79,7 +79,7 @@ class GameAnalyzeScreen(
             Button(onClick = {
                 startAnalyze()
             }) {
-                Text("Analyze (depth - ${depth.value})")
+                Text("Analyze (depth - ${depth.intValue})")
             }
         }
         Locate(Alignment.TopEnd) {
