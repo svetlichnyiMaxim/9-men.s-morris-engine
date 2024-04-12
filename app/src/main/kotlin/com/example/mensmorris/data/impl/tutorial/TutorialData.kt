@@ -1,7 +1,6 @@
 package com.example.mensmorris.data.impl.tutorial
 
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.data.DataModel
 
