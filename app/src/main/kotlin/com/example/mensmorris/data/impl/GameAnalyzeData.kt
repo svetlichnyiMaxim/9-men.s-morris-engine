@@ -31,14 +31,6 @@ class GameAnalyzeData(
      */
     val solveResult: MutableLiveData<List<Movement>> = MutableLiveData(listOf())
 
-    override suspend fun invokeBackend() {
-        // TODO: Not yet implemented
-    }
-
-    override fun clearTheScene() {
-        // TODO: Not yet implemented
-    }
-
     /**
      * decreases search depth
      */

@@ -19,11 +19,4 @@ class TutorialData(override val viewModel: ViewModel) : DataModel {
      * @see com.example.mensmorris.model.impl.tutorial.IndicatorsTutorialViewModel
      */
     val alpha = mutableFloatStateOf(1f)
-    override suspend fun invokeBackend() {
-        // TODO("Not yet implemented")
-    }
-
-    override fun clearTheScene() {
-        // TODO("Not yet implemented")
-    }
 }
