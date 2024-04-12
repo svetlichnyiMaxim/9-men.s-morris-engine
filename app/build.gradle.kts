@@ -60,4 +60,5 @@ dependencies {
     implementation("androidx.wear.compose:compose-material:1.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.04.00"))
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.5")
 }

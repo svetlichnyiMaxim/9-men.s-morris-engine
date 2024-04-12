@@ -45,25 +45,27 @@ class GameBoard(
     /**
      * what will happen if we click some circle
      */
-    var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit,
+    var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit = { _, _ -> },
     /**
      * what we should additionally do on undo
      */
-    var onUndo: () -> Unit = {}
+    var onUndo: () -> Unit = {},
+    /**
+     * stores all pieces which can be moved (used for highlighting)
+     */
+    override var moveHints: MutableState<List<Int>> = mutableStateOf(listOf()),
+    /**
+     * used for storing info of the previous (valid one) clicked button
+     */
+    private var selectedButton: MutableState<Int?> = mutableStateOf(null)
 ) : GameClickHandler(pos, moveHints, selectedButton) {
-    companion object {
-        /**
-         * stores all pieces which can be moved (used for highlighting)
-         */
-        private var moveHints: MutableState<List<Int>> = mutableStateOf(listOf())
-
-        /**
-         * used for storing info of the previous (valid one) clicked button
-         */
-        private var selectedButton = mutableStateOf<Int?>(null)
-    }
-
-    constructor(pos: Position) : this(mutableStateOf(pos), { _, _ -> }, {})
+    constructor(
+        pos: Position,
+        onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit = { _, _ -> },
+        onUndo: () -> Unit = {},
+        moveHints: MutableState<List<Int>> = mutableStateOf(listOf()),
+        selectedButton: MutableState<Int?> = mutableStateOf(null)
+    ) : this(mutableStateOf(pos), onClick, onUndo, moveHints, selectedButton)
 
     private fun onClickResponse(index: Int) {
         onClick(index) {
@@ -297,7 +299,7 @@ class GameBoard(
         Box(
             modifier = Modifier
                 .fillMaxSize(),
-                    Alignment.BottomStart
+            Alignment.BottomStart
         ) {
             Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
                 onClick = {

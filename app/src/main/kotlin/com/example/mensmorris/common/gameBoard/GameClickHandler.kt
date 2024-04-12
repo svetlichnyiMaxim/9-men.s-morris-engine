@@ -22,7 +22,7 @@ open class GameClickHandler(
      * move hints
      * list of all possible places you can move
      */
-    val moveHints: MutableState<List<Int>>,
+    open val moveHints: MutableState<List<Int>>,
     /**
      * selected button
      * usually it is the last one clicked
