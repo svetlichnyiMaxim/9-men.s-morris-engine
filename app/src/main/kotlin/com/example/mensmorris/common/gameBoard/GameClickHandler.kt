@@ -6,7 +6,7 @@ import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
 import com.example.mensmorris.common.moveProvider
 import com.example.mensmorris.common.utils.CacheUtils
-import com.example.mensmorris.common.utils.GameUtils
+import com.example.mensmorris.common.utils.GameState
 import com.example.mensmorris.common.utils.saveMove
 import com.example.mensmorris.currentScreen
 
@@ -36,13 +36,13 @@ open class GameClickHandler(
      */
     fun handleClick(elementIndex: Int) {
         when (pos.value.gameState()) {
-            GameUtils.GameState.Placement -> {
+            GameState.Placement -> {
                 if (pos.value.positions[elementIndex] == null) {
                     processMove(Movement(null, elementIndex))
                 }
             }
 
-            GameUtils.GameState.Normal -> {
+            GameState.Normal -> {
                 if (selectedButton.value == null) {
                     if (pos.value.positions[elementIndex] == pos.value.pieceToMove) {
                         selectedButton.value = elementIndex
@@ -58,7 +58,7 @@ open class GameClickHandler(
                 }
             }
 
-            GameUtils.GameState.Flying -> {
+            GameState.Flying -> {
                 if (selectedButton.value == null) {
                     if (pos.value.positions[elementIndex] == pos.value.pieceToMove)
                         selectedButton.value = elementIndex
@@ -71,13 +71,13 @@ open class GameClickHandler(
                 }
             }
 
-            GameUtils.GameState.Removing -> {
+            GameState.Removing -> {
                 if (pos.value.positions[elementIndex] == !pos.value.pieceToMove) {
                     processMove(Movement(elementIndex, null))
                 }
             }
 
-            GameUtils.GameState.End -> {
+            GameState.End -> {
                 currentScreen.value = Screen.EndGame
             }
         }
@@ -89,37 +89,33 @@ open class GameClickHandler(
     fun handleHighLighting() {
         pos.value.generateMoves(0u, true).let { moves ->
             when (pos.value.gameState()) {
-                GameUtils.GameState.Placement -> {
+                GameState.Placement -> {
                     moveHints.value = moves.map { it.endIndex!! }.toMutableList()
                 }
 
-                GameUtils.GameState.Normal -> {
+                GameState.Normal -> {
                     if (selectedButton.value == null) {
                         moveHints.value = moves.map { it.startIndex!! }.toMutableList()
                     } else {
-                        moveHints.value =
-                            moves.filter { it.startIndex == selectedButton.value }
-                                .map { it.endIndex!! }
-                                .toMutableList()
+                        moveHints.value = moves.filter { it.startIndex == selectedButton.value }
+                            .map { it.endIndex!! }.toMutableList()
                     }
                 }
 
-                GameUtils.GameState.Flying -> {
+                GameState.Flying -> {
                     if (selectedButton.value == null) {
                         moveHints.value = moves.map { it.startIndex!! }.toMutableList()
                     } else {
-                        moveHints.value =
-                            moves.filter { it.startIndex == selectedButton.value }
-                                .map { it.endIndex!! }
-                                .toMutableList()
+                        moveHints.value = moves.filter { it.startIndex == selectedButton.value }
+                            .map { it.endIndex!! }.toMutableList()
                     }
                 }
 
-                GameUtils.GameState.Removing -> {
+                GameState.Removing -> {
                     moveHints.value = moves.map { it.startIndex!! }.toMutableList()
                 }
 
-                GameUtils.GameState.End -> {
+                GameState.End -> {
                 }
             }
         }
@@ -133,7 +129,7 @@ open class GameClickHandler(
         pos.value = move.producePosition(pos.value).copy()
         CacheUtils.resetCachedPositions()
         saveMove(pos.value)
-        if (pos.value.gameState() == GameUtils.GameState.End) {
+        if (pos.value.gameState() == GameState.End) {
             currentScreen.value = Screen.EndGame
         }
         CacheUtils.hasCacheWithDepth = false

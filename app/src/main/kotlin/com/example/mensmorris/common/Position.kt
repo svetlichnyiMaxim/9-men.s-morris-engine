@@ -12,7 +12,7 @@ import com.example.mensmorris.PIECE_COST
 import com.example.mensmorris.POSSIBLE_TRIPLE_COST
 import com.example.mensmorris.UNFINISHED_TRIPLES_COST
 import com.example.mensmorris.common.utils.CacheUtils.occurredPositions
-import com.example.mensmorris.common.utils.GameUtils
+import com.example.mensmorris.common.utils.GameState
 import com.example.mensmorris.get
 import com.example.mensmorris.plus
 
@@ -208,23 +208,23 @@ class Position(
             }
         }
         val generatedList = when (gameState()) {
-            GameUtils.GameState.Placement -> {
+            GameState.Placement -> {
                 generatePlacementMovements()
             }
 
-            GameUtils.GameState.End -> {
+            GameState.End -> {
                 listOf()
             }
 
-            GameUtils.GameState.Flying -> {
+            GameState.Flying -> {
                 generateFlyingMovements()
             }
 
-            GameUtils.GameState.Normal -> {
+            GameState.Normal -> {
                 generateNormalMovements()
             }
 
-            GameUtils.GameState.Removing -> {
+            GameState.Removing -> {
                 generateRemovalMoves()
             }
         }
@@ -293,26 +293,26 @@ class Position(
     /**
      * @return state of the game
      */
-    fun gameState(): GameUtils.GameState {
+    fun gameState(): GameState {
         return when {
             (gameEnded()) -> {
-                GameUtils.GameState.End
+                GameState.End
             }
 
             (removalCount > 0) -> {
-                GameUtils.GameState.Removing
+                GameState.Removing
             }
 
             (freePieces[pieceToMove] > 0U) -> {
-                GameUtils.GameState.Placement
+                GameState.Placement
             }
 
             ((pieceToMove && greenPiecesAmount == PIECES_TO_FLY) ||
                     (!pieceToMove && bluePiecesAmount == PIECES_TO_FLY)) -> {
-                GameUtils.GameState.Flying
+                GameState.Flying
             }
 
-            else -> GameUtils.GameState.Normal
+            else -> GameState.Normal
         }
     }
 

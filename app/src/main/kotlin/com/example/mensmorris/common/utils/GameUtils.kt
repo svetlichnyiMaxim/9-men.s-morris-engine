@@ -1,18 +1,13 @@
 package com.example.mensmorris.common.utils
 
-import androidx.compose.ui.graphics.Color
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.common.Position
 
 /**
- * provides useful utils for game
+ * a default game start position
  */
-object GameUtils {
-    /**
-     * a default game start position
-     */
-    val gameStartPosition = Position(
-        // @formatter:off
+val gameStartPosition = Position(
+    // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  EMPTY,
                     EMPTY,          EMPTY,          EMPTY,
@@ -23,56 +18,35 @@ object GameUtils {
             EMPTY,                  EMPTY,                  EMPTY
         ),
         // @formatter:on
-        Pair(6u, 6u), pieceToMove = true
-    )
+    Pair(6u, 6u), pieceToMove = true
+)
+
+/**
+ * used for storing game state
+ */
+enum class GameState {
+    /**
+     * game starting part, we simply place pieces
+     */
+    Placement,
 
     /**
-     * @return color we are using to draw this piece
-     * @param piece pieces
+     * normal part of the game
      */
-    fun colorMap(piece: Boolean?): Color {
-        return when (piece) {
-            null -> {
-                Color.Black
-            }
-
-            true -> {
-                Color.Green
-            }
-
-            false -> {
-                Color.Blue
-            }
-        }
-    }
+    Normal,
 
     /**
-     * used for storing game state
+     * part of the game where pieces can fly
      */
-    enum class GameState {
-        /**
-         * game starting part, we simply place pieces
-         */
-        Placement,
+    Flying,
 
-        /**
-         * normal part of the game
-         */
-        Normal,
+    /**
+     * if game has ended xd
+     */
+    End,
 
-        /**
-         * part of the game where pieces can fly
-         */
-        Flying,
-
-        /**
-         * if game has ended xd
-         */
-        End,
-
-        /**
-         * if you are removing a piece
-         */
-        Removing
-    }
+    /**
+     * if you are removing a piece
+     */
+    Removing
 }

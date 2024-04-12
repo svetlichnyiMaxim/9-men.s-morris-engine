@@ -2,7 +2,6 @@ package com.example.mensmorris.common.utils
 
 import com.example.mensmorris.common.Movement
 import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.utils.GameUtils.gameStartPosition
 import com.example.mensmorris.data.impl.GameEndData
 
 /**

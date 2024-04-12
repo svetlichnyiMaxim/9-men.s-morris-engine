@@ -30,7 +30,7 @@ import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.R
 import com.example.mensmorris.common.Locate
 import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.utils.GameUtils
+import com.example.mensmorris.common.utils.gameStartPosition
 import com.example.mensmorris.common.utils.movesHistory
 import com.example.mensmorris.common.utils.undoneMoveHistory
 
@@ -41,7 +41,7 @@ class GameBoard(
     /**
      * stores current position
      */
-    override var pos: MutableState<Position> = mutableStateOf(GameUtils.gameStartPosition),
+    override var pos: MutableState<Position> = mutableStateOf(gameStartPosition),
     /**
      * what will happen if we click some circle
      */
@@ -283,7 +283,19 @@ class GameBoard(
             .size(BUTTON_WIDTH)
             .background(Color.Transparent, CircleShape),
             colors = ButtonDefaults.buttonColors(
-                containerColor = GameUtils.colorMap(pos.value.positions[elementIndex])
+                containerColor = when (pos.value.positions[elementIndex]) {
+                    null -> {
+                        Color.Black
+                    }
+
+                    true -> {
+                        Color.Green
+                    }
+
+                    false -> {
+                        Color.Blue
+                    }
+                }
             ),
             shape = CircleShape,
             onClick = {
@@ -306,7 +318,7 @@ class GameBoard(
                     if (!movesHistory.empty()) {
                         undoneMoveHistory.push(movesHistory.peek())
                         movesHistory.pop()
-                        pos.value = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
+                        pos.value = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value = arrayListOf()
                         selectedButton.value = null
                         onUndo()
@@ -327,7 +339,7 @@ class GameBoard(
                     if (!undoneMoveHistory.empty()) {
                         movesHistory.push(undoneMoveHistory.peek())
                         undoneMoveHistory.pop()
-                        pos.value = movesHistory.lastOrNull() ?: GameUtils.gameStartPosition
+                        pos.value = movesHistory.lastOrNull() ?: gameStartPosition
                         moveHints.value = arrayListOf()
                         selectedButton.value = null
                         onUndo()

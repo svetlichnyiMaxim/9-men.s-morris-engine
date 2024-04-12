@@ -4,8 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.utils.CacheUtils
-import com.example.mensmorris.common.utils.GameUtils
+import com.example.mensmorris.common.utils.GameState
 import com.example.mensmorris.common.utils.botScope
+import com.example.mensmorris.common.utils.gameStartPosition
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
 import com.example.mensmorris.model.impl.GameAnalyzeViewModel
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
  * data for game with bot screen
  */
 class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardInterface {
-    override val gameBoard = GameBoard(pos = mutableStateOf(GameUtils.gameStartPosition),
+    override val gameBoard = GameBoard(pos = mutableStateOf(gameStartPosition),
         onClick = { index, func -> response(index, func) },
         onUndo = {}
     )
@@ -52,7 +53,7 @@ class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardI
     override fun clearTheScene() {
         solvingJob?.cancel()
         CacheUtils.position = gameBoard.pos.value
-        gameBoard.pos.value = GameUtils.gameStartPosition
+        gameBoard.pos.value = gameStartPosition
     }
 
     /**
@@ -63,7 +64,7 @@ class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardI
         CoroutineScope(botScope).launch {
             while (true) {
                 if (!gameBoard.pos.value.pieceToMove
-                    && gameBoard.pos.value.gameState() != GameUtils.GameState.End
+                    && gameBoard.pos.value.gameState() != GameState.End
                 ) {
                     val solveResultValue = analyze.data.getAnalyzeResult()
                     // TODO: fix this it is going to shoot at your leg soon

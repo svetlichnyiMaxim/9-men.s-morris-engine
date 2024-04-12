@@ -5,7 +5,7 @@ import com.example.mensmorris.EMPTY
 import com.example.mensmorris.GREEN
 import com.example.mensmorris.common.Position
 
-open class GameState {
+open class GameStateTestData {
     internal val position = Position(
         // @formatter:off
         arrayOf(
