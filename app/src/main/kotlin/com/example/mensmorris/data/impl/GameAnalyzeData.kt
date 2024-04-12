@@ -5,9 +5,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.mensmorris.common.Movement
-import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.utils.CacheUtils
+import com.example.mensmorris.common.gameBoard.Movement
+import com.example.mensmorris.common.gameBoard.Position
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils
 import com.example.mensmorris.data.DataModel
 import kotlin.math.max
 

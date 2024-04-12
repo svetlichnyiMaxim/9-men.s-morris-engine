@@ -1,6 +1,6 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.common.utils.CacheUtils.wipeCachedPositions
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils.wipeCachedPositions
 import com.example.mensmorris.positions.MoveGeneration
 import junit.framework.TestCase
 import org.junit.Test

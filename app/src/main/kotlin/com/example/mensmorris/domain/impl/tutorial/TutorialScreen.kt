@@ -21,14 +21,14 @@ import androidx.wear.compose.material.FractionalThreshold
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.example.mensmorris.R
-import com.example.mensmorris.common.AppTheme
+import com.example.mensmorris.common.utils.AppTheme
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.model.ViewModelInterface
-import com.example.mensmorris.model.impl.tutorial.FlyingMovesTutorialViewModel
-import com.example.mensmorris.model.impl.tutorial.IndicatorsTutorialViewModel
-import com.example.mensmorris.model.impl.tutorial.LoseTutorialViewModel
-import com.example.mensmorris.model.impl.tutorial.NormalMovesTutorialViewModel
-import com.example.mensmorris.model.impl.tutorial.PlacementTutorialViewModel
+import com.example.mensmorris.model.impl.tutorial.viewModels.FlyingMovesTutorialViewModel
+import com.example.mensmorris.model.impl.tutorial.viewModels.IndicatorsTutorialViewModel
+import com.example.mensmorris.model.impl.tutorial.viewModels.LoseTutorialViewModel
+import com.example.mensmorris.model.impl.tutorial.viewModels.NormalMovesTutorialViewModel
+import com.example.mensmorris.model.impl.tutorial.viewModels.PlacementTutorialViewModel
 import kotlin.math.roundToInt
 
 /**

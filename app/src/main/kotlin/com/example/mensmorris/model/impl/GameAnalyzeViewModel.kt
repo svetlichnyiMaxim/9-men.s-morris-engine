@@ -3,8 +3,8 @@ package com.example.mensmorris.model.impl
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.toPositions
+import com.example.mensmorris.common.gameBoard.Position
+import com.example.mensmorris.common.utils.toPositions
 import com.example.mensmorris.data.impl.GameAnalyzeData
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.GameAnalyzeScreen

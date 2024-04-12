@@ -1,6 +1,6 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.common.utils.GameState
+import com.example.mensmorris.common.gameBoard.utils.GameState
 import com.example.mensmorris.positions.GameStateTestData
 import junit.framework.TestCase
 import org.junit.Test

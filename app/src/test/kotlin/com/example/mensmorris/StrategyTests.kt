@@ -1,6 +1,6 @@
 package com.example.mensmorris
 
-import com.example.mensmorris.common.utils.CacheUtils.occurredPositions
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils.occurredPositions
 import com.example.mensmorris.positions.Strategy
 import junit.framework.TestCase
 import org.junit.Test

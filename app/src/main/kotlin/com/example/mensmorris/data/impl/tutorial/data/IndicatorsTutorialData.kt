@@ -1,4 +1,4 @@
-package com.example.mensmorris.data.impl.tutorial
+package com.example.mensmorris.data.impl.tutorial.data
 
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.data.DataModel

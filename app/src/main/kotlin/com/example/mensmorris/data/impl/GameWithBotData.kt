@@ -3,10 +3,10 @@ package com.example.mensmorris.data.impl
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.gameBoard.GameBoard
-import com.example.mensmorris.common.utils.CacheUtils
-import com.example.mensmorris.common.utils.GameState
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils
+import com.example.mensmorris.common.gameBoard.utils.GameState
 import com.example.mensmorris.common.utils.botScope
-import com.example.mensmorris.common.utils.gameStartPosition
+import com.example.mensmorris.common.gameBoard.utils.gameStartPosition
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
 import com.example.mensmorris.model.impl.GameAnalyzeViewModel

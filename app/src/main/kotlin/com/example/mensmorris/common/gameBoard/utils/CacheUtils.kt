@@ -1,7 +1,7 @@
-package com.example.mensmorris.common.utils
+package com.example.mensmorris.common.gameBoard.utils
 
-import com.example.mensmorris.common.Movement
-import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.Movement
+import com.example.mensmorris.common.gameBoard.Position
 import com.example.mensmorris.data.impl.GameEndData
 
 /**

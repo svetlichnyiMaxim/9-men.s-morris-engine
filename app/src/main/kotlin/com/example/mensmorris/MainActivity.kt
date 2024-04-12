@@ -8,13 +8,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
-import com.example.mensmorris.common.render
 import com.example.mensmorris.model.ViewModelInterface
 import com.example.mensmorris.model.impl.GameEndViewModel
 import com.example.mensmorris.model.impl.GameWithBotViewModel
 import com.example.mensmorris.model.impl.GameWithFriendViewModel
 import com.example.mensmorris.model.impl.WelcomeViewModel
-import com.example.mensmorris.model.impl.tutorial.TutorialViewModel
 import kotlinx.coroutines.launch
 
 /**
@@ -52,7 +50,7 @@ class MainActivity : ComponentActivity() {
         mainActivity.setContent {
             DisposableEffect(key1 = currentScreen) {
                 lifecycleScope.launch {
-                    render {
+                    mainActivity.setContent {
                         currentScreen.value.viewModel.invokeBackend()
                         currentScreen.value.viewModel.InvokeRender()
                     }

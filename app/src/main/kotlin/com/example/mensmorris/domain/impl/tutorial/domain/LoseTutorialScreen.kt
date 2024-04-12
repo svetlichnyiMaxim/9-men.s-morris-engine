@@ -1,4 +1,4 @@
-package com.example.mensmorris.domain.impl.tutorial
+package com.example.mensmorris.domain.impl.tutorial.domain
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import com.example.mensmorris.BLUE_
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.GREEN
-import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.Position
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.PieceCountFragment
@@ -21,20 +21,20 @@ import com.example.mensmorris.domain.impl.PieceCountFragment
 /**
  * this screen tells about information indicators provide
  */
-class PlacementTutorialScreen : ScreenModel {
+class LoseTutorialScreen : ScreenModel {
     private val position = Position(
         // @formatter:off
         arrayOf(
-            BLUE_,                  BLUE_,                  GREEN,
+            BLUE_,                  BLUE_,                  BLUE_,
                     GREEN,          EMPTY,          EMPTY,
+                            EMPTY,  EMPTY,  BLUE_,
+            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
                             EMPTY,  EMPTY,  EMPTY,
-            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  BLUE_,
-                            EMPTY,  GREEN,  EMPTY,
-                    EMPTY,          BLUE_,          EMPTY,
-            EMPTY,                  BLUE_,                  GREEN
+                    EMPTY,          EMPTY,          EMPTY,
+            EMPTY,                  BLUE_,                  EMPTY
         ),
         // @formatter:on
-        freePieces = Pair(1u, 2u), pieceToMove = false, removalCount = 0
+        freePieces = Pair(0u, 0u), pieceToMove = true, removalCount = 0
     )
 
     private val gameBoard = GameBoard(position)
@@ -51,11 +51,11 @@ class PlacementTutorialScreen : ScreenModel {
                 .padding(bottom = BUTTON_WIDTH * 3),
             Alignment.BottomCenter
         ) {
-            gameBoard.handleHighLighting()
             gameBoard.Draw()
             Column {
-                Text(text = "If you have any pieces left you can place them in any empty place")
-                Text(text = "Possible moves are highlighted")
+                Text(
+                    text = "If you have only 3 pieces (including the ones you can place) you loose"
+                )
             }
         }
     }

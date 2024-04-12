@@ -2,7 +2,7 @@ package com.example.mensmorris.model.impl
 
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.gameBoard.GameBoard
-import com.example.mensmorris.common.utils.CacheUtils
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils
 import com.example.mensmorris.data.impl.GameEndData
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.GameEndScreen

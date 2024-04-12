@@ -3,8 +3,6 @@ package com.example.mensmorris.domain.impl
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandIn
-import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +20,7 @@ import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.Screen
-import com.example.mensmorris.common.AppTheme
+import com.example.mensmorris.common.utils.AppTheme
 import com.example.mensmorris.currentScreen
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.model.impl.tutorial.TutorialViewModel

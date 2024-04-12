@@ -3,8 +3,8 @@ package com.example.mensmorris.positions
 import com.example.mensmorris.BLUE_
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.GREEN
-import com.example.mensmorris.common.Movement
-import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.Movement
+import com.example.mensmorris.common.gameBoard.Position
 
 open class MoveGeneration {
     internal val position1 = Position(

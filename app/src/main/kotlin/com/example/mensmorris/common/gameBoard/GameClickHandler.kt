@@ -2,13 +2,11 @@ package com.example.mensmorris.common.gameBoard
 
 import androidx.compose.runtime.MutableState
 import com.example.mensmorris.Screen
-import com.example.mensmorris.common.Movement
-import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.moveProvider
-import com.example.mensmorris.common.utils.CacheUtils
-import com.example.mensmorris.common.utils.GameState
-import com.example.mensmorris.common.utils.saveMove
+import com.example.mensmorris.common.gameBoard.utils.moveProvider
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils
+import com.example.mensmorris.common.gameBoard.utils.GameState
 import com.example.mensmorris.currentScreen
+import java.util.Stack
 
 /**
  * handles clicks on the board
@@ -29,6 +27,16 @@ open class GameClickHandler(
      */
     private val selectedButton: MutableState<Int?>
 ) {
+    /**
+     * stores all movements (positions) history
+     */
+    val movesHistory: Stack<Position> = Stack()
+
+    /**
+     * stores a moves we have undone
+     * resets them if we do any other move
+     */
+    val undoneMoveHistory: Stack<Position> = Stack()
 
     /**
      * handles click on the pieces
@@ -133,5 +141,15 @@ open class GameClickHandler(
             currentScreen.value = Screen.EndGame
         }
         CacheUtils.hasCacheWithDepth = false
+    }
+
+    /**
+     * saves a move we have made
+     */
+    private fun saveMove(pos: Position) {
+        if (undoneMoveHistory.isNotEmpty()) {
+            undoneMoveHistory.clear()
+        }
+        movesHistory.push(pos)
     }
 }

@@ -1,10 +1,10 @@
-package com.example.mensmorris.model.impl.tutorial
+package com.example.mensmorris.model.impl.tutorial.viewModels
 
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.data.DataModel
-import com.example.mensmorris.data.impl.tutorial.FlyingMovesTutorialData
+import com.example.mensmorris.data.impl.tutorial.data.FlyingMovesTutorialData
 import com.example.mensmorris.domain.ScreenModel
-import com.example.mensmorris.domain.impl.tutorial.FlyingMovesTutorialScreen
+import com.example.mensmorris.domain.impl.tutorial.domain.FlyingMovesTutorialScreen
 import com.example.mensmorris.model.ViewModelInterface
 
 /**

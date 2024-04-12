@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -28,11 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.R
-import com.example.mensmorris.common.Locate
-import com.example.mensmorris.common.Position
-import com.example.mensmorris.common.utils.gameStartPosition
-import com.example.mensmorris.common.utils.movesHistory
-import com.example.mensmorris.common.utils.undoneMoveHistory
+import com.example.mensmorris.common.gameBoard.utils.gameStartPosition
 
 /**
  * Proves a useful way to draw boards
@@ -219,7 +216,10 @@ class GameBoard(
     @Composable
     fun Draw(
     ) {
-        Locate(Alignment.TopCenter) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(), Alignment.TopCenter
+        ) {
             Box(
                 modifier = Modifier
                     .padding(BUTTON_WIDTH)

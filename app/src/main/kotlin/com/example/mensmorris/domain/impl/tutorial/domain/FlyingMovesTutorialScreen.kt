@@ -1,4 +1,4 @@
-package com.example.mensmorris.domain.impl.tutorial
+package com.example.mensmorris.domain.impl.tutorial.domain
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,7 @@ import com.example.mensmorris.BLUE_
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.GREEN
-import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.Position
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.PieceCountFragment

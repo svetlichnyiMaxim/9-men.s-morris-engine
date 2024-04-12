@@ -1,4 +1,4 @@
-package com.example.mensmorris.common
+package com.example.mensmorris.common.gameBoard.utils
 
 
 /**

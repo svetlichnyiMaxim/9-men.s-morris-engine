@@ -3,6 +3,7 @@ package com.example.mensmorris.domain.impl
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -17,8 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.Screen
-import com.example.mensmorris.common.AppTheme
-import com.example.mensmorris.common.Locate
+import com.example.mensmorris.common.utils.AppTheme
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.currentScreen
 import com.example.mensmorris.domain.GameScreenModel
@@ -45,7 +45,10 @@ class GameEndScreen(
      */
     @Composable
     private fun DrawButtons() {
-        Locate(alignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth(), Alignment.Center
+        ) {
             Box(
                 modifier = Modifier
                     .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
@@ -53,7 +56,10 @@ class GameEndScreen(
             ) {
                 Text(fontSize = 30.sp, text = "Game has ended")
             }
-            Locate(Alignment.TopStart) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(), Alignment.TopStart
+            ) {
                 Box(
                     modifier = Modifier
                         .size(BUTTON_WIDTH * if (pos.value.pieceToMove) 1.5f else 1f)
@@ -62,7 +68,10 @@ class GameEndScreen(
                     Text(color = Color.Blue, text = pos.value.freePieces.first.toString())
                 }
             }
-            Locate(Alignment.TopEnd) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(), Alignment.TopEnd
+            ) {
                 Box(
                     modifier = Modifier
                         .size(BUTTON_WIDTH * if (!pos.value.pieceToMove) 1.5f else 1f)

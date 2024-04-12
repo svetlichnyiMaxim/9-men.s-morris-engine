@@ -14,7 +14,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.Position
 import com.example.mensmorris.domain.ScreenModel
 
 /**

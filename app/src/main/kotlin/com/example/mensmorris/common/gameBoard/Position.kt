@@ -1,4 +1,4 @@
-package com.example.mensmorris.common
+package com.example.mensmorris.common.gameBoard
 
 import com.example.mensmorris.BLUE_COLOR
 import com.example.mensmorris.CIRCLE
@@ -11,8 +11,11 @@ import com.example.mensmorris.PIECES_TO_FLY
 import com.example.mensmorris.PIECE_COST
 import com.example.mensmorris.POSSIBLE_TRIPLE_COST
 import com.example.mensmorris.UNFINISHED_TRIPLES_COST
-import com.example.mensmorris.common.utils.CacheUtils.occurredPositions
-import com.example.mensmorris.common.utils.GameState
+import com.example.mensmorris.common.gameBoard.utils.moveProvider
+import com.example.mensmorris.common.gameBoard.utils.removeChecker
+import com.example.mensmorris.common.gameBoard.utils.triplesMap
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils.occurredPositions
+import com.example.mensmorris.common.gameBoard.utils.GameState
 import com.example.mensmorris.get
 import com.example.mensmorris.plus
 

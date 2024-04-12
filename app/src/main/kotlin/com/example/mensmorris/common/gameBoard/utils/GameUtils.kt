@@ -1,7 +1,7 @@
-package com.example.mensmorris.common.utils
+package com.example.mensmorris.common.gameBoard.utils
 
 import com.example.mensmorris.EMPTY
-import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.Position
 
 /**
  * a default game start position

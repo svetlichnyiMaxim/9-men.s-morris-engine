@@ -1,4 +1,4 @@
-package com.example.mensmorris.domain.impl.tutorial
+package com.example.mensmorris.domain.impl.tutorial.domain
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +13,7 @@ import com.example.mensmorris.BLUE_
 import com.example.mensmorris.BUTTON_WIDTH
 import com.example.mensmorris.EMPTY
 import com.example.mensmorris.GREEN
-import com.example.mensmorris.common.Position
+import com.example.mensmorris.common.gameBoard.Position
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.PieceCountFragment
@@ -21,20 +21,20 @@ import com.example.mensmorris.domain.impl.PieceCountFragment
 /**
  * this screen tells about information indicators provide
  */
-class LoseTutorialScreen : ScreenModel {
+class IndicatorsTutorialScreen : ScreenModel {
     private val position = Position(
         // @formatter:off
         arrayOf(
-            BLUE_,                  BLUE_,                  BLUE_,
+            BLUE_,                  BLUE_,                  EMPTY,
                     GREEN,          EMPTY,          EMPTY,
-                            EMPTY,  EMPTY,  BLUE_,
-            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
                             EMPTY,  EMPTY,  EMPTY,
-                    EMPTY,          EMPTY,          EMPTY,
-            EMPTY,                  BLUE_,                  EMPTY
+            EMPTY,  GREEN,  EMPTY,          EMPTY,  EMPTY,  EMPTY,
+                            EMPTY,  GREEN,  EMPTY,
+                    EMPTY,          BLUE_,          EMPTY,
+            EMPTY,                  BLUE_,                  GREEN
         ),
         // @formatter:on
-        freePieces = Pair(0u, 0u), pieceToMove = true, removalCount = 0
+        freePieces = Pair(1u, 2u), pieceToMove = false, removalCount = 0
     )
 
     private val gameBoard = GameBoard(position)
@@ -53,9 +53,8 @@ class LoseTutorialScreen : ScreenModel {
         ) {
             gameBoard.Draw()
             Column {
-                Text(
-                    text = "If you have only 3 pieces (including the ones you can place) you loose"
-                )
+                Text(text = "Circle at the top shows how many piece you have left")
+                Text(text = "Circle size shows whose turn it is")
             }
         }
     }

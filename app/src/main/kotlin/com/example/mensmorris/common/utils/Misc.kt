@@ -1,21 +1,13 @@
-package com.example.mensmorris.common
+package com.example.mensmorris.common.utils
 
-import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.MutableLiveData
-import com.example.mensmorris.mainActivity
-
-/**
- * provides a quicker way for setting current windows
- * uses mainActivity
- * @param function our composable function we want to render (usually we set screens)
- */
-fun render(function: @Composable () -> Unit) {
-    mainActivity.setContent {
-        function()
-    }
-}
-
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import com.example.mensmorris.common.gameBoard.Movement
+import com.example.mensmorris.common.gameBoard.Position
 
 /**
  * provides a way to get an element from pair
@@ -82,4 +74,19 @@ fun MutableList<Movement>.displayAsPositions(startPos: Position) {
     println()
     println("finished output")
     println()
+}
+
+/**
+ * adds a basic background
+ * @param function everything ui-related that happens inside of the app
+ */
+@Composable
+inline fun AppTheme(function: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF7E7E7E))
+    ) {
+        function()
+    }
 }
