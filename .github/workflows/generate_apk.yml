@@ -52,7 +52,7 @@ jobs:
 
       # Create APK Release
       - name: Build apk release project (APK) - app module
-        run: ./gradlew assemble
+        run: ./gradlew assembleRelease
 
       # Decode keystore
       - name: Decode keystore.txt
@@ -67,7 +67,7 @@ jobs:
             --ks ~/keystore.jks \
             --ks-pass pass:${{ secrets.KEYSTORE_PASSWORD }} \
             --out ${{ env.path_to_release }}/app-release-signed.apk \
-            ${{ env.path_to_release }}/app-release.apk
+            ${{ env.path_to_release }}/app-release-unsigned.apk
 
       - name: Upload APK Release - ${{ env.repository_name }}
         uses: actions/upload-artifact@v3
