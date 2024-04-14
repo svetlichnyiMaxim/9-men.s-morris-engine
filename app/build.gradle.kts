@@ -4,6 +4,10 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
 }
 
+tasks.withType<Test>() {
+    useJUnitPlatform()
+}
+
 android {
     namespace = "com.example.mensmorris"
     compileSdk = 34
@@ -58,7 +62,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.wear.compose:compose-material:1.3.1")
-    testImplementation("junit:junit:4.13.2")
+    testImplementation(platform("org.junit:junit-bom:5.10.2"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.04.00"))
     debugImplementation("androidx.compose.ui:ui-tooling:1.6.5")
 }

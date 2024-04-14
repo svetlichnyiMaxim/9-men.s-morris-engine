@@ -1,8 +1,8 @@
 package com.example.mensmorris
 
 import com.example.mensmorris.positions.Equals
-import junit.framework.TestCase
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class EqualsTest : Equals() {
     /**
@@ -11,7 +11,7 @@ class EqualsTest : Equals() {
     @Test
     fun `equals test`() {
         val position1 = position.copy()
-        TestCase.assertEquals(position, position1)
+        assertEquals(position, position1)
     }
 
     /**
@@ -19,6 +19,6 @@ class EqualsTest : Equals() {
      */
     @Test
     fun `not equals test`() {
-        TestCase.assertEquals(position, position2)
+        assertEquals(position, position2)
     }
 }

@@ -1,7 +1,7 @@
 package com.example.mensmorris
 
 import com.example.mensmorris.positions.Memory
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MemoryTest : Memory() {
     /**
