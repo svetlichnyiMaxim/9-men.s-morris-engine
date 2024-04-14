@@ -51,11 +51,17 @@ class GameAnalyzeScreen(
     /**
      * gets called when "start analyze" button it pressed
      */
-    val startAnalyze: () -> Unit
+    val startAnalyze: () -> Unit,
+    /**
+     * gets called on render invoke
+     * needs to be here cause it is @Composable
+     */
+    val invokeTrasformation: @Composable () -> Unit
 ) : ViewModel(), ScreenModel {
 
     @Composable
     override fun InvokeRender() {
+        invokeTrasformation()
         DrawGameAnalyze()
     }
 

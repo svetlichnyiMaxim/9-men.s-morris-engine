@@ -11,11 +11,11 @@ import com.example.mensmorris.PIECES_TO_FLY
 import com.example.mensmorris.PIECE_COST
 import com.example.mensmorris.POSSIBLE_TRIPLE_COST
 import com.example.mensmorris.UNFINISHED_TRIPLES_COST
+import com.example.mensmorris.common.gameBoard.utils.CacheUtils.occurredPositions
+import com.example.mensmorris.common.gameBoard.utils.GameState
 import com.example.mensmorris.common.gameBoard.utils.moveProvider
 import com.example.mensmorris.common.gameBoard.utils.removeChecker
 import com.example.mensmorris.common.gameBoard.utils.triplesMap
-import com.example.mensmorris.common.gameBoard.utils.CacheUtils.occurredPositions
-import com.example.mensmorris.common.gameBoard.utils.GameState
 import com.example.mensmorris.get
 import com.example.mensmorris.plus
 
@@ -228,6 +228,10 @@ class Position(
             }
 
             GameState.Removing -> {
+                /*  TODO: fix critical logic flow
+                    we need to ensure that after each generation pieceToMove is the same
+                    this rule breaks here
+                 */
                 generateRemovalMoves()
             }
         }
@@ -412,21 +416,31 @@ class Position(
     }
 
     /**
-     * used for caching, replaces hashcode
-     * this "hash" function has no collisions
-     * each result is 28 symbols long
-     * TODO: rewrite it
+     * prints position in human readable form
      */
     override fun toString(): String {
-        return (if (pieceToMove) "1" else "0") + removalCount.toString() + positions.joinToString(
-            separator = ""
-        ) {
-            when (it) {
-                null -> "2"
-                true -> "1"
-                false -> "0"
+        val c = positions.map {
+            if (it == null) {
+                "empty"
+            } else {
+                if (it == false) {
+                    "blue_"
+                } else {
+                    "green"
+                }
             }
-        } + freePieces.first + freePieces.second
+        }
+        @Suppress("LongLine") return (
+                """
+        ${c[0]},                                    ${c[1]},                                     ${c[2]},
+                        ${c[3]},                    ${c[4]},                    ${c[5]},
+                                    ${c[6]},        ${c[7]},        ${c[8]},
+        ${c[9]},        ${c[10]},   ${c[11]},                       ${c[12]},   ${c[13]},        ${c[14]},
+                                    ${c[15]},       ${c[16]},       ${c[17]},
+                        ${c[18]},                   ${c[19]},                   ${c[20]},
+        ${c[21]},                                   ${c[22]},                                    ${c[23]}
+        """.trimIndent()
+                )
     }
 
     /**

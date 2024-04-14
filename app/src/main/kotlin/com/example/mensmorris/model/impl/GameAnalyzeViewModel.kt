@@ -1,5 +1,7 @@
 package com.example.mensmorris.model.impl
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.example.mensmorris.common.gameBoard.Position
@@ -25,15 +27,23 @@ class GameAnalyzeViewModel(
     private val positionsToDisplay: MutableState<List<Position>> = mutableStateOf(listOf())
 
     init {
-        data.solveResult.observeForever {
-            if (it == null)
-                return@observeForever
-            positionsToDisplay.value = it.toPositions(pos.value)
-        }
-        render = GameAnalyzeScreen(positionsToDisplay,
+        render = GameAnalyzeScreen(
+            positionsToDisplay,
             data.depth,
             { data.increaseDepth() },
             { data.decreaseDepth() },
-            { data.startAnalyze() })
+            { data.startAnalyze() },
+            { InvokeTransformation() }
+        )
+    }
+
+    /**
+     * invokes transformation from data.solveResult to positionsToDisplay
+     */
+    @Composable
+    fun InvokeTransformation() {
+        LaunchedEffect(key1 = data.solveResult.value) {
+            positionsToDisplay.value = data.solveResult.value.toPositions(pos.value)
+        }
     }
 }

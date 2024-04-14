@@ -3,7 +3,7 @@ package com.example.mensmorris.data.impl
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.common.gameBoard.Movement
 import com.example.mensmorris.common.gameBoard.Position
@@ -29,7 +29,7 @@ class GameAnalyzeData(
     /**
      * result of position analyze (best move)
      */
-    val solveResult: MutableLiveData<List<Movement>> = MutableLiveData(listOf())
+    val solveResult: MutableState<List<Movement>> = mutableStateOf(listOf())
 
     /**
      * decreases search depth
@@ -52,7 +52,7 @@ class GameAnalyzeData(
      */
     fun startAnalyze() {
         val solveResultValue = getAnalyzeResult() ?: return
-        solveResult.postValue(solveResultValue)
+        solveResult.value = solveResultValue
     }
 
     /**

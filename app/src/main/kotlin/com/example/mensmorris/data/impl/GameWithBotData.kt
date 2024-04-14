@@ -11,8 +11,6 @@ import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
 import com.example.mensmorris.model.impl.GameAnalyzeViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -53,13 +51,9 @@ class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardI
                     && gameBoard.pos.value.gameState() != GameState.End
                 ) {
                     val solveResultValue = analyze.data.getAnalyzeResult()
-                    // TODO: fix this it is going to shoot at your leg soon
-                    GlobalScope.launch(Dispatchers.Main) {
-                        analyze.data.solveResult.value = solveResultValue
-                        // TODO: fix this, it might cause npe
-                        gameBoard.processMove(analyze.data.solveResult.value!!.last())
-                        CacheUtils.resetCachedPositions()
-                    }
+                    analyze.data.solveResult.value = solveResultValue!!
+                    gameBoard.processMove(analyze.data.solveResult.value.last())
+                    CacheUtils.resetCachedPositions()
                 }
                 delay(500)
             }
