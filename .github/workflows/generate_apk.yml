@@ -46,10 +46,6 @@ jobs:
           sudo apt-get update &
           sudo apt-get install apksigner
 
-      # Run Build Project
-      - name: Build gradle project
-        run: ./gradlew build -x detekt
-
       # Create APK Release
       - name: Build apk release project (APK) - app module
         run: ./gradlew assembleRelease
