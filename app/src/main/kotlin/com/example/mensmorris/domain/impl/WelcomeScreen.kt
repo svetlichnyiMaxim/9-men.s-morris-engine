@@ -1,5 +1,6 @@
 package com.example.mensmorris.domain.impl
 
+import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -12,17 +13,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.Screen
+import com.example.mensmorris.activity
 import com.example.mensmorris.common.utils.AppTheme
-import com.example.mensmorris.currentScreen
 import com.example.mensmorris.domain.ScreenModel
+import com.example.mensmorris.model.impl.GameWithBotViewModel
+import com.example.mensmorris.model.impl.GameWithFriendViewModel
 import com.example.mensmorris.model.impl.tutorial.TutorialViewModel
 
 /**
@@ -36,8 +36,8 @@ class WelcomeScreen : ViewModel(), ScreenModel {
      */
     @Composable
     private fun DrawGameModesOptions() {
-        val zIndexValue = tutorialViewModel.zIndex.value
-        val alpha = tutorialViewModel.alpha.value
+        val zIndexValue = tutorialViewModel.zIndex.floatValue
+        val alpha = tutorialViewModel.alpha.floatValue
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -45,7 +45,7 @@ class WelcomeScreen : ViewModel(), ScreenModel {
                 modifier = Modifier
                     .zIndex(zIndexValue)
             ) {
-                tutorialViewModel.Invoke(value = remember { mutableStateOf({ true }) })
+                tutorialViewModel.Invoke()
             }
             AnimatedVisibility(
                 visible = alpha == 0f,
@@ -68,12 +68,16 @@ class WelcomeScreen : ViewModel(), ScreenModel {
                     ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                        currentScreen.value = Screen.GameWithFriend
+                        activity.setContent {
+                            GameWithFriendViewModel().Invoke()
+                        }
                     }) {
                         Text(text = "Play with friends")
                     }
                     Button(onClick = {
-                        currentScreen.value = Screen.GameWithBot
+                        activity.setContent {
+                            GameWithBotViewModel().Invoke()
+                        }
                     }) {
                         Text(text = "Play with bot")
                     }

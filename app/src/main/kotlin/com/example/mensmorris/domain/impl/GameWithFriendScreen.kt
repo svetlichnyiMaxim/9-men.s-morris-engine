@@ -40,7 +40,7 @@ class GameWithFriendScreen(override var gameBoard: GameBoard) : ViewModel(), Gam
                 .height(IntrinsicSize.Max)
                 .fillMaxWidth()
         ) {
-            GameAnalyzeViewModel(gameBoard.pos).Invoke(value = gameBoard.pos)
+            GameAnalyzeViewModel(gameBoard.pos).Invoke()
         }
     }
 }

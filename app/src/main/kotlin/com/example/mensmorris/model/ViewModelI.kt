@@ -1,8 +1,9 @@
 package com.example.mensmorris.model
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mensmorris.common.utils.backendScope
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.domain.ScreenModel
@@ -12,16 +13,16 @@ import kotlinx.coroutines.launch
 /**
  * model for our view models
  */
-interface ViewModelInterface {
+abstract class ViewModelI : ViewModel() {
     /**
      * screen we use for rendering
      */
-    var render: ScreenModel
+    abstract var render: ScreenModel
 
     /**
      * data we need
      */
-    val data: DataModel
+    abstract val data: DataModel
 
     /**
      * starts backend tasks
@@ -30,13 +31,6 @@ interface ViewModelInterface {
         CoroutineScope(backendScope).launch {
             data.invokeBackend()
         }
-    }
-
-    /**
-     * stops backend
-     */
-    fun shutDownBackend() {
-        data.clearTheScene()
     }
 
     /**
@@ -51,13 +45,12 @@ interface ViewModelInterface {
      * invokes render and backend using DisposableEffect
      */
     @Composable
-    fun <T> Invoke(value: MutableState<T>) {
-        this@ViewModelInterface.InvokeRender()
-        DisposableEffect(key1 = value) {
-            this@ViewModelInterface.invokeBackend()
-            onDispose {
-                this@ViewModelInterface.shutDownBackend()
+    fun Invoke() {
+        LaunchedEffect(key1 = true) {
+            this@ViewModelI.viewModelScope.launch {
+                this@ViewModelI.invokeBackend()
             }
         }
+        this@ViewModelI.InvokeRender()
     }
 }

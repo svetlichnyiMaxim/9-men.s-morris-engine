@@ -23,7 +23,7 @@ import androidx.wear.compose.material.swipeable
 import com.example.mensmorris.R
 import com.example.mensmorris.common.utils.AppTheme
 import com.example.mensmorris.domain.ScreenModel
-import com.example.mensmorris.model.ViewModelInterface
+import com.example.mensmorris.model.ViewModelI
 import com.example.mensmorris.model.impl.tutorial.viewModels.FlyingMovesTutorialViewModel
 import com.example.mensmorris.model.impl.tutorial.viewModels.IndicatorsTutorialViewModel
 import com.example.mensmorris.model.impl.tutorial.viewModels.LoseTutorialViewModel
@@ -42,7 +42,7 @@ class TutorialScreen(
      * TODO: replace this with a fancy code (example: https://github.com/SkidderMC/FDPClient/blob/b72bb4f493f4fd856ce3bd635f4bdbf43dc42c7b/src/main/java/net/ccbluex/liquidbounce/features/module/ModuleManager.kt#L39)
      */
     @Suppress("LongLine")
-    private val screensOrder = listOf<ViewModelInterface>(
+    private val screensOrder = listOf<ViewModelI>(
         IndicatorsTutorialViewModel(),
         LoseTutorialViewModel(),
         PlacementTutorialViewModel(),
@@ -155,7 +155,7 @@ class TutorialScreen(
     /**
      *
      */
-    private fun getNextScreen(): ViewModelInterface {
+    private fun getNextScreen(): ViewModelI {
         val currentIndex = screensOrder.indexOf(currentScreen.value)
         return screensOrder[(currentIndex + 1) % screensOrder.size]
     }
@@ -164,7 +164,7 @@ class TutorialScreen(
      * accesses the previous
      * screen from tutorials list
      */
-    private fun getPrevScreen(): ViewModelInterface {
+    private fun getPrevScreen(): ViewModelI {
         val currentIndex = screensOrder.indexOf(currentScreen.value)
         // this prevents any indexing errors
         return screensOrder[(currentIndex + screensOrder.size - 1) % screensOrder.size]

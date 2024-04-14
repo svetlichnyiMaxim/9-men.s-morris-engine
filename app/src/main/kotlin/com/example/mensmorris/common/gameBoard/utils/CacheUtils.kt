@@ -1,20 +1,11 @@
 package com.example.mensmorris.common.gameBoard.utils
 
 import com.example.mensmorris.common.gameBoard.Movement
-import com.example.mensmorris.common.gameBoard.Position
-import com.example.mensmorris.data.impl.GameEndData
 
 /**
  * provides caching utils
  */
 object CacheUtils {
-    /**
-     * position
-     * stores when needed
-     * @see GameEndData
-     * TODO: remove this
-     */
-    var position: Position = gameStartPosition
 
     /**
      * we store occurred positions here which massively increases speed

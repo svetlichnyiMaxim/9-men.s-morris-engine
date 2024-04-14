@@ -16,13 +16,7 @@ class GameWithFriendData(override val viewModel: ViewModel) : DataModel, GameBoa
         onClick = { index, func -> func(index) },
         onUndo = {})
 
-
     override suspend fun invokeBackend() {
         CacheUtils.resetCachedPositions()
-    }
-
-    override fun clearTheScene() {
-        CacheUtils.position = gameBoard.pos.value
-        gameBoard.pos.value = gameStartPosition
     }
 }

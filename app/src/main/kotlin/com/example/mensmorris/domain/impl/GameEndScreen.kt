@@ -1,5 +1,6 @@
 package com.example.mensmorris.domain.impl
 
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,11 +18,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.example.mensmorris.BUTTON_WIDTH
-import com.example.mensmorris.Screen
+import com.example.mensmorris.activity
 import com.example.mensmorris.common.utils.AppTheme
 import com.example.mensmorris.common.gameBoard.GameBoard
-import com.example.mensmorris.currentScreen
 import com.example.mensmorris.domain.GameScreenModel
+import com.example.mensmorris.model.impl.WelcomeViewModel
 
 /**
  * screen that is shown at the end
@@ -86,7 +87,9 @@ class GameEndScreen(
                     .fillMaxSize(), Alignment.Center
             ) {
                 Button(onClick = {
-                    currentScreen.value = Screen.Welcome
+                    activity.setContent {
+                        WelcomeViewModel().Invoke()
+                    }
                 }) {
                     Text("Reset")
                 }

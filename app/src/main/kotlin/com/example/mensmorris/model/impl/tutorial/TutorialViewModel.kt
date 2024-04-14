@@ -1,15 +1,14 @@
 package com.example.mensmorris.model.impl.tutorial
 
-import androidx.lifecycle.ViewModel
 import com.example.mensmorris.data.impl.tutorial.TutorialData
 import com.example.mensmorris.domain.ScreenModel
 import com.example.mensmorris.domain.impl.tutorial.TutorialScreen
-import com.example.mensmorris.model.ViewModelInterface
+import com.example.mensmorris.model.ViewModelI
 
 /**
  * view model for tutorials
  */
-class TutorialViewModel : ViewModelInterface, ViewModel() {
+class TutorialViewModel : ViewModelI() {
     override val data: TutorialData = TutorialData(this)
 
     /**

@@ -1,11 +1,13 @@
 package com.example.mensmorris.common.gameBoard
 
+import android.util.Log
+import androidx.activity.compose.setContent
 import androidx.compose.runtime.MutableState
-import com.example.mensmorris.Screen
-import com.example.mensmorris.common.gameBoard.utils.moveProvider
+import com.example.mensmorris.activity
 import com.example.mensmorris.common.gameBoard.utils.CacheUtils
 import com.example.mensmorris.common.gameBoard.utils.GameState
-import com.example.mensmorris.currentScreen
+import com.example.mensmorris.common.gameBoard.utils.moveProvider
+import com.example.mensmorris.model.impl.GameEndViewModel
 import java.util.Stack
 
 /**
@@ -86,7 +88,7 @@ open class GameClickHandler(
             }
 
             GameState.End -> {
-                currentScreen.value = Screen.EndGame
+                Log.e("screen switching error", "tried to handle move with END game state")
             }
         }
     }
@@ -138,7 +140,9 @@ open class GameClickHandler(
         CacheUtils.resetCachedPositions()
         saveMove(pos.value)
         if (pos.value.gameState() == GameState.End) {
-            currentScreen.value = Screen.EndGame
+            activity.setContent {
+                GameEndViewModel(pos.value).Invoke()
+            }
         }
         CacheUtils.hasCacheWithDepth = false
     }

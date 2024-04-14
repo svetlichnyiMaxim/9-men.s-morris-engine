@@ -16,9 +16,4 @@ interface DataModel {
      * launched with coroutine
      */
     suspend fun invokeBackend() {}
-
-    /**
-     * clears the scene when leaving the screen
-     */
-    fun clearTheScene() {}
 }

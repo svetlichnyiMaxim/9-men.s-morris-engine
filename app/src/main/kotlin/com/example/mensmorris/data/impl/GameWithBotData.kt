@@ -2,19 +2,17 @@ package com.example.mensmorris.data.impl
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.mensmorris.common.gameBoard.GameBoard
 import com.example.mensmorris.common.gameBoard.utils.CacheUtils
 import com.example.mensmorris.common.gameBoard.utils.GameState
-import com.example.mensmorris.common.utils.botScope
 import com.example.mensmorris.common.gameBoard.utils.gameStartPosition
 import com.example.mensmorris.data.DataModel
 import com.example.mensmorris.data.GameBoardInterface
 import com.example.mensmorris.model.impl.GameAnalyzeViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -27,12 +25,6 @@ class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardI
         onUndo = {}
     )
     private val analyze = GameAnalyzeViewModel(gameBoard.pos)
-
-    /**
-     * used for storing our analyze coroutine
-     * gets force-stopped when no longer needed
-     */
-    private var solvingJob: Job? = null
 
     /**
      * performs needed actions after click
@@ -50,18 +42,12 @@ class GameWithBotData(override val viewModel: ViewModel) : DataModel, GameBoardI
         launchBot()
     }
 
-    override fun clearTheScene() {
-        solvingJob?.cancel()
-        CacheUtils.position = gameBoard.pos.value
-        gameBoard.pos.value = gameStartPosition
-    }
-
     /**
      * launches bot actions against player
      */
     @OptIn(DelicateCoroutinesApi::class)
     private suspend fun launchBot() {
-        CoroutineScope(botScope).launch {
+        viewModel.viewModelScope.launch {
             while (true) {
                 if (!gameBoard.pos.value.pieceToMove
                     && gameBoard.pos.value.gameState() != GameState.End
