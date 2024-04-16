@@ -145,12 +145,30 @@ class Position(
         }
         // for all possible positions, we try to solve them
         val positions: MutableList<Pair<Pair<Int, Int>, MutableList<Movement>>> = mutableListOf()
-        generateMoves(depth).forEach {
-            val result = it.producePosition(this).solve((depth - 1u).toUByte())
-            if (depth != 1.toUByte() && result.second.isEmpty()) {
+        val generatedMoves = generateMoves(depth)
+        val movesAfterRemoval = mutableListOf<Pair<Movement, Movement>>()
+        generatedMoves.forEach {
+            val pos = it.producePosition(this)
+            if (pos.removalCount > 0 && !gameEnded()) {
+                movesAfterRemoval.addAll(
+                    pos.generateRemovalMoves().map { newMove -> Pair(newMove, it) })
+                return@forEach
+            }
+            val result = pos.solve((depth - 1u).toUByte())
+            if (depth != 1.toUByte() && result.second.isEmpty() && !pos.gameEnded()) {
                 return@forEach
             }
             result.second.add(it)
+            positions.add(result)
+        }
+        movesAfterRemoval.forEach { (newMove, oldMove) ->
+            val pos = newMove.producePosition(this)
+            val result = pos.solve((depth - 1u).toUByte())
+            if (depth != 1.toUByte() && result.second.isEmpty() && !pos.gameEnded()) {
+                return@forEach
+            }
+            result.second.add(newMove)
+            result.second.add(oldMove)
             positions.add(result)
         }
         if (positions.isEmpty()) {
@@ -228,10 +246,6 @@ class Position(
             }
 
             GameState.Removing -> {
-                /*  TODO: fix critical logic flow
-                    we need to ensure that after each generation pieceToMove is the same
-                    this rule breaks here
-                 */
                 generateRemovalMoves()
             }
         }

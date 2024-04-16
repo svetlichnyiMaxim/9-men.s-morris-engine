@@ -25,6 +25,12 @@ class StrategyTests : Strategy() {
         assertEquals(ourResult, correctResult3)
     }
 
+    @Test
+    fun `winning test4`() {
+        val ourResult = position4.solve(2u)
+        assertEquals(ourResult, correctResult4)
+    }
+
     @AfterEach
     fun clearCache() {
         CacheUtils.wipeCachedPositions()

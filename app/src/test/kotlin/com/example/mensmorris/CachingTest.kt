@@ -49,7 +49,7 @@ class CachingTest : Caching() {
     @Test
     fun `cache 6`() {
         position.solve(6u)
-        assertEquals(occurredPositions.size, 3028)
+        assertEquals(occurredPositions.size, 3070)
     }
 
     @Test
