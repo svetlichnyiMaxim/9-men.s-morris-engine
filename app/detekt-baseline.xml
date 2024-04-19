@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>CyclomaticComplexMethod:Position.kt$Position$fun solve( depth: UByte ): Pair&lt;Pair&lt;Int, Int&gt;, MutableList&lt;Movement&gt;&gt;</ID>
+  </CurrentIssues>
+</SmellBaseline>
