@@ -12,7 +12,7 @@ tasks.withType<Test>() {
 }
 
 android {
-    namespace = "com.example.mensmorris"
+    namespace = "com.kr8ne.mensMorris"
     compileSdk = 34
 
     defaultConfig {
