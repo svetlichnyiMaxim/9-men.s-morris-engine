@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class Equals {
-    internal val position = Position(
+    val position = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -21,7 +21,7 @@ open class Equals {
         pieceToMove = true
     )
 
-    internal val position2 = Position(
+    val position2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,

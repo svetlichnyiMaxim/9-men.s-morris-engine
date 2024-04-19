@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class GameStateTestData {
-    internal val position = Position(
+    val position = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  BLUE_,                  EMPTY,

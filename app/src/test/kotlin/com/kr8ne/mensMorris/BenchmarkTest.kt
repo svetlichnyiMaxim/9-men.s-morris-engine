@@ -33,7 +33,7 @@ class BenchmarkTest : Benchmark() {
     @RepeatedTest(10)
     fun benchmark2() {
         val time = measureTimeMillis {
-            benchmark1.solve(4u)
+            benchmark2.solve(4u)
         }
         // TODO: replace with JMH tests
         println(time)

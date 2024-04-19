@@ -7,7 +7,7 @@ import com.kr8ne.mensMorris.common.gameBoard.Movement
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class MoveGeneration {
-    internal val position1 = Position(
+    val position1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -22,7 +22,7 @@ open class MoveGeneration {
         freePieces = Pair(1u, 1u), pieceToMove = true, removalCount = 0
     )
 
-    internal val position1Result = mutableListOf(
+    val position1Result = mutableListOf(
         Movement(null, 2),
         Movement(null, 4),
         Movement(null, 5),
@@ -44,7 +44,7 @@ open class MoveGeneration {
         Movement(null, 22)
     )
 
-    internal val position2 = Position(
+    val position2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  EMPTY,                  EMPTY,
@@ -59,7 +59,7 @@ open class MoveGeneration {
         freePieces = Pair(6u, 6u), pieceToMove = true, removalCount = 0
     )
 
-    internal val position2Result = mutableListOf(
+    val position2Result = mutableListOf(
         Movement(null, 1),
         Movement(null, 2),
         Movement(null, 3),
@@ -81,7 +81,7 @@ open class MoveGeneration {
         Movement(null, 23),
     )
 
-    internal val position3 = Position(
+    val position3 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  EMPTY,                  EMPTY,
@@ -96,13 +96,13 @@ open class MoveGeneration {
         freePieces = Pair(5u, 6u), pieceToMove = true, removalCount = 1
     )
 
-    internal val position3Result = mutableListOf(
+    val position3Result = mutableListOf(
         Movement(0, null),
         Movement(11, null),
         Movement(15, null),
     )
 
-    internal val position4 = Position(
+    val position4 = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  EMPTY,
@@ -117,7 +117,7 @@ open class MoveGeneration {
         freePieces = Pair(5u, 5u), pieceToMove = false, removalCount = 0
     )
 
-    internal val position4Result = mutableListOf(
+    val position4Result = mutableListOf(
         Movement(null, 0),
         Movement(null, 1),
         Movement(null, 2),
@@ -139,7 +139,7 @@ open class MoveGeneration {
         Movement(null, 23),
     )
 
-    internal val position5 = Position(
+    val position5 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -154,7 +154,7 @@ open class MoveGeneration {
         freePieces = Pair(0u, 0u), pieceToMove = false, removalCount = 0
     )
 
-    internal val position5Result = mutableListOf(
+    val position5Result = mutableListOf(
         Movement(0, 2),
         Movement(0, 4),
         Movement(0, 5),
@@ -211,7 +211,7 @@ open class MoveGeneration {
         Movement(22, 21)
     )
 
-    internal val position6 = Position(
+    val position6 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -226,7 +226,7 @@ open class MoveGeneration {
         freePieces = Pair(0u, 0u), pieceToMove = false, removalCount = 0
     )
 
-    internal val position6Result = mutableListOf(
+    val position6Result = mutableListOf(
         Movement(0, 9),
         Movement(1, 2),
         Movement(1, 4),

@@ -56,7 +56,7 @@ class GameAnalyzeScreen(
      * gets called on render invoke
      * needs to be here cause it is @Composable
      */
-    val invokeTransformation: @Composable () -> Unit
+    val invokeTransformation: @Composable () -> Unit,
 ) : ViewModel(), ScreenModel {
 
     @Composable
@@ -126,7 +126,12 @@ class GameAnalyzeScreen(
                 ) {
                     positions.value.forEach {
                         Row {
-                            GameBoard(remember { mutableStateOf(it) }, { _, _ -> }, {}).Draw()
+                            GameBoard(
+                                remember { mutableStateOf(it) },
+                                { _, _ -> },
+                                {},
+                                navController = null
+                            ).Draw()
                         }
                     }
                 }

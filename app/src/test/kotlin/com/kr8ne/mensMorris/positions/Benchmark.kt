@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class Benchmark {
-    internal val benchmark1 = Position(
+    val benchmark1 = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  EMPTY,
@@ -21,7 +21,7 @@ open class Benchmark {
         freePieces = Pair(5u, 5u), pieceToMove = true
     )
 
-    internal val benchmark2 = Position(
+    val benchmark2 = Position(
         // @formatter:off
         arrayOf(
             GREEN,                  EMPTY,                  EMPTY,

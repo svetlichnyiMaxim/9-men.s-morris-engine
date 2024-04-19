@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class Copy {
-    internal val position = Position(
+    val position = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,

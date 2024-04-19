@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class BasicEvaluation {
-    internal val blueWinning1 = Position(
+    val blueWinning1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  BLUE_,
@@ -21,7 +21,7 @@ open class BasicEvaluation {
         pieceToMove = true
     )
 
-    internal val blueWinning2 = Position(
+    val blueWinning2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -36,7 +36,7 @@ open class BasicEvaluation {
         freePieces = Pair(0u, 1u), pieceToMove = true
     )
 
-    internal val blueWinning3 = Position(
+    val blueWinning3 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -51,7 +51,7 @@ open class BasicEvaluation {
         freePieces = Pair(0u, 0u), pieceToMove = true
     )
 
-    internal val blueWinning4 = Position(
+    val blueWinning4 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -66,7 +66,7 @@ open class BasicEvaluation {
         freePieces = Pair(0u, 1u), pieceToMove = true
     )
 
-    internal val greenWinning1 = Position(
+    val greenWinning1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -81,7 +81,7 @@ open class BasicEvaluation {
         pieceToMove = false
     )
 
-    internal val greenWinning2 = Position(
+    val greenWinning2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  EMPTY,                  BLUE_,
@@ -96,7 +96,7 @@ open class BasicEvaluation {
         pieceToMove = false
     )
 
-    internal val greenWinning3 = Position(
+    val greenWinning3 = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  BLUE_,
@@ -111,7 +111,7 @@ open class BasicEvaluation {
         pieceToMove = false
     )
 
-    internal val greenWinning4 = Position(
+    val greenWinning4 = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  BLUE_,

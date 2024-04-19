@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class AdvanceEvaluation {
-    internal val greenWinning1 = Position(
+    val greenWinning1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  EMPTY,                  EMPTY,
@@ -22,7 +22,7 @@ open class AdvanceEvaluation {
     )
 
 
-    internal val draw1 = Position(
+    val draw1 = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  EMPTY,
@@ -37,7 +37,7 @@ open class AdvanceEvaluation {
         freePieces = Pair(7u, 6u), pieceToMove = true
     )
 
-    internal val blueWinning1 = Position(
+    val blueWinning1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  GREEN,                  EMPTY,
@@ -52,7 +52,7 @@ open class AdvanceEvaluation {
         freePieces = Pair(5u, 5u), pieceToMove = false
     )
 
-    internal val blueWinning2 = Position(
+    val blueWinning2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  GREEN,                  EMPTY,

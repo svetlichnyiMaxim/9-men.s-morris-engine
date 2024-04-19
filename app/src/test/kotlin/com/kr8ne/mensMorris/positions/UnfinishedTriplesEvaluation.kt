@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class UnfinishedTriplesEvaluation {
-    internal val draw1 = Position(
+    val draw1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -21,7 +21,7 @@ open class UnfinishedTriplesEvaluation {
         pieceToMove = true
     )
 
-    internal val greenWinning1 = Position(
+    val greenWinning1 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  EMPTY,
@@ -36,7 +36,7 @@ open class UnfinishedTriplesEvaluation {
         freePieces = Pair(0u, 1u), pieceToMove = true
     )
 
-    internal val greenWinning2 = Position(
+    val greenWinning2 = Position(
         // @formatter:off
         arrayOf(
             BLUE_,                  BLUE_,                  BLUE_,

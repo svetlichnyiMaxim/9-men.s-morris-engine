@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.Position
 
 open class Memory {
-    internal val wonPosition = Position(
+    val wonPosition = Position(
         // @formatter:off
         arrayOf(
             EMPTY,                  EMPTY,                  BLUE_,
