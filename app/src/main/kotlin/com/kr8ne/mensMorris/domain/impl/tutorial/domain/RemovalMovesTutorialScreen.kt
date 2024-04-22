@@ -13,9 +13,11 @@ import com.kr8ne.mensMorris.BLUE_
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.EMPTY
 import com.kr8ne.mensMorris.GREEN
+import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.gameBoard.Position
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
+import com.kr8ne.mensMorris.getString
 
 /**
  * this screen tells about information indicators provide
@@ -51,7 +53,7 @@ class RemovalMovesTutorialScreen : ScreenModel {
             Column {
                 gameBoard.handleHighLighting()
                 gameBoard.RenderBoard()
-                Text(text = "If you can remove enemies piece simply click on it")
+                Text(text = getString(R.string.tutorial_removal_moves_explaination))
             }
         }
     }

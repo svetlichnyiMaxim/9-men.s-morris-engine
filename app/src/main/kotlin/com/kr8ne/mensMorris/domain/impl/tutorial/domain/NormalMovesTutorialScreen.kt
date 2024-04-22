@@ -57,7 +57,7 @@ class NormalMovesTutorialScreen : ScreenModel {
                 gameBoard.handleHighLighting()
                 gameBoard.RenderBoard()
                 Text(text = getString(R.string.tutorial_normal_moves_condition))
-                Text(text = "Possible moves are highlighted when you have selected a piece to move")
+                Text(text = getString(R.string.tutorial_normal_moves_highlighting))
             }
         }
     }
