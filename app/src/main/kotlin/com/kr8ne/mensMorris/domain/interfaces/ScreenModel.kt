@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.domain
+package com.kr8ne.mensMorris.domain.interfaces
 
 import androidx.compose.runtime.Composable
 

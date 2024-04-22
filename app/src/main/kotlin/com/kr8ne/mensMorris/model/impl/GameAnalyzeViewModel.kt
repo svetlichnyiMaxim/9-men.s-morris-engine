@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import com.kr8ne.mensMorris.common.gameBoard.Position
 import com.kr8ne.mensMorris.common.utils.toPositions
 import com.kr8ne.mensMorris.data.impl.GameAnalyzeData
-import com.kr8ne.mensMorris.domain.ScreenModel
 import com.kr8ne.mensMorris.domain.impl.GameAnalyzeScreen
-import com.kr8ne.mensMorris.model.ViewModelI
+import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
+import com.kr8ne.mensMorris.model.interfaces.ViewModelI
 
 /**
  * game analyze model
@@ -22,7 +22,7 @@ class GameAnalyzeViewModel(
 ) : ViewModelI() {
 
     override var render: ScreenModel
-    override val data = GameAnalyzeData(pos, this)
+    override val data = GameAnalyzeData(pos)
 
     private val positionsToDisplay: MutableState<List<Position>> = mutableStateOf(listOf())
 

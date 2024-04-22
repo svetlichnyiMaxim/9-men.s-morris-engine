@@ -4,11 +4,10 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import com.kr8ne.mensMorris.common.gameBoard.Movement
 import com.kr8ne.mensMorris.common.gameBoard.Position
 import com.kr8ne.mensMorris.common.gameBoard.utils.CacheUtils
-import com.kr8ne.mensMorris.data.DataModel
+import com.kr8ne.mensMorris.data.interfaces.DataModel
 import kotlin.math.max
 
 /**
@@ -18,7 +17,7 @@ class GameAnalyzeData(
     /**
      * position in our analyze
      */
-    val pos: MutableState<Position>, override val viewModel: ViewModel
+    val pos: MutableState<Position>
 ) : DataModel {
 
     /**

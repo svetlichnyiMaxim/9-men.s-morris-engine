@@ -4,22 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.utils.AppTheme
-import com.kr8ne.mensMorris.domain.GameScreenModel
+import com.kr8ne.mensMorris.domain.interfaces.GameScreenModel
 
 /**
  * Game main screen
  */
 class GameWithBotScreen(
-    override var gameBoard: GameBoard
+    override val gameBoard: GameBoard
 ) : ViewModel(), GameScreenModel {
-
-    private val pieceCountFragment = PieceCountFragment(gameBoard.pos)
 
     @Composable
     override fun InvokeRender() {
         AppTheme {
-            gameBoard.Draw()
-            pieceCountFragment.InvokeRender()
+            gameBoard.RenderBoard()
+            gameBoard.RenderPieceCount()
             gameBoard.RenderUndoRedo()
         }
     }

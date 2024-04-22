@@ -21,7 +21,7 @@ import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.GAME_WITH_BOT_SCREEN
 import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
 import com.kr8ne.mensMorris.common.utils.AppTheme
-import com.kr8ne.mensMorris.domain.ScreenModel
+import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
 import com.kr8ne.mensMorris.model.impl.tutorial.TutorialViewModel
 
 /**

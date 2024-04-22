@@ -15,8 +15,7 @@ import com.kr8ne.mensMorris.EMPTY
 import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.gameBoard.Position
-import com.kr8ne.mensMorris.domain.ScreenModel
-import com.kr8ne.mensMorris.domain.impl.PieceCountFragment
+import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
 
 /**
  * this screen tells about information indicators provide
@@ -39,12 +38,10 @@ class TriplesTutorialScreen : ScreenModel {
 
     private val gameBoard = GameBoard(position, navController = null)
 
-    private val pieceCountFragment = PieceCountFragment(gameBoard.pos)
-
     @Composable
     override fun InvokeRender() {
         // TODO: add animations
-        pieceCountFragment.InvokeRender()
+        gameBoard.RenderPieceCount()
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15))
@@ -53,7 +50,7 @@ class TriplesTutorialScreen : ScreenModel {
         ) {
             Column {
                 gameBoard.handleHighLighting()
-                gameBoard.Draw()
+                gameBoard.RenderBoard()
                 Text(text = "If you have 3 pieces in a row you can remove enemies piece")
                 Text(text = "Rows are highlighted with grey")
             }

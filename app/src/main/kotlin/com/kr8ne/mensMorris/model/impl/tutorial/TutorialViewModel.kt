@@ -1,15 +1,15 @@
 package com.kr8ne.mensMorris.model.impl.tutorial
 
 import com.kr8ne.mensMorris.data.impl.tutorial.TutorialData
-import com.kr8ne.mensMorris.domain.ScreenModel
 import com.kr8ne.mensMorris.domain.impl.tutorial.TutorialScreen
-import com.kr8ne.mensMorris.model.ViewModelI
+import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
+import com.kr8ne.mensMorris.model.interfaces.ViewModelI
 
 /**
  * view model for tutorials
  */
 class TutorialViewModel : ViewModelI() {
-    override val data: TutorialData = TutorialData(this)
+    override val data: TutorialData = TutorialData()
 
     /**
      * alpha of the tutorial screen

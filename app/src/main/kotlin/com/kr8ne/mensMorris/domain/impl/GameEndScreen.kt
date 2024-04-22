@@ -21,7 +21,7 @@ import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.utils.AppTheme
-import com.kr8ne.mensMorris.domain.GameScreenModel
+import com.kr8ne.mensMorris.domain.interfaces.GameScreenModel
 
 /**
  * screen that is shown at the end
@@ -40,7 +40,7 @@ class GameEndScreen(
     override fun InvokeRender() {
         AppTheme {
             DrawButtons()
-            gameBoard.Draw()
+            gameBoard.RenderBoard()
         }
     }
 

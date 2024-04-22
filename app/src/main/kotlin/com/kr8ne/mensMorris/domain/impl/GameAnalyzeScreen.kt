@@ -26,7 +26,7 @@ import androidx.lifecycle.ViewModel
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.gameBoard.Position
-import com.kr8ne.mensMorris.domain.ScreenModel
+import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
 
 /**
  * game analyzing screen
@@ -131,7 +131,7 @@ class GameAnalyzeScreen(
                                 { _, _ -> },
                                 {},
                                 navController = null
-                            ).Draw()
+                            ).RenderBoard()
                         }
                     }
                 }

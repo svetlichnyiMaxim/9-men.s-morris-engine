@@ -14,10 +14,11 @@ import com.kr8ne.mensMorris.BLUE_
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.EMPTY
 import com.kr8ne.mensMorris.GREEN
+import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.gameBoard.Position
-import com.kr8ne.mensMorris.domain.ScreenModel
-import com.kr8ne.mensMorris.domain.impl.PieceCountFragment
+import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
+import com.kr8ne.mensMorris.getString
 
 /**
  * this screen tells about information indicators provide
@@ -42,12 +43,10 @@ class FlyingMovesTutorialScreen : ScreenModel {
         position, selectedButton = mutableStateOf(3), navController = null
     )
 
-    private val pieceCountFragment = PieceCountFragment(gameBoard.pos)
-
     @Composable
     override fun InvokeRender() {
         // TODO: add animations
-        pieceCountFragment.InvokeRender()
+        gameBoard.RenderPieceCount()
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15))
@@ -56,12 +55,9 @@ class FlyingMovesTutorialScreen : ScreenModel {
         ) {
             Column {
                 gameBoard.handleHighLighting()
-                gameBoard.Draw()
-                Text(
-                    text = "If you don't have any figures to place and your pieces count = 3 " +
-                            "you can fly (move to any empty place)"
-                )
-                Text(text = "Possible moves are highlighted when you have selected a piece to move")
+                gameBoard.RenderBoard()
+                Text(text = getString(R.string.tutorial_fly_condition))
+                Text(text = getString(R.string.tutorial_fly_highlighting))
             }
         }
     }

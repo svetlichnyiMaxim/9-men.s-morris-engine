@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data
+package com.kr8ne.mensMorris.data.interfaces
 
 import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 
