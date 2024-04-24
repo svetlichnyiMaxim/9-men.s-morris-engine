@@ -24,9 +24,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.kr8ne.mensMorris.BUTTON_WIDTH
-import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.gameBoard.Position
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
+import com.kr8ne.mensMorris.model.impl.GameBoardViewModel
 
 /**
  * game analyzing screen
@@ -126,12 +126,12 @@ class GameAnalyzeScreen(
                 ) {
                     positions.value.forEach {
                         Row {
-                            GameBoard(
+                            GameBoardViewModel(
                                 remember { mutableStateOf(it) },
                                 { _, _ -> },
                                 {},
                                 navController = null
-                            ).RenderBoard()
+                            ).InvokeRender()
                         }
                     }
                 }

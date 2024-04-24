@@ -1,7 +1,6 @@
 package com.kr8ne.mensMorris.model.impl
 
 import androidx.navigation.NavHostController
-import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.gameBoard.Position
 import com.kr8ne.mensMorris.data.impl.GameEndData
 import com.kr8ne.mensMorris.domain.impl.GameEndScreen
@@ -15,7 +14,7 @@ class GameEndViewModel(pos: Position, navController: NavHostController) : ViewMo
     /**
      * our current game board
      */
-    val gameBoard = GameBoard(pos, navController = navController)
+    val gameBoard = GameBoardViewModel(pos, navController = navController)
     override var render: ScreenModel = GameEndScreen(gameBoard, navController)
     override val data = GameEndData(gameBoard)
 }

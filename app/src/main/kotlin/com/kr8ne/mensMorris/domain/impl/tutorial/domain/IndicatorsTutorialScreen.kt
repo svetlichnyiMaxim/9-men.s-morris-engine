@@ -14,10 +14,10 @@ import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.EMPTY
 import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.R
-import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.gameBoard.Position
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
 import com.kr8ne.mensMorris.getString
+import com.kr8ne.mensMorris.model.impl.GameBoardViewModel
 
 /**
  * this screen tells about information indicators provide
@@ -38,12 +38,12 @@ class IndicatorsTutorialScreen : ScreenModel {
         freePieces = Pair(1u, 2u), pieceToMove = false, removalCount = 0
     )
 
-    private val gameBoard = GameBoard(position, navController = null)
+    private val gameBoard = GameBoardViewModel(position, navController = null)
 
     @Composable
     override fun InvokeRender() {
         // TODO: add animations
-        gameBoard.RenderPieceCount()
+        gameBoard.render.RenderPieceCount()
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15))
@@ -51,7 +51,7 @@ class IndicatorsTutorialScreen : ScreenModel {
             Alignment.BottomCenter
         ) {
             Column {
-                gameBoard.RenderBoard()
+                gameBoard.InvokeRender()
                 Text(text = getString(R.string.tutorial_indicator_piece_count))
                 Text(text = getString(R.string.tutorial_fly_condition))
             }

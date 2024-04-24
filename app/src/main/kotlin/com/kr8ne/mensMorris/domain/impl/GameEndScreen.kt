@@ -19,28 +19,28 @@ import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.WELCOME_SCREEN
-import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.utils.AppTheme
 import com.kr8ne.mensMorris.domain.interfaces.GameScreenModel
+import com.kr8ne.mensMorris.model.impl.GameBoardViewModel
 
 /**
  * screen that is shown at the end
  */
 class GameEndScreen(
-    override var gameBoard: GameBoard,
+    override var gameBoard: GameBoardViewModel,
     /**
      * navigation controller
      */
     val navController: NavHostController
 ) : ViewModel(), GameScreenModel {
 
-    private val pos = gameBoard.pos
+    private val pos = gameBoard.data.pos
 
     @Composable
     override fun InvokeRender() {
         AppTheme {
             DrawButtons()
-            gameBoard.RenderBoard()
+            gameBoard.render.InvokeRender()
         }
     }
 

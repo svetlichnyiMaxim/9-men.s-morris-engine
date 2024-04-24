@@ -10,24 +10,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.kr8ne.mensMorris.BUTTON_WIDTH
-import com.kr8ne.mensMorris.common.gameBoard.GameBoard
 import com.kr8ne.mensMorris.common.utils.AppTheme
 import com.kr8ne.mensMorris.domain.interfaces.GameScreenModel
 import com.kr8ne.mensMorris.model.impl.GameAnalyzeViewModel
+import com.kr8ne.mensMorris.model.impl.GameBoardViewModel
 
 /**
  * Game main screen
  */
-class GameWithFriendScreen(override var gameBoard: GameBoard) : ViewModel(), GameScreenModel {
+class GameWithFriendScreen(override var gameBoard: GameBoardViewModel) : ViewModel(), GameScreenModel {
 
 
     @Composable
     override fun InvokeRender() {
         AppTheme {
-            gameBoard.RenderPieceCount()
+            gameBoard.render.RenderPieceCount()
             DrawMainPage()
-            gameBoard.RenderBoard()
-            gameBoard.RenderUndoRedo()
+            gameBoard.render.InvokeRender()
+            gameBoard.render.RenderUndoRedo()
         }
     }
 
@@ -39,7 +39,7 @@ class GameWithFriendScreen(override var gameBoard: GameBoard) : ViewModel(), Gam
                 .height(IntrinsicSize.Max)
                 .fillMaxWidth()
         ) {
-            GameAnalyzeViewModel(gameBoard.pos).Invoke()
+            GameAnalyzeViewModel(gameBoard.data.pos).Invoke()
         }
     }
 }

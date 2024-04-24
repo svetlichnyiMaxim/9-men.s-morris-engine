@@ -17,7 +17,7 @@ abstract class ViewModelI : ViewModel() {
     /**
      * screen we use for rendering
      */
-    abstract var render: ScreenModel
+    abstract val render: ScreenModel
 
     /**
      * data we need

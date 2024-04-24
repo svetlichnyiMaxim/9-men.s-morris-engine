@@ -17,3 +17,6 @@ local.properties
 /.idea/.name
 /.idea/misc.xml
 /.idea/gradle
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/appInsightsSettings.xml
+/.idea/deploymentTargetDropDown.xml

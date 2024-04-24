@@ -21,21 +21,17 @@ class GameAnalyzeViewModel(
     val pos: MutableState<Position>
 ) : ViewModelI() {
 
-    override var render: ScreenModel
     override val data = GameAnalyzeData(pos)
 
     private val positionsToDisplay: MutableState<List<Position>> = mutableStateOf(listOf())
-
-    init {
-        render = GameAnalyzeScreen(
-            positionsToDisplay,
-            data.depth,
-            { data.increaseDepth() },
-            { data.decreaseDepth() },
-            { data.startAnalyze() },
-            { InvokeTransformation() }
-        )
-    }
+    override var render: ScreenModel = GameAnalyzeScreen(
+        positionsToDisplay,
+        data.depth,
+        { data.increaseDepth() },
+        { data.decreaseDepth() },
+        { data.startAnalyze() },
+        { InvokeTransformation() }
+    )
 
     /**
      * invokes transformation from data.solveResult to positionsToDisplay
