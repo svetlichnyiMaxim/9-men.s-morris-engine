@@ -13,4 +13,6 @@
     <string name="tutorial_removal_moves_explaination">если вы можете убрать фишку противника, то просто нажмите на неё</string>
     <string name="tutorial_triples_condition">если после вашего хода появляется новая линия из трех фигур, то вы можете убрать фишку противника</string>
     <string name="tutorial_triples_highlighting">такие линии подсвеченны серым цветом</string>
+    <string name="play_game_with_friends">играть с друзьями</string>
+    <string name="play_game_with_bot">играть против бота</string>
 </resources>

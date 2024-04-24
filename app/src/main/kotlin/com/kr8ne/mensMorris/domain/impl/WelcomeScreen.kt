@@ -20,8 +20,10 @@ import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.GAME_WITH_BOT_SCREEN
 import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
+import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.common.utils.AppTheme
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
+import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.model.impl.tutorial.TutorialViewModel
 
 /**
@@ -73,12 +75,12 @@ class WelcomeScreen(
                     Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
                         navController.navigate(GAME_WITH_FRIEND_SCREEN)
                     }) {
-                        Text(text = "Play with friends")
+                        Text(text = getString(R.string.play_game_with_friends))
                     }
                     Button(onClick = {
                         navController.navigate(GAME_WITH_BOT_SCREEN)
                     }) {
-                        Text(text = "Play with bot")
+                        Text(text = getString(R.string.play_game_with_bot))
                     }
                 }
             }
