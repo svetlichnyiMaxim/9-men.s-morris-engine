@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--suppress LongLine -->
 <resources>
     <string name="app_name">Мельница</string>
     <string name="tutorial_fly_condition">если у вас нет фигур, чтобы разместить и у вас есть ровно 3 фишки, то вы можете перемещать вашу фиишку из людой клетки в любую другую (пустую)</string>
@@ -10,7 +10,7 @@
     <string name="tutorial_normal_moves_highlighting">возможные ходы подсвечиваются после выбора фишки</string>
     <string name="tutorial_placement_condition">если у вас есть еще не размещенные фишки, то вы можете поставить их в любую постую клетку</string>
     <string name="tutorial_placement_highlighting">возможные ходы подсвечиваются</string>
-    <string name="tutorial_removal_moves_explaination">если вы можете убрать фишку противника, то просто нажмите на неё</string>
+    <string name="tutorial_removal_moves_explanation">если вы можете убрать фишку противника, то просто нажмите на неё</string>
     <string name="tutorial_triples_condition">если после вашего хода появляется новая линия из трех фигур, то вы можете убрать фишку противника</string>
     <string name="tutorial_triples_highlighting">такие линии подсвеченны серым цветом</string>
     <string name="play_game_with_friends">играть с друзьями</string>

@@ -53,7 +53,7 @@ class RemovalMovesTutorialScreen : ScreenModel {
             Column {
                 gameBoard.data.handleHighLighting()
                 gameBoard.render.InvokeRender()
-                Text(text = getString(R.string.tutorial_removal_moves_explaination))
+                Text(text = getString(R.string.tutorial_removal_moves_explanation))
             }
         }
     }
