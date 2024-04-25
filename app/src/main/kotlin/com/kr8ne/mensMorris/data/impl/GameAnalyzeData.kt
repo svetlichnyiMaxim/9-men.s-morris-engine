@@ -4,9 +4,9 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import com.kr8ne.mensMorris.common.gameBoard.Movement
-import com.kr8ne.mensMorris.common.gameBoard.Position
-import com.kr8ne.mensMorris.common.gameBoard.utils.CacheUtils
+import com.kr8ne.mensMorris.common.game.Movement
+import com.kr8ne.mensMorris.common.game.Position
+import com.kr8ne.mensMorris.common.game.utils.CacheUtils
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import kotlin.math.max
 

@@ -1,6 +1,6 @@
 package com.kr8ne.mensMorris
 
-import com.kr8ne.mensMorris.common.gameBoard.utils.CacheUtils.occurredPositions
+import com.kr8ne.mensMorris.common.game.utils.CacheUtils.occurredPositions
 import com.kr8ne.mensMorris.positions.Benchmark
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.RepeatedTest

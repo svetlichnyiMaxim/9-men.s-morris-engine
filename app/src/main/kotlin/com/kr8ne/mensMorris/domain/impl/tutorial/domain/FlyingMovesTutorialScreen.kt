@@ -15,7 +15,7 @@ import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.EMPTY
 import com.kr8ne.mensMorris.GREEN
 import com.kr8ne.mensMorris.R
-import com.kr8ne.mensMorris.common.gameBoard.Position
+import com.kr8ne.mensMorris.common.game.Position
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
 import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.model.impl.GameBoardViewModel

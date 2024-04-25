@@ -3,7 +3,7 @@ package com.kr8ne.mensMorris.positions
 import com.kr8ne.mensMorris.BLUE_
 import com.kr8ne.mensMorris.EMPTY
 import com.kr8ne.mensMorris.GREEN
-import com.kr8ne.mensMorris.common.gameBoard.Position
+import com.kr8ne.mensMorris.common.game.Position
 
 open class Caching {
     val position = Position(

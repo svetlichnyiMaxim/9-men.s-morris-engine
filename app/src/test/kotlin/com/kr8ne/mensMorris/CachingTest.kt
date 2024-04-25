@@ -1,8 +1,8 @@
 package com.kr8ne.mensMorris
 
-import com.kr8ne.mensMorris.common.gameBoard.Position
-import com.kr8ne.mensMorris.common.gameBoard.utils.CacheUtils
-import com.kr8ne.mensMorris.common.gameBoard.utils.CacheUtils.occurredPositions
+import com.kr8ne.mensMorris.common.game.Position
+import com.kr8ne.mensMorris.common.game.utils.CacheUtils
+import com.kr8ne.mensMorris.common.game.utils.CacheUtils.occurredPositions
 import com.kr8ne.mensMorris.positions.Caching
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals

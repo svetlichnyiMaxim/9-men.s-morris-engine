@@ -1,7 +1,7 @@
-package com.kr8ne.mensMorris.common.gameBoard.utils
+package com.kr8ne.mensMorris.common.game.utils
 
 import com.kr8ne.mensMorris.EMPTY
-import com.kr8ne.mensMorris.common.gameBoard.Position
+import com.kr8ne.mensMorris.common.game.Position
 
 /**
  * a default game start position

@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.common.gameBoard
+package com.kr8ne.mensMorris.common.game
 
 /**
  * used to store movement

@@ -5,6 +5,9 @@ exclude:
   - name: IncorrectFormatting
     paths:
       - config/detekt/detekt.yml
+      - app/src/main/res/values-ru/strings.xml
+      - app/src/main/res/values-en/strings.xml
+      - app/src/main/res/values/strings.xml
   - name: LongLine
     paths:
       - config/detekt/detekt.yml

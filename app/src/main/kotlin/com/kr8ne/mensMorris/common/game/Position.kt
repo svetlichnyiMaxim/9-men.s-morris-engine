@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.common.gameBoard
+package com.kr8ne.mensMorris.common.game
 
 import com.kr8ne.mensMorris.BLUE_COLOR
 import com.kr8ne.mensMorris.CIRCLE
@@ -11,11 +11,11 @@ import com.kr8ne.mensMorris.PIECES_TO_FLY
 import com.kr8ne.mensMorris.PIECE_COST
 import com.kr8ne.mensMorris.POSSIBLE_TRIPLE_COST
 import com.kr8ne.mensMorris.UNFINISHED_TRIPLES_COST
-import com.kr8ne.mensMorris.common.gameBoard.utils.CacheUtils.occurredPositions
-import com.kr8ne.mensMorris.common.gameBoard.utils.GameState
-import com.kr8ne.mensMorris.common.gameBoard.utils.moveProvider
-import com.kr8ne.mensMorris.common.gameBoard.utils.removeChecker
-import com.kr8ne.mensMorris.common.gameBoard.utils.triplesMap
+import com.kr8ne.mensMorris.common.game.utils.CacheUtils.occurredPositions
+import com.kr8ne.mensMorris.common.game.utils.GameState
+import com.kr8ne.mensMorris.common.game.utils.moveProvider
+import com.kr8ne.mensMorris.common.game.utils.removeChecker
+import com.kr8ne.mensMorris.common.game.utils.triplesMap
 import com.kr8ne.mensMorris.get
 import com.kr8ne.mensMorris.plus
 

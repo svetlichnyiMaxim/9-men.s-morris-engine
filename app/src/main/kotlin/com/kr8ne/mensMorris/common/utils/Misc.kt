@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.kr8ne.mensMorris.common.gameBoard.Movement
-import com.kr8ne.mensMorris.common.gameBoard.Position
-import com.kr8ne.mensMorris.common.gameBoard.utils.gameStartPosition
+import com.kr8ne.mensMorris.common.game.Movement
+import com.kr8ne.mensMorris.common.game.Position
+import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
 
 /**
  * provides a way to get an element from pair

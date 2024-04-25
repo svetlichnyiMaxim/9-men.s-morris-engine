@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.kr8ne.mensMorris.common.gameBoard.Position
+import com.kr8ne.mensMorris.common.game.Position
 import com.kr8ne.mensMorris.common.utils.toPositions
 import com.kr8ne.mensMorris.data.impl.GameAnalyzeData
 import com.kr8ne.mensMorris.domain.impl.GameAnalyzeScreen

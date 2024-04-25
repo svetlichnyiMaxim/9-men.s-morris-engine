@@ -1,6 +1,6 @@
-package com.kr8ne.mensMorris.common.gameBoard.utils
+package com.kr8ne.mensMorris.common.game.utils
 
-import com.kr8ne.mensMorris.common.gameBoard.Movement
+import com.kr8ne.mensMorris.common.game.Movement
 
 /**
  * provides caching utils

@@ -4,10 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kr8ne.mensMorris.common.utils.backendScope
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 /**
@@ -27,10 +25,8 @@ abstract class ViewModelI : ViewModel() {
     /**
      * starts backend tasks
      */
-    fun invokeBackend() {
-        CoroutineScope(backendScope).launch {
-            data.invokeBackend()
-        }
+    suspend fun invokeBackend() {
+        data.invokeBackend()
     }
 
     /**
