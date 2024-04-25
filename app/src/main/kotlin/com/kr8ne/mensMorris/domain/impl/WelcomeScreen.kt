@@ -21,6 +21,7 @@ import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.GAME_WITH_BOT_SCREEN
 import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
 import com.kr8ne.mensMorris.R
+import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.utils.AppTheme
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
 import com.kr8ne.mensMorris.getString
@@ -33,27 +34,28 @@ class WelcomeScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController) : ViewModel(), ScreenModel {
-    private val tutorialViewModel = TutorialViewModel()
+    val navController: NavHostController
+) : ViewModel(), ScreenModel {
+    private val hasSeen = activity.sharedPreferences.getBoolean("hasSeenTutorial", false)
+    private val tutorialViewModel = TutorialViewModel(if (hasSeen) 0f else -1f)
 
     /**
      * draws game modes options
      */
     @Composable
     private fun DrawGameModesOptions() {
-        val zIndexValue = tutorialViewModel.zIndex.floatValue
-        val alpha = tutorialViewModel.alpha.floatValue
+        val progress = tutorialViewModel.data.progress
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
             Box(
                 modifier = Modifier
-                    .zIndex(zIndexValue)
+                    .zIndex(if (progress.floatValue < 1f) -1f else 1f)
             ) {
                 tutorialViewModel.Invoke()
             }
             AnimatedVisibility(
-                visible = alpha == 0f,
+                visible = progress.floatValue == 0f,
                 enter = slideInVertically(
                     animationSpec = tween(
                         durationMillis = 300,

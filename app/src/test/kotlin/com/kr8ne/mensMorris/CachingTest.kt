@@ -60,6 +60,23 @@ class CachingTest : Caching() {
         assertNotEquals(position.solve(5u).second, mutableListOf<Position>())
     }
 
+    @Test
+    fun `check hash collisions`() {
+        val generatedPositions: MutableMap<Position, Long> = mutableMapOf()
+        position.generateMoves(ignoreCache = true).forEach {
+            val pos = it.producePosition(position)
+            generatedPositions[pos] = pos.longHashCode()
+        }
+        val usedHashes = mutableMapOf<Long, Position>()
+        generatedPositions.forEach {
+            if (usedHashes[it.value] != null) {
+                assertEquals(usedHashes[it.value]!!, it.key)
+            } else {
+                usedHashes[it.value] = it.key
+            }
+        }
+    }
+
     @AfterEach
     fun clearCache() {
         CacheUtils.wipeCachedPositions()

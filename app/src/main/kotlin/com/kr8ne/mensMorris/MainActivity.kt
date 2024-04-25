@@ -1,8 +1,11 @@
 package com.kr8ne.mensMorris
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,7 +26,7 @@ val BUTTON_WIDTH = 35.dp
  * represents current activity
  * used for switching screens
  */
-lateinit var activity: ComponentActivity
+lateinit var activity: MainActivity
 
 /**
  * activity our app is launched from
@@ -36,14 +39,31 @@ class MainActivity : ComponentActivity() {
     lateinit var navController: NavHostController
 
     /**
+     * shared preferences for this activity
+     */
+    lateinit var sharedPreferences: SharedPreferences
+
+    /**
      * we initialize all important stuff here
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = this
+        sharedPreferences = getSharedPreferences(
+            "com.kr8ne.mensMorris",
+            MODE_PRIVATE
+        )
         setContent {
             navController = rememberNavController()
-            NavHost(navController = navController, startDestination = WELCOME_SCREEN) {
+            NavHost(
+                navController = navController,
+                startDestination = WELCOME_SCREEN,
+                enterTransition = {
+                    fadeIn(initialAlpha = 0.1f)
+                },
+                exitTransition = {
+                    fadeOut()
+                }) {
                 composable(WELCOME_SCREEN) {
                     WelcomeViewModel(navController).Invoke()
                 }

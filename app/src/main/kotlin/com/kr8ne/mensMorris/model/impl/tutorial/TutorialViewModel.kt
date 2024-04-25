@@ -8,19 +8,7 @@ import com.kr8ne.mensMorris.model.interfaces.ViewModelI
 /**
  * view model for tutorials
  */
-class TutorialViewModel : ViewModelI() {
-    override val data: TutorialData = TutorialData()
-
-    /**
-     * alpha of the tutorial screen
-     * @see com.kr8ne.mensMorris.domain.impl.WelcomeScreen
-     */
-    val alpha = data.alpha
-
-    /**
-     * z index of the tutorial screen (layer priority)
-     * @see com.kr8ne.mensMorris.domain.impl.WelcomeScreen
-     */
-    val zIndex = data.zIndex
-    override var render: ScreenModel = TutorialScreen(zIndex, alpha)
+class TutorialViewModel(progress: Float) : ViewModelI() {
+    override val data: TutorialData = TutorialData(progress)
+    override var render: ScreenModel = TutorialScreen(data.progress)
 }

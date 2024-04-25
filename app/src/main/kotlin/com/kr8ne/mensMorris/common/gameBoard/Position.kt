@@ -143,6 +143,28 @@ class Position(
         if (depth == 0.toUByte() || gameEnded()) {
             return Pair(evaluate(depth), mutableListOf())
         }
+        val positions = generatePositionsWithEval(depth)
+        if (positions.isEmpty()) {
+            // if we can't make a move, we lose
+            return Pair(
+                if (!pieceToMove) {
+                    Pair(LOST_GAME_COST, Int.MAX_VALUE)
+                } else {
+                    Pair(Int.MAX_VALUE, LOST_GAME_COST)
+                }, mutableListOf()
+            )
+        }
+        return positions.maxBy {
+            it.first[pieceToMove]
+        }
+    }
+
+    /**
+     * generates all possible positions
+     */
+    private fun generatePositionsWithEval(
+        depth: UByte
+    ): MutableList<Pair<Pair<Int, Int>, MutableList<Movement>>> {
         // for all possible positions, we try to solve them
         val positions: MutableList<Pair<Pair<Int, Int>, MutableList<Movement>>> = mutableListOf()
         val generatedMoves = generateMoves(depth)
@@ -171,19 +193,7 @@ class Position(
             result.second.add(oldMove)
             positions.add(result)
         }
-        if (positions.isEmpty()) {
-            // if we can't make a move, we lose
-            return Pair(
-                if (!pieceToMove) {
-                    Pair(LOST_GAME_COST, Int.MAX_VALUE)
-                } else {
-                    Pair(Int.MAX_VALUE, LOST_GAME_COST)
-                }, mutableListOf()
-            )
-        }
-        return positions.maxBy {
-            it.first[pieceToMove]
-        }
+        return positions
     }
 
     /**
@@ -460,10 +470,9 @@ class Position(
      * this "hash" function has no collisions
      * each result is 31 symbols long
      * TODO: try to compress it
-     * TODO: rewrite UNIT tests for this
      * (1){pieceToMove}(1){removalCount}(24){positions}(3){freePieces.first}(3){freePieces.second}
      */
-    private fun longHashCode(): Long {
+    fun longHashCode(): Long {
         var result = 0L
         // 3^30 = 205891132094649
         result += removalCount * 205891132094649

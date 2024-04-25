@@ -16,14 +16,15 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
+import androidx.core.content.edit
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
 import androidx.wear.compose.material.FractionalThreshold
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.kr8ne.mensMorris.R
+import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.utils.AppTheme
 import com.kr8ne.mensMorris.domain.interfaces.ScreenModel
-import com.kr8ne.mensMorris.model.interfaces.ViewModelI
 import com.kr8ne.mensMorris.model.impl.tutorial.viewModels.FlyingMovesTutorialViewModel
 import com.kr8ne.mensMorris.model.impl.tutorial.viewModels.IndicatorsTutorialViewModel
 import com.kr8ne.mensMorris.model.impl.tutorial.viewModels.LoseTutorialViewModel
@@ -31,19 +32,18 @@ import com.kr8ne.mensMorris.model.impl.tutorial.viewModels.NormalMovesTutorialVi
 import com.kr8ne.mensMorris.model.impl.tutorial.viewModels.PlacementTutorialViewModel
 import com.kr8ne.mensMorris.model.impl.tutorial.viewModels.RemovalMovesViewModel
 import com.kr8ne.mensMorris.model.impl.tutorial.viewModels.TriplesTutorialViewModel
+import com.kr8ne.mensMorris.model.interfaces.ViewModelI
 import kotlin.math.roundToInt
 
 /**
  * screen that shows tutorial on how to play this game
  */
 class TutorialScreen(
-    private val zIndex: MutableState<Float>, private val alpha: MutableState<Float>
+    private val progress: MutableState<Float>
 ) : ScreenModel {
     /**
      * stores order of tutorials (used for slider)
-     * TODO: replace this with a fancy code (example: https://github.com/SkidderMC/FDPClient/blob/b72bb4f493f4fd856ce3bd635f4bdbf43dc42c7b/src/main/java/net/ccbluex/liquidbounce/features/module/ModuleManager.kt#L39)
      */
-    @Suppress("LongLine")
     private val screensOrder = listOf(
         IndicatorsTutorialViewModel(),
         LoseTutorialViewModel(),
@@ -67,11 +67,6 @@ class TutorialScreen(
          * tutorial is fully opened
          */
         FULL,
-
-        /**
-         * tutorial is getting closed/opened
-         */
-        OPENING,
 
         /**
          * tutorial is fully closed
@@ -130,14 +125,17 @@ class TutorialScreen(
     @Composable
     override fun InvokeRender() {
         val swipeUpState = rememberSwipeableState(SwipeStates.FULL)
-        zIndex.value = if (swipeUpState.currentValue != SwipeStates.CLOSED) 1f else -1f
+        if (swipeUpState.currentValue == SwipeStates.CLOSED) {
+            activity.sharedPreferences.edit {
+                this.putBoolean("hasSeenTutorial", true)
+            }
+        }
         BoxWithConstraints {
             val sizePx =
                 with(LocalDensity.current) { this@BoxWithConstraints.maxHeight.toPx() * 0.85f }
-            val alphaValue = 1 - swipeUpState.offset.value / sizePx
-            alpha.value = alphaValue
+            progress.value = 1 - swipeUpState.offset.value / sizePx
             val anchorsUp = mapOf(
-                0f to SwipeStates.FULL, 0.1f to SwipeStates.OPENING, sizePx to SwipeStates.CLOSED
+                0f to SwipeStates.FULL, sizePx to SwipeStates.CLOSED
             )
             Box(
                 modifier = Modifier
@@ -151,7 +149,7 @@ class TutorialScreen(
             ) {
                 // we apply our offset here
                 Box(modifier = Modifier
-                    .graphicsLayer { alpha = alphaValue }
+                    .graphicsLayer { alpha = progress.value }
                     .offset { IntOffset(0, swipeUpState.offset.value.roundToInt()) }
                 ) {
                     InvokeTutorialRendering()
