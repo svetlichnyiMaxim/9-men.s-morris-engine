@@ -33,7 +33,7 @@ jobs:
       - name: Set Up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '19'
+          java-version: '20'
           distribution: 'corretto'
           cache: 'gradle'
 
@@ -66,7 +66,7 @@ jobs:
             ${{ env.path_to_release }}/app-release-unsigned.apk
 
       - name: Upload APK Release - ${{ env.repository_name }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.date_today }} - ${{ env.repository_name }} - APK(s) release
           path: ${{ env.path_to_release }}/app-release-signed.apk
