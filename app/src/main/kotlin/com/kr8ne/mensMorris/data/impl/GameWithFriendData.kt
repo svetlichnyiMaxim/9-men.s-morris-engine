@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.common.game.utils.CacheUtils
 import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
-import com.kr8ne.mensMorris.model.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 
 /**
  * data for game with friend screen

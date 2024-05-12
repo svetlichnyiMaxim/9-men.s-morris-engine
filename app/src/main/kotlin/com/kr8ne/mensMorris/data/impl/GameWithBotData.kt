@@ -7,8 +7,8 @@ import com.kr8ne.mensMorris.common.game.utils.GameState
 import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
-import com.kr8ne.mensMorris.model.impl.GameAnalyzeViewModel
-import com.kr8ne.mensMorris.model.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.GameAnalyzeViewModel
+import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

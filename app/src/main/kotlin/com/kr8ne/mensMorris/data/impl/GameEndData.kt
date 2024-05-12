@@ -1,7 +1,7 @@
 package com.kr8ne.mensMorris.data.impl
 
 import com.kr8ne.mensMorris.data.interfaces.DataModel
-import com.kr8ne.mensMorris.model.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 
 /**
  * data for game end screen
