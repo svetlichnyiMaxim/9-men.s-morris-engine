@@ -14,6 +14,6 @@ class SearchingForGameData(
     val navController: NavHostController
 ) : DataModel {
     override suspend fun invokeBackend() {
-        Client.startSearchingGame()
+        //Client.startSearchingGame()
     }
 }

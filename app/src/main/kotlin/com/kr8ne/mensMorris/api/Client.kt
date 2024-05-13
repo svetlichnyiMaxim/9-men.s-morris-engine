@@ -25,8 +25,9 @@ object Client {
 
     /**
      * The server's address.
+     * put your network ip here
      */
-    private const val SERVER_ADDRESS = "http://**.**.***.***:8080"
+    private const val SERVER_ADDRESS = "http://YOURNETWORKIP:8080"
 
     /**
      * The API endpoint for user-related operations.
@@ -81,7 +82,7 @@ object Client {
      * @param newLogin The new value of password.
      */
     fun updateUserPassword(newLogin: String) {
-        userData.login = newLogin
+        userData.password = newLogin
     }
 
 
