@@ -68,7 +68,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
     implementation("androidx.navigation:navigation-compose:2.8.0-beta01")
     implementation("io.ktor:ktor-client-core:3.0.0-beta-1")
-    implementation("io.ktor:ktor-client-android:3.0.0-beta-1")
+    implementation("io.ktor:ktor-client-okhttp:3.0.0-beta-1")
     implementation("io.ktor:ktor-client-auth:3.0.0-beta-1")
     testImplementation(platform("org.junit:junit-bom:5.11.0-M1"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0-M1")

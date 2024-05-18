@@ -145,6 +145,9 @@ class GameBoardData(
         movesHistory.push(pos)
     }
 
+    /**
+     * gets movement produced by user click
+     */
     fun getMovement(elementIndex: Int): Movement? {
         when (pos.value.gameState()) {
             GameState.Placement -> {

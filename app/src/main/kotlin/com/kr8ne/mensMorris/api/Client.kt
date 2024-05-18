@@ -5,14 +5,16 @@ import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.plus
 import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
+import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.websocket.WebSockets
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import io.ktor.utils.io.printStack
+import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
+import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +39,7 @@ object Client {
      * The server's address.
      * put your network ip here
      */
-    private const val SERVER_ADDRESS = "http://5.228.116.128:8080"
+    private const val SERVER_ADDRESS = "://10.68.154.156:8080"
 
     /**
      * The API endpoint for user-related operations.
@@ -54,9 +56,8 @@ object Client {
     /**
      * The network client for making HTTP requests.
      */
-    private val network = HttpClient(Android) {
+    private val network = HttpClient(OkHttp) {
         install(WebSockets)
-        expectSuccess = true
     }
 
     /**
@@ -106,7 +107,7 @@ object Client {
     suspend fun register(): Result<ServerResponse> {
         val userDataState: UserData = userData
         return runCatching {
-            val registerResult = network.get("$SERVER_ADDRESS${USER_API}/reg") {
+            val registerResult = network.get("http$SERVER_ADDRESS${USER_API}/reg") {
                 method = HttpMethod.Get
                 url {
                     parameters["login"] = userDataState.login
@@ -132,7 +133,7 @@ object Client {
                 }
             }
         }.onFailure {
-            println("error accessing ${"$SERVER_ADDRESS$USER_API/reg"}")
+            println("error accessing ${"http$SERVER_ADDRESS$USER_API/reg"}")
             it.printStack()
         }
     }
@@ -145,7 +146,7 @@ object Client {
     suspend fun login(): Result<ServerResponse> {
         val userDataState: UserData = userData
         return runCatching {
-            val registerResult = network.get("$SERVER_ADDRESS${USER_API}/login") {
+            val registerResult = network.get("http$SERVER_ADDRESS${USER_API}/login") {
                 method = HttpMethod.Get
                 url {
                     parameters["login"] = userDataState.login
@@ -167,7 +168,7 @@ object Client {
                 }
             }
         }.onFailure {
-            println("error accessing ${"$SERVER_ADDRESS$USER_API/login"}")
+            println("error accessing ${"http$SERVER_ADDRESS$USER_API/login"}")
             it.printStack()
         }
     }
@@ -177,48 +178,61 @@ object Client {
      *
      * @return [ServerResponse] indicating the success or failure of the search attempt.
      */
-    suspend fun startSearchingGame(): String {
+    suspend fun startSearchingGame(): Result<String> {
         //TODO: finish this
-        require(jwtToken != null)
-        var gameId: String? = null
-        network.webSocket("$SERVER_ADDRESS$USER_API/start-searching-game") {
-            while (true) {
-                val serverMessage = incoming.receive() as? Frame.Text ?: continue
-                gameId = serverMessage.readText()
-                break
+        return runCatching {
+            require(jwtToken != null)
+            var gameId: String? = null
+            network.webSocket("ws$SERVER_ADDRESS$USER_API/search-for-game") {
+                send(jwtToken!!)
+                while (true) {
+                    val serverMessage = (incoming.receive() as? Frame.Text)?.readText() ?: continue
+                    println("game id: $serverMessage")
+                    gameId = serverMessage
+                    close(CloseReason(CloseReason.Codes.NORMAL, "ok"))
+                    break
+                }
             }
+            return@runCatching gameId!!
+        }.onFailure {
+            println("error accessing ${"ws$SERVER_ADDRESS$USER_API/search-for-game"}")
+            it.printStack()
         }
-        return gameId!!
     }
 
     suspend fun playGame(gameId: String, classParent: GameBoardInterface) {
-        network.webSocket("$SERVER_ADDRESS$USER_API/game-$gameId") {
-            while (true) {
-                while (movesQueue.isNotEmpty()) {
-                    val string = Json.encodeToString<MovementAdapter>(
-                        MovementAdapter(
-                            movesQueue.peek()!!.startIndex,
-                            movesQueue.peek()!!.endIndex
+        runCatching {
+            network.webSocket("ws$SERVER_ADDRESS$USER_API/game-$gameId") {
+                while (true) {
+                    while (movesQueue.isNotEmpty()) {
+                        val string = Json.encodeToString<MovementAdapter>(
+                            MovementAdapter(
+                                movesQueue.peek()!!.startIndex,
+                                movesQueue.peek()!!.endIndex
+                            )
                         )
-                    )
-                    // post our move
-                    send(string)
-                    movesQueue.remove()
-                }
-                // receive the server's data
-                val serverMessage = incoming.receive() as? Frame.Text ?: continue
-                val position = Json.decodeFromString<PositionAdapter>(serverMessage.readText())
-                classParent.gameBoard.data.pos.value.let {
-                    it.positions = position.positions
-                    it.freePieces = position.freePieces
-                    it.pieceToMove = position.pieceToMove
-                    it.removalCount = position.removalCount
-                    it.greenPiecesAmount =
-                        (it.positions.count { it1 -> it1 == true } + it.freePieces.first)
-                    it.bluePiecesAmount =
-                        (it.positions.count { it1 -> it1 == false } + it.freePieces.second)
+                        // post our move
+                        send(string)
+                        movesQueue.remove()
+                    }
+                    // receive the server's data
+                    val serverMessage = incoming.receive() as? Frame.Text ?: continue
+                    val position = Json.decodeFromString<PositionAdapter>(serverMessage.readText())
+                    classParent.gameBoard.data.pos.value.let {
+                        it.positions = position.positions
+                        it.freePieces = position.freePieces
+                        it.pieceToMove = position.pieceToMove
+                        it.removalCount = position.removalCount
+                        it.greenPiecesAmount =
+                            (it.positions.count { it1 -> it1 == true } + it.freePieces.first)
+                        it.bluePiecesAmount =
+                            (it.positions.count { it1 -> it1 == false } + it.freePieces.second)
+                    }
                 }
             }
+        }.onFailure() {
+            println("error accessing ${"$SERVER_ADDRESS$USER_API/game-$gameId"}")
+            it.printStack()
         }
     }
 }

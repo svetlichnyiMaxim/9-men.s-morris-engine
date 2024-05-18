@@ -4,6 +4,7 @@ import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.data.interfaces.DataModel
+import kotlinx.coroutines.delay
 
 /**
  * data for game end screen
@@ -15,8 +16,15 @@ class SearchingForGameData(
     val navController: NavHostController
 ) : DataModel {
     override suspend fun invokeBackend() {
-        val gameId = Client.startSearchingGame()
-        println("finished searching for game with id: $gameId")
-        navController.navigate(ONLINE_GAME_SCREEN)
+        while (true) {
+            val gameId = Client.startSearchingGame().getOrNull()
+            if (gameId == null) {
+                delay(5000L)
+                continue
+            }
+            println("finished searching for game with id: $gameId")
+            navController.navigate(ONLINE_GAME_SCREEN)
+            break
+        }
     }
 }
