@@ -15,6 +15,7 @@ import com.kr8ne.mensMorris.common.utils.positionToNuke
 import com.kr8ne.mensMorris.viewModel.impl.GameEndViewModel
 import com.kr8ne.mensMorris.viewModel.impl.GameWithBotViewModel
 import com.kr8ne.mensMorris.viewModel.impl.GameWithFriendViewModel
+import com.kr8ne.mensMorris.viewModel.impl.OnlineGameViewModel
 import com.kr8ne.mensMorris.viewModel.impl.SearchingForGameViewModel
 import com.kr8ne.mensMorris.viewModel.impl.SignInViewModel
 import com.kr8ne.mensMorris.viewModel.impl.SignUpViewModel
@@ -87,6 +88,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(SEARCHING_ONLINE_GAME_SCREEN) {
                     SearchingForGameViewModel(navController).Invoke()
+                }
+                composable(ONLINE_GAME_SCREEN) {
+                    OnlineGameViewModel(navController).Invoke()
                 }
             }
         }

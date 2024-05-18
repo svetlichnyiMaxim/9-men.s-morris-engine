@@ -145,6 +145,44 @@ class GameBoardData(
         movesHistory.push(pos)
     }
 
+    fun getMovement(elementIndex: Int): Movement? {
+        when (pos.value.gameState()) {
+            GameState.Placement -> {
+                if (pos.value.positions[elementIndex] == null) {
+                    return Movement(null, elementIndex)
+                }
+            }
+
+            GameState.Normal -> {
+                if (selectedButton.value != null) {
+                    if (moveProvider[selectedButton.value!!]!!.filter { endIndex ->
+                            pos.value.positions[endIndex] == null
+                        }.contains(elementIndex)) {
+                        return Movement(selectedButton.value, elementIndex)
+                    }
+                }
+            }
+
+            GameState.Flying -> {
+                if (selectedButton.value != null) {
+                    if (pos.value.positions[elementIndex] == null) {
+                        return Movement(selectedButton.value, elementIndex)
+                    }
+                }
+            }
+
+            GameState.Removing -> {
+                if (pos.value.positions[elementIndex] == !pos.value.pieceToMove) {
+                    return Movement(elementIndex, null)
+                }
+            }
+
+            GameState.End -> {
+            }
+        }
+        return null
+    }
+
     /**
      * handles click on the pieces
      * @param elementIndex element that got clicked

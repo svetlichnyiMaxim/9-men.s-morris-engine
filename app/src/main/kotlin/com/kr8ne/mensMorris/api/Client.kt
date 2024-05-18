@@ -1,5 +1,9 @@
 package com.kr8ne.mensMorris.api
 
+import com.kr8ne.mensMorris.common.game.Movement
+import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
+import com.kr8ne.mensMorris.plus
+import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.websocket.WebSockets
@@ -10,7 +14,13 @@ import io.ktor.http.HttpMethod
 import io.ktor.utils.io.printStack
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
+import io.ktor.websocket.send
 import kotlinx.coroutines.Dispatchers
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.util.LinkedList
+import java.util.Queue
 
 /**
  * Object representing the client for interacting with the server.
@@ -27,7 +37,7 @@ object Client {
      * The server's address.
      * put your network ip here
      */
-    private const val SERVER_ADDRESS = "http://YOURNETWORKIP:8080"
+    private const val SERVER_ADDRESS = "http://5.228.116.128:8080"
 
     /**
      * The API endpoint for user-related operations.
@@ -38,6 +48,8 @@ object Client {
      * The network scope for asynchronous operations.
      */
     val networkScope = Dispatchers.IO
+
+    val movesQueue: Queue<Movement> = LinkedList()
 
     /**
      * The network client for making HTTP requests.
@@ -165,7 +177,7 @@ object Client {
      *
      * @return [ServerResponse] indicating the success or failure of the search attempt.
      */
-    suspend fun startSearchingGame(): ServerResponse {
+    suspend fun startSearchingGame(): String {
         //TODO: finish this
         require(jwtToken != null)
         var gameId: String? = null
@@ -173,11 +185,56 @@ object Client {
             while (true) {
                 val serverMessage = incoming.receive() as? Frame.Text ?: continue
                 gameId = serverMessage.readText()
+                break
             }
         }
-        return ServerResponse.Success(gameId!!)
+        return gameId!!
+    }
+
+    suspend fun playGame(gameId: String, classParent: GameBoardInterface) {
+        network.webSocket("$SERVER_ADDRESS$USER_API/game-$gameId") {
+            while (true) {
+                while (movesQueue.isNotEmpty()) {
+                    val string = Json.encodeToString<MovementAdapter>(
+                        MovementAdapter(
+                            movesQueue.peek()!!.startIndex,
+                            movesQueue.peek()!!.endIndex
+                        )
+                    )
+                    // post our move
+                    send(string)
+                    movesQueue.remove()
+                }
+                // receive the server's data
+                val serverMessage = incoming.receive() as? Frame.Text ?: continue
+                val position = Json.decodeFromString<PositionAdapter>(serverMessage.readText())
+                classParent.gameBoard.data.pos.value.let {
+                    it.positions = position.positions
+                    it.freePieces = position.freePieces
+                    it.pieceToMove = position.pieceToMove
+                    it.removalCount = position.removalCount
+                    it.greenPiecesAmount =
+                        (it.positions.count { it1 -> it1 == true } + it.freePieces.first)
+                    it.bluePiecesAmount =
+                        (it.positions.count { it1 -> it1 == false } + it.freePieces.second)
+                }
+            }
+        }
     }
 }
+
+@Serializable
+class PositionAdapter(
+    @Serializable val positions: Array<Boolean?>,
+    @Serializable val freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
+    @Serializable val pieceToMove: Boolean,
+    @Serializable val removalCount: Byte = 0
+)
+
+@Serializable
+class MovementAdapter(
+    @Serializable val startIndex: Int?, @Serializable val endIndex: Int?
+)
 
 /**
  * Represents the server's response to client requests.
