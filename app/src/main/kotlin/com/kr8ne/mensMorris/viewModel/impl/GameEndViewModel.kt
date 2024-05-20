@@ -10,7 +10,7 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 /**
  * game end model
  */
-class GameEndViewModel(pos: Position, navController: NavHostController) : ViewModelI() {
+class GameEndViewModel(pos: Position, navController: NavHostController?) : ViewModelI() {
     /**
      * our current game board
      */

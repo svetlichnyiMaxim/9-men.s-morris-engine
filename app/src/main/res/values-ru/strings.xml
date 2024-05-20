@@ -15,4 +15,20 @@
     <string name="tutorial_triples_highlighting">такие линии подсвеченны серым цветом</string>
     <string name="play_game_with_friends">играть с друзьями</string>
     <string name="play_game_with_bot">играть против бота</string>
+    <string name="sign_in">Войдите в аккаунт</string>
+    <string name="no_account_sign_up">Нет аккаунта? Зарегистрируйся</string>
+    <string name="password">Пароль</string>
+    <string name="invalid_password">Ваш пароль не корректен</string>
+    <string name="invalid_login">Ваш логин не корректен</string>
+    <string name="wrong_pass_or_login">Не правильный пароль или логин</string>
+    <string name="server_error">Ошибка сервера, попробуйте чуть позже  или сообщите об этом на гитхабе</string>
+    <string name="network_error">Запрос к серверу не удался, проверьте ваше соединение</string>
+    <string name="username">Имя пользователя</string>
+    <string name="play_online_game">играть онлайн</string>
+    <string name="searching_for_game">Поиск игры</string>
+    <string name="login_in_use">Этот логин уже используется</string>
+    <string name="repeat_pass">повторите ваш новый пароль</string>
+    <string name="pass_doesnt_match">Ваши пароли не совпадают</string>
+    <string name="have_account_sign_in">Уже есть аккаунт? Войдите</string>
+    <string name="sign_up">Зарегистрируйтесь</string>
 </resources>

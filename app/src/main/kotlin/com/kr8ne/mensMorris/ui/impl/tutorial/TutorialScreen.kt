@@ -124,9 +124,10 @@ class TutorialScreen(
     @OptIn(ExperimentalWearMaterialApi::class)
     @Composable
     override fun InvokeRender() {
-        val swipeUpState = rememberSwipeableState(SwipeStates.FULL)
+        val swipeUpState =
+            rememberSwipeableState(if (progress.value != 0f) SwipeStates.FULL else SwipeStates.CLOSED)
         if (swipeUpState.currentValue == SwipeStates.CLOSED) {
-            activity.sharedPreferences.edit {
+            activity.sharedPreferences.edit(commit = true) {
                 this.putBoolean("hasSeenTutorial", true)
             }
         }

@@ -9,7 +9,7 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 /**
  * game with bot model
  */
-class SearchingForGameViewModel(navController: NavHostController) : ViewModelI() {
+class SearchingForGameViewModel(navController: NavHostController?) : ViewModelI() {
     override val data = SearchingForGameData(navController)
     override var render: ScreenModel = SearchingForGameScreen()
 }

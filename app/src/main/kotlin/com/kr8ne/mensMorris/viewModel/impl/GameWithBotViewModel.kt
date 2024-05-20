@@ -10,7 +10,7 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 /**
  * game with bot model
  */
-class GameWithBotViewModel(navController: NavHostController) : ViewModelI() {
+class GameWithBotViewModel(navController: NavHostController?) : ViewModelI() {
     override val data = GameWithBotData(navController, viewModelScope)
     override var render: ScreenModel = GameWithBotScreen(data.gameBoard)
 }

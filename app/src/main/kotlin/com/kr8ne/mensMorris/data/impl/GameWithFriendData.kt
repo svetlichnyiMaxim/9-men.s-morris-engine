@@ -11,7 +11,7 @@ import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 /**
  * data for game with friend screen
  */
-class GameWithFriendData(navController: NavHostController) :
+class GameWithFriendData(navController: NavHostController?) :
     DataModel, GameBoardInterface {
     override val gameBoard = GameBoardViewModel(
         pos = mutableStateOf(gameStartPosition),

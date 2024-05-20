@@ -28,9 +28,11 @@ import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.api.Client.networkScope
 import com.kr8ne.mensMorris.api.ServerResponse
 import com.kr8ne.mensMorris.common.utils.AppTheme
+import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+
 /**
  * Represents a screen for signing in to the application.
  *
@@ -42,7 +44,7 @@ class SignInScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController,
+    val navController: NavHostController?,
     /**
      * Validates the provided login.
      *
@@ -72,19 +74,19 @@ class SignInScreen(
                 if (serverResponse.value != null) {
                     when (serverResponse.value?.getOrNull()) {
                         is ServerResponse.Success -> {
-                            navController.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                            navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
                         }
 
                         is ServerResponse.WrongPasswordOrLogin -> {
-                            Text(text = "Wrong password or login")
+                            Text(text = getString(R.string.wrong_pass_or_login))
                         }
 
                         is ServerResponse.ServerError -> {
-                            Text(text = "Server error, pls try later or report this at GitHub")
+                            Text(text = getString(R.string.server_error))
                         }
 
                         null -> {
-                            Text(text = "Network request has failed, check your internet connection")
+                            Text(text = getString(R.string.network_error))
                         }
 
                         else -> {
@@ -105,21 +107,14 @@ class SignInScreen(
                             Row {
                                 if (!isUsernameValid.value) {
                                     Text(
-                                        "Your login is invalid",
+                                        getString(R.string.invalid_password),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp
                                     )
-                                } else {
-                                    Text(
-                                        "Your login is valid",
-                                        modifier = Modifier,
-                                        color = Color.Green,
-                                        fontSize = 12.sp
-                                    )
                                 }
                             }
-                        }, placeholder = { Text("Username") })
+                        }, placeholder = { Text(getString(R.string.username)) })
                     }
                 }
                 val isPasswordValid = remember { mutableStateOf(false) }
@@ -137,21 +132,14 @@ class SignInScreen(
                             Row {
                                 if (!isPasswordValid.value) {
                                     Text(
-                                        "Your password is invalid",
+                                        getString(R.string.invalid_password),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp
                                     )
-                                } else {
-                                    Text(
-                                        "Your password is valid",
-                                        modifier = Modifier,
-                                        color = Color.Green,
-                                        fontSize = 12.sp
-                                    )
                                 }
                             }
-                        }, placeholder = { Text("Password") })
+                        }, placeholder = { Text(getString(R.string.password)) })
                     }
                 }
                 Spacer(modifier = Modifier.height(100.dp))
@@ -166,14 +154,14 @@ class SignInScreen(
                     },
                     enabled = isUsernameValid.value && isPasswordValid.value && !requestInProcess.value
                 ) {
-                    Text("Sign in")
+                    Text(getString(R.string.sign_in))
                 }
                 Spacer(modifier = Modifier.height(100.dp))
                 Box {
                     Button(modifier = Modifier, onClick = {
-                        navController.navigate(SIGN_UP_SCREEN)
+                        navController?.navigate(SIGN_UP_SCREEN)
                     }) {
-                        Text("Don't have an account? Sign up")
+                        Text(getString(R.string.no_account_sign_up))
                     }
                 }
             }

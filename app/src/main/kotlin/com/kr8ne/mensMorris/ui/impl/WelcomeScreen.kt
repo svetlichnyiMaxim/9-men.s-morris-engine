@@ -14,11 +14,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.GAME_WITH_BOT_SCREEN
 import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
@@ -28,8 +25,8 @@ import com.kr8ne.mensMorris.SIGN_IN_SCREEN
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.common.utils.AppTheme
-import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.getString
+import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.tutorial.TutorialViewModel
 
 /**
@@ -39,7 +36,7 @@ class WelcomeScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController
+    val navController: NavHostController?
 ) : ScreenModel {
     private val hasSeen = activity.sharedPreferences.getBoolean("hasSeenTutorial", false)
     private val tutorialViewModel = TutorialViewModel(if (hasSeen) 0f else -1f)
@@ -80,23 +77,23 @@ class WelcomeScreen(
                     ), horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                        navController.navigate(GAME_WITH_FRIEND_SCREEN)
+                        navController?.navigate(GAME_WITH_FRIEND_SCREEN)
                     }) {
                         Text(text = getString(R.string.play_game_with_friends))
                     }
                     Button(onClick = {
-                        navController.navigate(GAME_WITH_BOT_SCREEN)
+                        navController?.navigate(GAME_WITH_BOT_SCREEN)
                     }) {
                         Text(text = getString(R.string.play_game_with_bot))
                     }
                     Button(onClick = {
                         if (Client.jwtToken == null) {
-                            navController.navigate(SIGN_IN_SCREEN)
+                            navController?.navigate(SIGN_IN_SCREEN)
                         } else {
-                            navController.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                            navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
                         }
                     }) {
-                        Text(text = "play online")
+                        Text(text = getString(R.string.play_online_game))
                     }
                 }
             }

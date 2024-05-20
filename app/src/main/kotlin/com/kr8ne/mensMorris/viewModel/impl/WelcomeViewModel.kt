@@ -10,7 +10,7 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  * welcome model
  * called when app is launched
  */
-class WelcomeViewModel(navController: NavHostController) : ViewModelI() {
+class WelcomeViewModel(navController: NavHostController?) : ViewModelI() {
     override var render: ScreenModel = WelcomeScreen(navController)
     override val data = WelcomeData()
 }

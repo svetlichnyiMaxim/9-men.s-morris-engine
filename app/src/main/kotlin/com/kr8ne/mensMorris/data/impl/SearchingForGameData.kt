@@ -13,7 +13,7 @@ class SearchingForGameData(
     /**
      * The NavHostController instance used for navigation.
      */
-    val navController: NavHostController
+    val navController: NavHostController?
 ) : DataModel {
     override suspend fun invokeBackend() {
         while (true) {
@@ -23,7 +23,7 @@ class SearchingForGameData(
                 continue
             }
             println("finished searching for game with id: $gameId")
-            navController.navigate(ONLINE_GAME_SCREEN)
+            navController?.navigate(ONLINE_GAME_SCREEN)
             break
         }
     }

@@ -1,5 +1,7 @@
 package com.kr8ne.mensMorris.api
 
+import androidx.core.content.edit
+import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.game.Movement
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.plus
@@ -33,7 +35,14 @@ object Client {
     /**
      * Jwt token provided by the server
      */
-    var jwtToken: String? = null
+    var jwtToken: String? = activity.sharedPreferences.getString("jwtToken", null)
+        get() = null
+        set(value) {
+            field = value
+            activity.sharedPreferences.edit(commit = true) {
+                putString("jwtToken", value).apply()
+            }
+        }
 
     /**
      * The server's address.
@@ -179,7 +188,6 @@ object Client {
      * @return [ServerResponse] indicating the success or failure of the search attempt.
      */
     suspend fun startSearchingGame(): Result<String> {
-        //TODO: finish this
         return runCatching {
             require(jwtToken != null)
             var gameId: String? = null

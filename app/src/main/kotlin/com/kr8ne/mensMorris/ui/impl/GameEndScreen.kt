@@ -30,7 +30,7 @@ class GameEndScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController
+    val navController: NavHostController?
 ) : GameScreenModel {
 
     private val pos = gameBoard.data.pos
@@ -89,7 +89,7 @@ class GameEndScreen(
                     .fillMaxSize(), Alignment.Center
             ) {
                 Button(onClick = {
-                    navController.navigate(WELCOME_SCREEN)
+                    navController?.navigate(WELCOME_SCREEN)
                 }) {
                     Text("Reset")
                 }

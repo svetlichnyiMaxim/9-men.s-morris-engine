@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
  * data for game with bot screen
  */
 class GameWithBotData(
-    navController: NavHostController,
+    navController: NavHostController?,
     private val viewModelScope: CoroutineScope
 ) :
     DataModel, GameBoardInterface {

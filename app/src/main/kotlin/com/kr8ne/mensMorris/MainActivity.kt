@@ -15,6 +15,7 @@ import com.kr8ne.mensMorris.common.utils.positionToNuke
 import com.kr8ne.mensMorris.viewModel.impl.GameEndViewModel
 import com.kr8ne.mensMorris.viewModel.impl.GameWithBotViewModel
 import com.kr8ne.mensMorris.viewModel.impl.GameWithFriendViewModel
+import com.kr8ne.mensMorris.viewModel.impl.LoadingAnimationViewModel
 import com.kr8ne.mensMorris.viewModel.impl.OnlineGameViewModel
 import com.kr8ne.mensMorris.viewModel.impl.SearchingForGameViewModel
 import com.kr8ne.mensMorris.viewModel.impl.SignInViewModel
@@ -61,7 +62,7 @@ class MainActivity : ComponentActivity() {
             navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = WELCOME_SCREEN,
+                startDestination = LOADING_ANIMATION_SCREEN,
                 enterTransition = {
                     fadeIn(initialAlpha = 0.1f)
                 },
@@ -91,6 +92,9 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(ONLINE_GAME_SCREEN) {
                     OnlineGameViewModel(navController).Invoke()
+                }
+                composable(LOADING_ANIMATION_SCREEN) {
+                    LoadingAnimationViewModel(navController).Invoke()
                 }
             }
         }
