@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris
 
+import com.kr8ne.mensMorris.common.LOST_GAME_COST
 import com.kr8ne.mensMorris.positions.BasicEvaluation
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

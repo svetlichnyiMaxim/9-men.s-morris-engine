@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris
+package com.kr8ne.mensMorris.common
 
 /**
  * pieces cost

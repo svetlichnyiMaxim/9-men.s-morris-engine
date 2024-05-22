@@ -9,14 +9,20 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.GAME_WITH_BOT_SCREEN
 import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
 import com.kr8ne.mensMorris.R
@@ -38,7 +44,7 @@ class WelcomeScreen(
      */
     val navController: NavHostController?
 ) : ScreenModel {
-    private val hasSeen = activity.sharedPreferences.getBoolean("hasSeenTutorial", false)
+    private val hasSeen = activity?.sharedPreferences?.getBoolean("hasSeenTutorial", false) ?: true
     private val tutorialViewModel = TutorialViewModel(if (hasSeen) 0f else -1f)
 
     /**
@@ -46,6 +52,7 @@ class WelcomeScreen(
      */
     @Composable
     private fun DrawGameModesOptions() {
+        val height = LocalConfiguration.current.screenHeightDp
         val progress = tutorialViewModel.data.progress
         Box(
             modifier = Modifier.fillMaxSize()
@@ -72,28 +79,54 @@ class WelcomeScreen(
                 )
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(
-                        BUTTON_WIDTH * 5, Alignment.CenterVertically
-                    ), horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = (height * 0.2).dp, bottom = (height * 0.2).dp),
+                    verticalArrangement = Arrangement.spacedBy(
+                        (height * 0.05).dp,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                        navController?.navigate(GAME_WITH_FRIEND_SCREEN)
-                    }) {
-                        Text(text = getString(R.string.play_game_with_friends))
+                    Button(
+                        modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
+                            navController?.navigate(GAME_WITH_FRIEND_SCREEN)
+                        },
+                        shape = RoundedCornerShape(5.dp),
+                        colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
+                    ) {
+                        Text(
+                            text = getString(R.string.play_game_with_friends),
+                            color = Color.White
+                        )
                     }
-                    Button(onClick = {
-                        navController?.navigate(GAME_WITH_BOT_SCREEN)
-                    }) {
-                        Text(text = getString(R.string.play_game_with_bot))
+                    Button(
+                        onClick = {
+                            navController?.navigate(GAME_WITH_BOT_SCREEN)
+                        },
+                        shape = RoundedCornerShape(5.dp),
+                        colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
+                    ) {
+                        Text(
+                            text = getString(R.string.play_game_with_bot),
+                            color = Color.White
+                        )
                     }
-                    Button(onClick = {
-                        if (Client.jwtToken == null) {
-                            navController?.navigate(SIGN_IN_SCREEN)
-                        } else {
-                            navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
-                        }
-                    }) {
-                        Text(text = getString(R.string.play_online_game))
+                    Button(
+                        onClick = {
+                            if (Client.jwtToken == null) {
+                                navController?.navigate(SIGN_IN_SCREEN)
+                            } else {
+                                navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                            }
+                        },
+                        shape = RoundedCornerShape(5.dp),
+                        colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
+                    ) {
+                        Text(
+                            text = getString(R.string.play_online_game),
+                            color = Color.White
+                        )
                     }
                 }
             }

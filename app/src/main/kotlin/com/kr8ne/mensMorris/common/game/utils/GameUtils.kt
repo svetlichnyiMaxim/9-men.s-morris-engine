@@ -1,6 +1,6 @@
 package com.kr8ne.mensMorris.common.game.utils
 
-import com.kr8ne.mensMorris.EMPTY
+import com.kr8ne.mensMorris.common.EMPTY
 import com.kr8ne.mensMorris.common.game.Position
 
 /**

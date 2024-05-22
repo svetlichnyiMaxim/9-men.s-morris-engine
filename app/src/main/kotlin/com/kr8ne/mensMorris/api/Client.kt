@@ -5,7 +5,6 @@ import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.game.Movement
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.plus
-import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.websocket.WebSockets
@@ -35,11 +34,11 @@ object Client {
     /**
      * Jwt token provided by the server
      */
-    var jwtToken: String? = activity.sharedPreferences.getString("jwtToken", null)
+    var jwtToken: String? = activity?.sharedPreferences?.getString("jwtToken", null)
         get() = null
         set(value) {
             field = value
-            activity.sharedPreferences.edit(commit = true) {
+            activity?.sharedPreferences?.edit(commit = true) {
                 putString("jwtToken", value).apply()
             }
         }
@@ -60,6 +59,10 @@ object Client {
      */
     val networkScope = Dispatchers.IO
 
+    /**
+     * queue of the moves that player perfomed
+     * TODO: implement premoves with this one
+     */
     val movesQueue: Queue<Movement> = LinkedList()
 
     /**
@@ -194,11 +197,13 @@ object Client {
             network.webSocket("ws$SERVER_ADDRESS$USER_API/search-for-game") {
                 send(jwtToken!!)
                 while (true) {
-                    val serverMessage = (incoming.receive() as? Frame.Text)?.readText() ?: continue
-                    println("game id: $serverMessage")
-                    gameId = serverMessage
-                    close(CloseReason(CloseReason.Codes.NORMAL, "ok"))
-                    break
+                    val serverMessage = (incoming.receive() as? Frame.Text)?.readText()
+                    if (serverMessage != null) {
+                        println("game id: $serverMessage")
+                        gameId = serverMessage
+                        close(CloseReason(CloseReason.Codes.NORMAL, "ok"))
+                        break
+                    }
                 }
             }
             return@runCatching gameId!!
@@ -208,6 +213,13 @@ object Client {
         }
     }
 
+    /**
+     * plays the game
+     *
+     * @id id of the game
+     * @classParent game board to update data
+     * TODO: find better solution
+     */
     suspend fun playGame(gameId: String, classParent: GameBoardInterface) {
         runCatching {
             network.webSocket("ws$SERVER_ADDRESS$USER_API/game-$gameId") {
@@ -245,17 +257,42 @@ object Client {
     }
 }
 
+/**
+ * used to serialize data (position) from the server
+ */
 @Serializable
 class PositionAdapter(
+    /**
+     * current position
+     */
     @Serializable val positions: Array<Boolean?>,
+    /**
+     * free pieces
+     */
     @Serializable val freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
+    /**
+     * piece to move
+     */
     @Serializable val pieceToMove: Boolean,
+    /**
+     * amount of removals
+     */
     @Serializable val removalCount: Byte = 0
 )
 
+/**
+ * used to serialize data (movement) from the server
+ */
 @Serializable
 class MovementAdapter(
-    @Serializable val startIndex: Int?, @Serializable val endIndex: Int?
+    /**
+     * movement start index
+     */
+    @Serializable val startIndex: Int?,
+    /**
+     * movement end index
+     */
+    @Serializable val endIndex: Int?
 )
 
 /**

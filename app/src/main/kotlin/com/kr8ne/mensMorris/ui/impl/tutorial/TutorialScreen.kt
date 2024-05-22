@@ -127,7 +127,7 @@ class TutorialScreen(
         val swipeUpState =
             rememberSwipeableState(if (progress.value != 0f) SwipeStates.FULL else SwipeStates.CLOSED)
         if (swipeUpState.currentValue == SwipeStates.CLOSED) {
-            activity.sharedPreferences.edit(commit = true) {
+            activity?.sharedPreferences?.edit(commit = true) {
                 this.putBoolean("hasSeenTutorial", true)
             }
         }

@@ -31,7 +31,7 @@ val BUTTON_WIDTH = 35.dp
  * represents current activity
  * used for switching screens
  */
-lateinit var activity: MainActivity
+var activity: MainActivity? = null
 
 /**
  * activity our app is launched from

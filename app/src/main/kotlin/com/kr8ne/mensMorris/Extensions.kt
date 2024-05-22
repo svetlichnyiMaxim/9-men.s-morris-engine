@@ -19,5 +19,5 @@ operator fun Int.plus(uByte: UByte): UByte {
 }
 
 internal fun getString(@StringRes id: Int): String {
-    return activity.resources.getString(id)
+    return activity?.resources?.getString(id) ?: "activity is null"
 }

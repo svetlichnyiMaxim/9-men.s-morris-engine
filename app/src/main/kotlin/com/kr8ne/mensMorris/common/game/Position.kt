@@ -1,16 +1,16 @@
 package com.kr8ne.mensMorris.common.game
 
-import com.kr8ne.mensMorris.BLUE_COLOR
-import com.kr8ne.mensMorris.CIRCLE
-import com.kr8ne.mensMorris.DEPTH_COST
-import com.kr8ne.mensMorris.ENEMY_UNFINISHED_TRIPLES_COST
-import com.kr8ne.mensMorris.GREEN_COLOR
-import com.kr8ne.mensMorris.LOST_GAME_COST
-import com.kr8ne.mensMorris.NONE_COLOR
-import com.kr8ne.mensMorris.PIECES_TO_FLY
-import com.kr8ne.mensMorris.PIECE_COST
-import com.kr8ne.mensMorris.POSSIBLE_TRIPLE_COST
-import com.kr8ne.mensMorris.UNFINISHED_TRIPLES_COST
+import com.kr8ne.mensMorris.common.BLUE_COLOR
+import com.kr8ne.mensMorris.common.CIRCLE
+import com.kr8ne.mensMorris.common.DEPTH_COST
+import com.kr8ne.mensMorris.common.ENEMY_UNFINISHED_TRIPLES_COST
+import com.kr8ne.mensMorris.common.GREEN_COLOR
+import com.kr8ne.mensMorris.common.LOST_GAME_COST
+import com.kr8ne.mensMorris.common.NONE_COLOR
+import com.kr8ne.mensMorris.common.PIECES_TO_FLY
+import com.kr8ne.mensMorris.common.PIECE_COST
+import com.kr8ne.mensMorris.common.POSSIBLE_TRIPLE_COST
+import com.kr8ne.mensMorris.common.UNFINISHED_TRIPLES_COST
 import com.kr8ne.mensMorris.common.game.utils.CacheUtils.occurredPositions
 import com.kr8ne.mensMorris.common.game.utils.GameState
 import com.kr8ne.mensMorris.common.game.utils.moveProvider

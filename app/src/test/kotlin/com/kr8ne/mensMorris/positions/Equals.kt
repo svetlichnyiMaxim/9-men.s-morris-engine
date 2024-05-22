@@ -1,8 +1,8 @@
 package com.kr8ne.mensMorris.positions
 
-import com.kr8ne.mensMorris.BLUE_
-import com.kr8ne.mensMorris.EMPTY
-import com.kr8ne.mensMorris.GREEN
+import com.kr8ne.mensMorris.common.BLUE_
+import com.kr8ne.mensMorris.common.EMPTY
+import com.kr8ne.mensMorris.common.GREEN
 import com.kr8ne.mensMorris.common.game.Position
 
 open class Equals {

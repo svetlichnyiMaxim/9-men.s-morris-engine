@@ -40,4 +40,7 @@ const val SEARCHING_ONLINE_GAME_SCREEN = "searching_online_game_screen"
  */
 const val ONLINE_GAME_SCREEN = "online_game_screen"
 
+/**
+ * Screen with loading animation
+ */
 const val LOADING_ANIMATION_SCREEN = "loading_animation_screen"

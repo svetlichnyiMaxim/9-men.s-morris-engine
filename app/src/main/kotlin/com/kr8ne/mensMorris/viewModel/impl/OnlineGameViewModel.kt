@@ -11,7 +11,7 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  * welcome model
  * called when app is launched
  */
-class OnlineGameViewModel(navController: NavHostController?) : ViewModelI() {
+class OnlineGameViewModel(@Suppress("UnusedPrivateProperty") navController: NavHostController?) : ViewModelI() {
     // TODO: finish this
     override val data = OnlineGameData("1")
     override var render: ScreenModel = OnlineGameScreen(data.gameBoard)

@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import com.kr8ne.mensMorris.BLUE_
+import com.kr8ne.mensMorris.common.BLUE_
 import com.kr8ne.mensMorris.BUTTON_WIDTH
-import com.kr8ne.mensMorris.EMPTY
-import com.kr8ne.mensMorris.GREEN
+import com.kr8ne.mensMorris.common.EMPTY
+import com.kr8ne.mensMorris.common.GREEN
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.common.game.Position
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel

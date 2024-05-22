@@ -18,13 +18,13 @@ class SearchingForGameData(
     override suspend fun invokeBackend() {
         while (true) {
             val gameId = Client.startSearchingGame().getOrNull()
-            if (gameId == null) {
+            if (gameId != null) {
+                println("finished searching for game with id: $gameId")
+                navController?.navigate(ONLINE_GAME_SCREEN)
+                break
+            } else {
                 delay(5000L)
-                continue
             }
-            println("finished searching for game with id: $gameId")
-            navController?.navigate(ONLINE_GAME_SCREEN)
-            break
         }
     }
 }

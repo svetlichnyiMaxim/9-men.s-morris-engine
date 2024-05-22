@@ -148,6 +148,7 @@ class GameBoardData(
     /**
      * gets movement produced by user click
      */
+    @Suppress("ReturnCount")
     fun getMovement(elementIndex: Int): Movement? {
         when (pos.value.gameState()) {
             GameState.Placement -> {
