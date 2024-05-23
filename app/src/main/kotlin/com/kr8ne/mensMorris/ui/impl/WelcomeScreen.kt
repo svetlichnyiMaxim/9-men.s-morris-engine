@@ -5,6 +5,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
@@ -28,6 +32,7 @@ import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
+import com.kr8ne.mensMorris.VIEW_ACCOUNT_SCREEN
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.common.utils.AppTheme
@@ -53,6 +58,7 @@ class WelcomeScreen(
     @Composable
     private fun DrawGameModesOptions() {
         val height = LocalConfiguration.current.screenHeightDp
+        //val width = LocalConfiguration.current.screenWidthDp
         val progress = tutorialViewModel.data.progress
         Box(
             modifier = Modifier.fillMaxSize()
@@ -61,7 +67,7 @@ class WelcomeScreen(
                 modifier = Modifier
                     .zIndex(if (progress.floatValue < 1f) -1f else 1f)
             ) {
-                tutorialViewModel.Invoke()
+                //tutorialViewModel.Invoke()
             }
             AnimatedVisibility(
                 visible = progress.floatValue == 0f,
@@ -78,6 +84,41 @@ class WelcomeScreen(
                     )
                 )
             ) {
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.TopEnd)
+                ) {
+                    val path = Path()
+                    path.moveTo(2 * size.width / 3, 0f)
+                    path.lineTo(size.width, size.width / 3f)
+                    path.lineTo(size.width, 0f)
+                    drawPath(path, Color.Red)
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center),
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    if (Client.jwtToken != null) {
+                        IconButton(
+                            onClick = {
+                                navController?.navigate(VIEW_ACCOUNT_SCREEN)
+                            }
+                        ) {
+                            Icon(painterResource(R.drawable.logged_in), "logged in")
+                        }
+                    } else {
+                        IconButton(
+                            onClick = {
+                                navController?.navigate(SIGN_IN_SCREEN)
+                            }
+                        ) {
+                            Icon(painterResource(R.drawable.no_account), "no account found")
+                        }
+                    }
+                }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()

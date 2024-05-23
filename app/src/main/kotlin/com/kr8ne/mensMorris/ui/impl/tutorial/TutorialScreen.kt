@@ -24,15 +24,14 @@ import androidx.wear.compose.material.swipeable
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.utils.AppTheme
+import com.kr8ne.mensMorris.ui.impl.tutorial.domain.FlyingMovesTutorialScreen
+import com.kr8ne.mensMorris.ui.impl.tutorial.domain.IndicatorsTutorialScreen
+import com.kr8ne.mensMorris.ui.impl.tutorial.domain.LoseTutorialScreen
+import com.kr8ne.mensMorris.ui.impl.tutorial.domain.NormalMovesTutorialScreen
+import com.kr8ne.mensMorris.ui.impl.tutorial.domain.PlacementTutorialScreen
+import com.kr8ne.mensMorris.ui.impl.tutorial.domain.RemovalMovesTutorialScreen
+import com.kr8ne.mensMorris.ui.impl.tutorial.domain.TriplesTutorialScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.viewModels.FlyingMovesTutorialViewModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.viewModels.IndicatorsTutorialViewModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.viewModels.LoseTutorialViewModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.viewModels.NormalMovesTutorialViewModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.viewModels.PlacementTutorialViewModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.viewModels.RemovalMovesViewModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.viewModels.TriplesTutorialViewModel
-import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 import kotlin.math.roundToInt
 
 /**
@@ -45,13 +44,13 @@ class TutorialScreen(
      * stores order of tutorials (used for slider)
      */
     private val screensOrder = listOf(
-        IndicatorsTutorialViewModel(),
-        LoseTutorialViewModel(),
-        PlacementTutorialViewModel(),
-        NormalMovesTutorialViewModel(),
-        FlyingMovesTutorialViewModel(),
-        TriplesTutorialViewModel(),
-        RemovalMovesViewModel()
+        IndicatorsTutorialScreen(),
+        LoseTutorialScreen(),
+        PlacementTutorialScreen(),
+        NormalMovesTutorialScreen(),
+        FlyingMovesTutorialScreen(),
+        TriplesTutorialScreen(),
+        RemovalMovesTutorialScreen()
     )
 
     /**
@@ -176,7 +175,7 @@ class TutorialScreen(
     /**
      *
      */
-    private fun getNextScreen(): ViewModelI {
+    private fun getNextScreen(): ScreenModel {
         val currentIndex = screensOrder.indexOf(currentScreen.value)
         return screensOrder[(currentIndex + 1) % screensOrder.size]
     }
@@ -185,7 +184,7 @@ class TutorialScreen(
      * accesses the previous
      * screen from tutorials list
      */
-    private fun getPrevScreen(): ViewModelI {
+    private fun getPrevScreen(): ScreenModel {
         val currentIndex = screensOrder.indexOf(currentScreen.value)
         // this prevents any indexing errors
         return screensOrder[(currentIndex + screensOrder.size - 1) % screensOrder.size]

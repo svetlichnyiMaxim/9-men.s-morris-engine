@@ -107,7 +107,7 @@ class SignInScreen(
                             Row {
                                 if (!isUsernameValid.value) {
                                     Text(
-                                        getString(R.string.invalid_password),
+                                        getString(R.string.invalid_login),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp

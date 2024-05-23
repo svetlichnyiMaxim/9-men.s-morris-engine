@@ -34,8 +34,9 @@ object Client {
     /**
      * Jwt token provided by the server
      */
+    @Volatile
     var jwtToken: String? = activity?.sharedPreferences?.getString("jwtToken", null)
-        get() = null
+        get() = field
         set(value) {
             field = value
             activity?.sharedPreferences?.edit(commit = true) {
@@ -128,6 +129,7 @@ object Client {
             }
             when (registerResult.status.value) {
                 200 -> {
+                    println(registerResult.bodyAsText())
                     jwtToken = registerResult.bodyAsText()
                     return Result.success(ServerResponse.Success(jwtToken!!))
                 }
@@ -158,16 +160,17 @@ object Client {
     suspend fun login(): Result<ServerResponse> {
         val userDataState: UserData = userData
         return runCatching {
-            val registerResult = network.get("http$SERVER_ADDRESS${USER_API}/login") {
+            val loginResult = network.get("http$SERVER_ADDRESS${USER_API}/login") {
                 method = HttpMethod.Get
                 url {
                     parameters["login"] = userDataState.login
                     parameters["password"] = userDataState.password
                 }
             }
-            when (registerResult.status.value) {
+            when (loginResult.status.value) {
                 200 -> {
-                    jwtToken = registerResult.bodyAsText()
+                    println(loginResult.bodyAsText())
+                    jwtToken = loginResult.bodyAsText()
                     return Result.success(ServerResponse.Success(jwtToken!!))
                 }
 
