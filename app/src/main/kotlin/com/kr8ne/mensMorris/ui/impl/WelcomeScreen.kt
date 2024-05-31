@@ -32,7 +32,6 @@ import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
-import com.kr8ne.mensMorris.VIEW_ACCOUNT_SCREEN
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.common.utils.AppTheme
@@ -67,7 +66,7 @@ class WelcomeScreen(
                 modifier = Modifier
                     .zIndex(if (progress.floatValue < 1f) -1f else 1f)
             ) {
-                //tutorialViewModel.Invoke()
+                tutorialViewModel.Invoke()
             }
             AnimatedVisibility(
                 visible = progress.floatValue == 0f,
@@ -104,7 +103,9 @@ class WelcomeScreen(
                     if (Client.jwtToken != null) {
                         IconButton(
                             onClick = {
-                                navController?.navigate(VIEW_ACCOUNT_SCREEN)
+                                Client.jwtToken = null
+                                Client.gameId = null
+                                //navController?.navigate(VIEW_ACCOUNT_SCREEN)
                             }
                         ) {
                             Icon(painterResource(R.drawable.logged_in), "logged in")

@@ -9,6 +9,7 @@ import androidx.compose.ui.graphics.Color
 import com.kr8ne.mensMorris.common.game.Movement
 import com.kr8ne.mensMorris.common.game.Position
 import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
+import kotlin.random.Random
 
 /**
  * provides a way to get an element from pair
@@ -97,3 +98,5 @@ inline fun AppTheme(function: () -> Unit) {
  * TODO: remove this
  */
 var positionToNuke: Position = gameStartPosition
+
+val randomUtils = Random

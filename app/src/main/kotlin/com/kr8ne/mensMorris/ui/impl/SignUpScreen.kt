@@ -31,6 +31,7 @@ import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import java.net.SocketException
 
 /**
  * Represents a screen for signing up a new user.
@@ -55,38 +56,38 @@ class SignUpScreen(
 ) : ScreenModel {
     @Composable
     override fun InvokeRender() {
+        var isSwitchingScreens = false
         AppTheme {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val serverResponse = remember { mutableStateOf<Result<ServerResponse>?>(null) }
+                val serverResponse = remember { mutableStateOf<Result<String>?>(null) }
                 val requestInProcess = remember { mutableStateOf(false) }
                 val isUsernameValid = remember { mutableStateOf(false) }
                 val usernameOrEmail = remember { mutableStateOf("") }
-                // TODO: FIX THIS, YOU ARE GOING TO REGRET THIS SOOOOO MUCH
-                if (serverResponse.value != null) {
-                    when (serverResponse.value!!.getOrNull()) {
-                        is ServerResponse.Success -> {
-                            navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
-                        }
-
-                        is ServerResponse.LoginIsInUse -> {
+                serverResponse.value?.onFailure { exception ->
+                    when (exception) {
+                        is ServerResponse.LoginInUse -> {
                             Text(text = getString(R.string.login_in_use))
                         }
 
-                        is ServerResponse.ServerError -> {
-                            Text(text = getString(R.string.server_error))
-                        }
-
-                        null -> {
+                        is ServerResponse.Unreachable, is SocketException -> {
                             Text(text = getString(R.string.network_error))
                         }
 
                         else -> {
-                            error("Unknown server response")
+                            Text(text = getString(R.string.server_error))
                         }
+                    }
+                }
+                serverResponse.value?.onSuccess {
+                    if (!isSwitchingScreens) {
+                        Client.jwtToken = it
+                        navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                        // we make sure to only change screen once
+                        isSwitchingScreens = true
                     }
                 }
                 Box {

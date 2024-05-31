@@ -18,7 +18,11 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -36,11 +40,19 @@ object Client {
      */
     @Volatile
     var jwtToken: String? = activity?.sharedPreferences?.getString("jwtToken", null)
-        get() = field
         set(value) {
             field = value
             activity?.sharedPreferences?.edit(commit = true) {
                 putString("jwtToken", value).apply()
+            }
+        }
+
+    @Volatile
+    var gameId: Long? = activity?.sharedPreferences?.getString("gameId", null)?.toLongOrNull()
+        set(value) {
+            field = value
+            activity?.sharedPreferences?.edit(commit = true) {
+                putString("gameId", value.toString()).apply()
             }
         }
 
@@ -60,8 +72,10 @@ object Client {
      */
     val networkScope = Dispatchers.IO
 
+    var searchingForGameJob: Deferred<Result<Long>>? = null
+
     /**
-     * queue of the moves that player perfomed
+     * queue of the moves that player performed
      * TODO: implement premoves with this one
      */
     val movesQueue: Queue<Movement> = LinkedList()
@@ -117,7 +131,7 @@ object Client {
      *
      * @return [ServerResponse] indicating the success or failure of the registration attempt.
      */
-    suspend fun register(): Result<ServerResponse> {
+    suspend fun register(): Result<String> {
         val userDataState: UserData = userData
         return runCatching {
             val registerResult = network.get("http$SERVER_ADDRESS${USER_API}/reg") {
@@ -129,21 +143,23 @@ object Client {
             }
             when (registerResult.status.value) {
                 200 -> {
-                    println(registerResult.bodyAsText())
-                    jwtToken = registerResult.bodyAsText()
-                    return Result.success(ServerResponse.Success(jwtToken!!))
+                    return Result.success(registerResult.bodyAsText())
                 }
 
                 401 -> {
-                    return Result.success(ServerResponse.WrongPasswordOrLogin)
+                    return Result.failure(ServerResponse.WrongPasswordOrLogin())
+                }
+
+                404 -> {
+                    return Result.failure(ServerResponse.Unreachable())
                 }
 
                 409 -> {
-                    return Result.success(ServerResponse.LoginIsInUse)
+                    return Result.failure(ServerResponse.LoginInUse())
                 }
 
                 else -> {
-                    return Result.success(ServerResponse.ServerError)
+                    return Result.failure(ServerResponse.UnknownServerError())
                 }
             }
         }.onFailure {
@@ -157,7 +173,7 @@ object Client {
      *
      * @return [ServerResponse] indicating the success or failure of the login attempt.
      */
-    suspend fun login(): Result<ServerResponse> {
+    suspend fun login(): Result<String> {
         val userDataState: UserData = userData
         return runCatching {
             val loginResult = network.get("http$SERVER_ADDRESS${USER_API}/login") {
@@ -169,17 +185,19 @@ object Client {
             }
             when (loginResult.status.value) {
                 200 -> {
-                    println(loginResult.bodyAsText())
-                    jwtToken = loginResult.bodyAsText()
-                    return Result.success(ServerResponse.Success(jwtToken!!))
+                    return Result.success(loginResult.bodyAsText())
                 }
 
                 401 -> {
-                    return Result.success(ServerResponse.WrongPasswordOrLogin)
+                    return Result.failure(ServerResponse.WrongPasswordOrLogin())
+                }
+
+                404 -> {
+                    return Result.failure(ServerResponse.Unreachable())
                 }
 
                 else -> {
-                    return Result.success(ServerResponse.ServerError)
+                    return Result.failure(ServerResponse.UnknownServerError())
                 }
             }
         }.onFailure {
@@ -188,32 +206,59 @@ object Client {
         }
     }
 
+    suspend fun isPlaying(): Long? {
+        val jwtTokenState = jwtToken
+        require(jwtTokenState != null)
+        val result = network.get("http$SERVER_ADDRESS$USER_API/is-playing") {
+            method = HttpMethod.Get
+            url {
+                parameters["jwtToken"] = jwtTokenState
+            }
+        }
+        return result.bodyAsText().toLongOrNull()
+    }
+
     /**
      * Starts searching for a game.
      *
      * @return [ServerResponse] indicating the success or failure of the search attempt.
      */
-    suspend fun startSearchingGame(): Result<String> {
-        return runCatching {
-            require(jwtToken != null)
-            var gameId: String? = null
-            network.webSocket("ws$SERVER_ADDRESS$USER_API/search-for-game") {
-                send(jwtToken!!)
-                while (true) {
-                    val serverMessage = (incoming.receive() as? Frame.Text)?.readText()
-                    if (serverMessage != null) {
-                        println("game id: $serverMessage")
-                        gameId = serverMessage
-                        close(CloseReason(CloseReason.Codes.NORMAL, "ok"))
-                        break
+    fun startSearchingGame() {
+        if (searchingForGameJob?.isCompleted == false) {
+            return
+        }
+        searchingForGameJob = CoroutineScope(networkScope).async {
+            runCatching {
+                val jwtTokenState = jwtToken
+                require(jwtTokenState != null)
+                var gameId: String? = null
+                network.webSocket("ws$SERVER_ADDRESS$USER_API/search-for-game", request = {
+                    url {
+                        parameters["jwtToken"] = jwtTokenState
+                    }
+                }) {
+                    send(jwtToken!!)
+                    while (true) {
+                        val serverMessage = (incoming.receive() as? Frame.Text)?.readText()
+                        if (serverMessage != null) {
+                            println("game id: $serverMessage")
+                            gameId = serverMessage
+                            close(CloseReason(CloseReason.Codes.NORMAL, "ok"))
+                            break
+                        }
                     }
                 }
+                gameId!!.toLong()
+            }.onFailure {
+                println("error accessing ${"ws$SERVER_ADDRESS$USER_API/search-for-game"}")
+                it.printStack()
             }
-            return@runCatching gameId!!
-        }.onFailure {
-            println("error accessing ${"ws$SERVER_ADDRESS$USER_API/search-for-game"}")
-            it.printStack()
         }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun awaitForGameSearchEnd(): Result<Long>? {
+        return searchingForGameJob?.await()
     }
 
     /**
@@ -223,9 +268,16 @@ object Client {
      * @classParent game board to update data
      * TODO: find better solution
      */
-    suspend fun playGame(gameId: String, classParent: GameBoardInterface) {
+    suspend fun playGame(gameId: Long, classParent: GameBoardInterface) {
         runCatching {
-            network.webSocket("ws$SERVER_ADDRESS$USER_API/game-$gameId") {
+            val jwtTokenState = jwtToken
+            require(jwtTokenState != null)
+            network.webSocket("ws$SERVER_ADDRESS$USER_API/game", request = {
+                url {
+                    parameters["jwtToken"] = jwtTokenState
+                    parameters["gameId"] = gameId.toString()
+                }
+            }) {
                 while (true) {
                     while (movesQueue.isNotEmpty()) {
                         val string = Json.encodeToString<MovementAdapter>(
@@ -235,12 +287,14 @@ object Client {
                             )
                         )
                         // post our move
+                        println("sent move")
                         send(string)
                         movesQueue.remove()
                     }
                     // receive the server's data
                     val serverMessage = incoming.receive() as? Frame.Text ?: continue
                     val position = Json.decodeFromString<PositionAdapter>(serverMessage.readText())
+                    println("received move")
                     classParent.gameBoard.data.pos.value.let {
                         it.positions = position.positions
                         it.freePieces = position.freePieces
@@ -253,8 +307,8 @@ object Client {
                     }
                 }
             }
-        }.onFailure() {
-            println("error accessing ${"$SERVER_ADDRESS$USER_API/game-$gameId"}")
+        }.onFailure {
+            println("error accessing ${"$SERVER_ADDRESS$USER_API/game; gameId = $gameId"}")
             it.printStack()
         }
     }
@@ -263,7 +317,6 @@ object Client {
 /**
  * used to serialize data (position) from the server
  */
-@Serializable
 class PositionAdapter(
     /**
      * current position
@@ -301,28 +354,25 @@ class MovementAdapter(
 /**
  * Represents the server's response to client requests.
  */
-sealed class ServerResponse {
-    /**
-     * Represents a successful server response.
-     *
-     * @param jwtToken The JWT token returned by the server.
-     */
-    data class Success(val jwtToken: String) : ServerResponse()
-
+sealed class ServerResponse : Exception() {
     /**
      * Represents a server response indicating that the login is already in use.
      */
-    data object LoginIsInUse : ServerResponse()
+    class LoginInUse : ServerResponse()
 
     /**
      * Represents a server response indicating that the provided password or login is incorrect.
      */
-    data object WrongPasswordOrLogin : ServerResponse()
+    class WrongPasswordOrLogin : ServerResponse()
+
+    class Unreachable : ServerResponse()
+
+    class AlreadySearching : ServerResponse()
 
     /**
      * Represents a server response indicating an unknown error.
      */
-    data object ServerError : ServerResponse()
+    class UnknownServerError : ServerResponse()
 }
 
 /**
