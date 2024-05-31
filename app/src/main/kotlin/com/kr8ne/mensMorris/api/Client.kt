@@ -74,6 +74,9 @@ object Client {
 
     var searchingForGameJob: Deferred<Result<Long>>? = null
 
+    var playingGameJob: Deferred<Unit>? = null
+    var isPlaying = false
+
     /**
      * queue of the moves that player performed
      * TODO: implement premoves with this one
@@ -237,7 +240,6 @@ object Client {
                         parameters["jwtToken"] = jwtTokenState
                     }
                 }) {
-                    send(jwtToken!!)
                     while (true) {
                         val serverMessage = (incoming.receive() as? Frame.Text)?.readText()
                         if (serverMessage != null) {
@@ -269,54 +271,64 @@ object Client {
      * TODO: find better solution
      */
     suspend fun playGame(gameId: Long, classParent: GameBoardInterface) {
-        runCatching {
-            val jwtTokenState = jwtToken
-            require(jwtTokenState != null)
-            network.webSocket("ws$SERVER_ADDRESS$USER_API/game", request = {
-                url {
-                    parameters["jwtToken"] = jwtTokenState
-                    parameters["gameId"] = gameId.toString()
-                }
-            }) {
-                while (true) {
-                    while (movesQueue.isNotEmpty()) {
-                        val string = Json.encodeToString<MovementAdapter>(
-                            MovementAdapter(
-                                movesQueue.peek()!!.startIndex,
-                                movesQueue.peek()!!.endIndex
-                            )
-                        )
-                        // post our move
-                        println("sent move")
-                        send(string)
-                        movesQueue.remove()
-                    }
-                    // receive the server's data
-                    val serverMessage = incoming.receive() as? Frame.Text ?: continue
-                    val position = Json.decodeFromString<PositionAdapter>(serverMessage.readText())
-                    println("received move")
-                    classParent.gameBoard.data.pos.value.let {
-                        it.positions = position.positions
-                        it.freePieces = position.freePieces
-                        it.pieceToMove = position.pieceToMove
-                        it.removalCount = position.removalCount
-                        it.greenPiecesAmount =
-                            (it.positions.count { it1 -> it1 == true } + it.freePieces.first)
-                        it.bluePiecesAmount =
-                            (it.positions.count { it1 -> it1 == false } + it.freePieces.second)
-                    }
-                }
-            }
-        }.onFailure {
-            println("error accessing ${"$SERVER_ADDRESS$USER_API/game; gameId = $gameId"}")
-            it.printStack()
+        if (playingGameJob?.isCompleted == false) {
+            return
         }
+        playingGameJob = CoroutineScope(networkScope).async {
+            runCatching {
+                val jwtTokenState = jwtToken
+                require(jwtTokenState != null)
+                network.webSocket("ws$SERVER_ADDRESS$USER_API/game", request = {
+                    url {
+                        parameters["jwtToken"] = jwtTokenState
+                        parameters["gameId"] = gameId.toString()
+                    }
+                }) {
+                    while (true) {
+                        println(movesQueue.size)
+                        while (movesQueue.isNotEmpty()) {
+                            val string = Json.encodeToString<MovementAdapter>(
+                                MovementAdapter(
+                                    movesQueue.peek()!!.startIndex,
+                                    movesQueue.peek()!!.endIndex
+                                )
+                            )
+                            // post our move
+                            println("sent move $string")
+                            send(string)
+                            movesQueue.remove()
+                        }
+                        // receive the server's data
+                        val serverMessage =
+                            incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
+                        val position =
+                            Json.decodeFromString<PositionAdapter>(serverMessage.readText())
+                        println("received move")
+                        classParent.gameBoard.data.pos.value.let {
+                            it.positions = position.positions
+                            it.freePieces = position.freePieces
+                            it.pieceToMove = position.pieceToMove
+                            it.removalCount = position.removalCount
+                            it.greenPiecesAmount =
+                                (it.positions.count { it1 -> it1 == true } + it.freePieces.first)
+                            it.bluePiecesAmount =
+                                (it.positions.count { it1 -> it1 == false } + it.freePieces.second)
+                        }
+                    }
+                }
+            }.onFailure {
+                println("error accessing ${"$SERVER_ADDRESS$USER_API/game; gameId = $gameId"}")
+                it.printStack()
+            }
+        }
+        playingGameJob?.start()
     }
 }
 
 /**
  * used to serialize data (position) from the server
  */
+@Serializable
 class PositionAdapter(
     /**
      * current position
