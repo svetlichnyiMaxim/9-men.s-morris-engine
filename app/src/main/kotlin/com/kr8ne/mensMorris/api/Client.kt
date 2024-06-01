@@ -285,7 +285,6 @@ object Client {
                     }
                 }) {
                     while (true) {
-                        println(movesQueue.size)
                         while (movesQueue.isNotEmpty()) {
                             val string = Json.encodeToString<MovementAdapter>(
                                 MovementAdapter(
