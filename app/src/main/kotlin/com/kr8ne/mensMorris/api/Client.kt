@@ -74,8 +74,6 @@ object Client {
 
     var searchingForGameJob: Deferred<Result<Long>>? = null
 
-    var playingGameJob: Deferred<Unit>? = null
-
     /**
      * queue of the moves that player performed
      * TODO: implement premoves with this one

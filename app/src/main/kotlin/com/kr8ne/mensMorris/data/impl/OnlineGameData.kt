@@ -37,9 +37,21 @@ class OnlineGameData(
     }
 
     override suspend fun invokeBackend() {
+        /**
+         * if you even see this debug message in logs more than once you should know
+         * that you are FUCKED
+         * I have tried fixing this complete piece of shit for MANY hours
+         * I have made a "fix"
+         * but it is the shittiest piece of code I have written in more than 30 days
+         * I don't know what causes this issue
+         * I don't want to debug it
+         * I don't want to touch it
+         * YOU don't want to touch it, leave it as it is, don't waste your life
+         * I hope it will never break or at least I won't be the one responsible for it
+         * FUCK THIS SHIT
+         */
         println("invoke")
-        Client.playingGameJob?.cancel()
-        Client.playingGameJob = CoroutineScope(Client.networkScope).async {
+        CoroutineScope(Client.networkScope).async {
             runCatching {
                 val jwtTokenState = Client.jwtToken
                 require(jwtTokenState != null)
@@ -77,6 +89,5 @@ class OnlineGameData(
                 it.printStack()
             }
         }
-        Client.playingGameJob?.start()
     }
 }
