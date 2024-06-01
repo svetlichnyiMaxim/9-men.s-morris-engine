@@ -1,6 +1,9 @@
 package com.kr8ne.mensMorris.api
 
 import androidx.core.content.edit
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.game.Movement
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
@@ -75,7 +78,6 @@ object Client {
     var searchingForGameJob: Deferred<Result<Long>>? = null
 
     var playingGameJob: Deferred<Unit>? = null
-    var isPlaying = false
 
     /**
      * queue of the moves that player performed
@@ -83,6 +85,8 @@ object Client {
      */
     val movesQueue: Queue<Movement> = LinkedList()
 
+    val positionsQueue: MutableLiveData<Queue<PositionAdapter>> =
+        MutableLiveData<Queue<PositionAdapter>>(LinkedList())
     /**
      * The network client for making HTTP requests.
      */
@@ -270,7 +274,7 @@ object Client {
      * @classParent game board to update data
      * TODO: find better solution
      */
-    suspend fun playGame(gameId: Long, classParent: GameBoardInterface) {
+    suspend fun playGame(gameId: Long) {
         if (playingGameJob?.isCompleted == false) {
             return
         }
@@ -300,19 +304,11 @@ object Client {
                         // receive the server's data
                         val serverMessage =
                             incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
+                        println(serverMessage.readText())
                         val position =
                             Json.decodeFromString<PositionAdapter>(serverMessage.readText())
                         println("received move")
-                        classParent.gameBoard.data.pos.value.let {
-                            it.positions = position.positions
-                            it.freePieces = position.freePieces
-                            it.pieceToMove = position.pieceToMove
-                            it.removalCount = position.removalCount
-                            it.greenPiecesAmount =
-                                (it.positions.count { it1 -> it1 == true } + it.freePieces.first)
-                            it.bluePiecesAmount =
-                                (it.positions.count { it1 -> it1 == false } + it.freePieces.second)
-                        }
+                        positionsQueue.value!!.add(position)
                     }
                 }
             }.onFailure {
