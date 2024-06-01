@@ -1,12 +1,18 @@
 package com.kr8ne.mensMorris.common.game
 
+import kotlinx.serialization.Serializable
+
 /**
  * used to store movement
  * @param startIndex index of place a piece moves from
  * @param endIndex index of place a piece moves to
  */
 @Suppress("EqualsOrHashCode")
-class Movement(val startIndex: Int?, val endIndex: Int?) {
+@Serializable
+class Movement(
+    @Serializable val startIndex: Int?,
+    @Serializable val endIndex: Int?
+) {
     /**
      * @param pos position we have a more for
      * @return position after specified move

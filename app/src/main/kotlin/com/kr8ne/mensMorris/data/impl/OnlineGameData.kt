@@ -2,7 +2,6 @@ package com.kr8ne.mensMorris.data.impl
 
 import androidx.compose.runtime.mutableStateOf
 import com.kr8ne.mensMorris.api.Client
-import com.kr8ne.mensMorris.api.MovementAdapter
 import com.kr8ne.mensMorris.common.game.Movement
 import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
 import com.kr8ne.mensMorris.data.interfaces.DataModel
@@ -17,7 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.async
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import okhttp3.WebSocket
 
 /**
  * data for online game screen
@@ -26,9 +24,7 @@ class OnlineGameData(
     private val gameId: Long
 ) : GameBoardInterface, DataModel {
 
-    val position = mutableStateOf(gameStartPosition)
     override val gameBoard = GameBoardViewModel(
-        pos = position,
         onClick = { index, func -> response(index, func) },
         navController = null
     )
@@ -37,8 +33,6 @@ class OnlineGameData(
         gameBoard.data.getMovement(index)?.let {
             Client.movesQueue.add(it)
         }
-        println("move added to the queue")
-        println(gameBoard.data.pos.value.toString())
         func(index)
     }
 
@@ -58,15 +52,10 @@ class OnlineGameData(
                         }
                     }) {
                     while (true) {
+                        // send all our moves
                         while (Client.movesQueue.isNotEmpty()) {
-                            val string = Json.encodeToString<MovementAdapter>(
-                                MovementAdapter(
-                                    Client.movesQueue.peek()!!.startIndex,
-                                    Client.movesQueue.peek()!!.endIndex
-                                )
-                            )
+                            val string = Json.encodeToString<Movement>(Client.movesQueue.peek()!!)
                             // post our move
-                            println("sent move $string")
                             send(string)
                             Client.movesQueue.remove()
                         }
@@ -74,12 +63,9 @@ class OnlineGameData(
                             // receive the server's data
                             val serverMessage =
                                 incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
-                            println(serverMessage.readText())
-                            val move = Json.decodeFromString<MovementAdapter>(serverMessage.readText())
-                                    .toMovement()
+                            val move = Json.decodeFromString<Movement>(serverMessage.readText())
                             println("received move")
                             gameBoard.data.processMove(move)
-                            println(gameBoard.data.pos.value.toString())
                         } catch (e: Exception) {
                             println("error when receiving move")
                             e.printStackTrace()
@@ -93,11 +79,4 @@ class OnlineGameData(
         }
         Client.playingGameJob?.start()
     }
-}
-
-fun MovementAdapter.toMovement(): Movement {
-    return Movement(
-        startIndex = this.startIndex,
-        endIndex = this.endIndex
-    )
 }
