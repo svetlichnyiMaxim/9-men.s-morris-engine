@@ -1,13 +1,10 @@
 package com.kr8ne.mensMorris.api
 
 import androidx.core.content.edit
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.game.Movement
-import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
-import com.kr8ne.mensMorris.plus
+import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.websocket.WebSockets
@@ -63,12 +60,12 @@ object Client {
      * The server's address.
      * put your network ip here
      */
-    private const val SERVER_ADDRESS = "://10.68.154.156:8080"
+    const val SERVER_ADDRESS = "://10.68.154.156:8080"
 
     /**
      * The API endpoint for user-related operations.
      */
-    private const val USER_API = "/api/v1/user"
+    const val USER_API = "/api/v1/user"
 
     /**
      * The network scope for asynchronous operations.
@@ -85,12 +82,10 @@ object Client {
      */
     val movesQueue: Queue<Movement> = LinkedList()
 
-    val positionsQueue: MutableLiveData<Queue<PositionAdapter>> =
-        MutableLiveData<Queue<PositionAdapter>>(LinkedList())
     /**
      * The network client for making HTTP requests.
      */
-    private val network = HttpClient(OkHttp) {
+    val network = HttpClient(OkHttp) {
         install(WebSockets)
     }
 
@@ -265,58 +260,6 @@ object Client {
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun awaitForGameSearchEnd(): Result<Long>? {
         return searchingForGameJob?.await()
-    }
-
-    /**
-     * plays the game
-     *
-     * @id id of the game
-     * @classParent game board to update data
-     * TODO: find better solution
-     */
-    suspend fun playGame(gameId: Long) {
-        if (playingGameJob?.isCompleted == false) {
-            return
-        }
-        playingGameJob = CoroutineScope(networkScope).async {
-            runCatching {
-                val jwtTokenState = jwtToken
-                require(jwtTokenState != null)
-                network.webSocket("ws$SERVER_ADDRESS$USER_API/game", request = {
-                    url {
-                        parameters["jwtToken"] = jwtTokenState
-                        parameters["gameId"] = gameId.toString()
-                    }
-                }) {
-                    while (true) {
-                        while (movesQueue.isNotEmpty()) {
-                            val string = Json.encodeToString<MovementAdapter>(
-                                MovementAdapter(
-                                    movesQueue.peek()!!.startIndex,
-                                    movesQueue.peek()!!.endIndex
-                                )
-                            )
-                            // post our move
-                            println("sent move $string")
-                            send(string)
-                            movesQueue.remove()
-                        }
-                        // receive the server's data
-                        val serverMessage =
-                            incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
-                        println(serverMessage.readText())
-                        val position =
-                            Json.decodeFromString<PositionAdapter>(serverMessage.readText())
-                        println("received move")
-                        positionsQueue.value!!.add(position)
-                    }
-                }
-            }.onFailure {
-                println("error accessing ${"$SERVER_ADDRESS$USER_API/game; gameId = $gameId"}")
-                it.printStack()
-            }
-        }
-        playingGameJob?.start()
     }
 }
 
