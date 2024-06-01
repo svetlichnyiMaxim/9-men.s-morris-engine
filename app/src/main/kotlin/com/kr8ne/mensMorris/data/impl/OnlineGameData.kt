@@ -14,11 +14,10 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okhttp3.WebSocket
 
 /**
  * data for online game screen
@@ -39,6 +38,7 @@ class OnlineGameData(
             Client.movesQueue.add(it)
         }
         println("move added to the queue")
+        println(gameBoard.data.pos.value.toString())
         func(index)
     }
 
@@ -75,13 +75,11 @@ class OnlineGameData(
                             val serverMessage =
                                 incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
                             println(serverMessage.readText())
-                            val move =
-                                Json.decodeFromString<MovementAdapter>(serverMessage.readText())
+                            val move = Json.decodeFromString<MovementAdapter>(serverMessage.readText())
                                     .toMovement()
                             println("received move")
-                            withContext(Dispatchers.Main) {
-                                gameBoard.data.processMove(move)
-                            }
+                            gameBoard.data.processMove(move)
+                            println(gameBoard.data.pos.value.toString())
                         } catch (e: Exception) {
                             println("error when receiving move")
                             e.printStackTrace()

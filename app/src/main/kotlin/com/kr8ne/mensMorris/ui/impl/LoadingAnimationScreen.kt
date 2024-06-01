@@ -100,6 +100,7 @@ class LoadingAnimationScreen(
         ) {
             TextButton({
                 controller?.navigate(WELCOME_SCREEN)
+                println("switching to welcome screen")
             }, modifier = Modifier.align(Alignment.Center)) {
                 Text(
                     text = "Press to start",

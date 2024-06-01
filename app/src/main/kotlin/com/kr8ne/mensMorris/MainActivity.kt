@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
             "com.kr8ne.mensMorris",
             MODE_PRIVATE
         )
+        var abuseCounter = 0
         setContent {
             navController = rememberNavController()
             NavHost(
@@ -91,7 +92,12 @@ class MainActivity : ComponentActivity() {
                     SearchingForGameViewModel(navController).Invoke()
                 }
                 composable(ONLINE_GAME_SCREEN) {
-                    OnlineGameViewModel(navController).Invoke()
+                    abuseCounter++
+                    if (abuseCounter % 3 == 0) {
+                        print("execute")
+                        OnlineGameViewModel(navController).Invoke()
+                    }
+                    println("antiabuse")
                 }
                 composable(LOADING_ANIMATION_SCREEN) {
                     LoadingAnimationViewModel(navController).Invoke()
