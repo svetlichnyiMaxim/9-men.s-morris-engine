@@ -98,5 +98,3 @@ inline fun AppTheme(function: () -> Unit) {
  * TODO: remove this
  */
 var positionToNuke: Position = gameStartPosition
-
-val randomUtils = Random

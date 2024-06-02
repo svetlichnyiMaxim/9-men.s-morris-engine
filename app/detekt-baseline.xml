@@ -1,9 +1,5 @@
 <?xml version="1.0" ?>
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
-  <CurrentIssues>
-    <ID>LongMethod:SignInScreen.kt$SignInScreen$@Composable override fun InvokeRender()</ID>
-    <ID>LongMethod:SignUpScreen.kt$SignUpScreen$@Composable override fun InvokeRender()</ID>
-    <ID>ReturnCount:Client.kt$Client$suspend fun register(): Result&lt;ServerResponse&gt;</ID>
-  </CurrentIssues>
+  <CurrentIssues></CurrentIssues>
 </SmellBaseline>

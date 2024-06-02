@@ -47,6 +47,9 @@ object Client {
             }
         }
 
+    /**
+     * current game id
+     */
     @Volatile
     var gameId: Long? = activity?.sharedPreferences?.getString("gameId", null)?.toLongOrNull()
         set(value) {
@@ -72,6 +75,9 @@ object Client {
      */
     val networkScope = Dispatchers.IO
 
+    /**
+     * job created when searching for a game
+     */
     var searchingForGameJob: Deferred<Result<Long>>? = null
 
     /**
@@ -141,25 +147,25 @@ object Client {
                     parameters["password"] = userDataState.password
                 }
             }
-            when (registerResult.status.value) {
+            return when (registerResult.status.value) {
                 200 -> {
-                    return Result.success(registerResult.bodyAsText())
+                    Result.success(registerResult.bodyAsText())
                 }
 
                 401 -> {
-                    return Result.failure(ServerResponse.WrongPasswordOrLogin())
+                    Result.failure(ServerResponse.WrongPasswordOrLogin())
                 }
 
                 404 -> {
-                    return Result.failure(ServerResponse.Unreachable())
+                    Result.failure(ServerResponse.Unreachable())
                 }
 
                 409 -> {
-                    return Result.failure(ServerResponse.LoginInUse())
+                    Result.failure(ServerResponse.LoginInUse())
                 }
 
                 else -> {
-                    return Result.failure(ServerResponse.UnknownServerError())
+                    Result.failure(ServerResponse.UnknownServerError())
                 }
             }
         }.onFailure {
@@ -183,21 +189,21 @@ object Client {
                     parameters["password"] = userDataState.password
                 }
             }
-            when (loginResult.status.value) {
+            return when (loginResult.status.value) {
                 200 -> {
-                    return Result.success(loginResult.bodyAsText())
+                    Result.success(loginResult.bodyAsText())
                 }
 
                 401 -> {
-                    return Result.failure(ServerResponse.WrongPasswordOrLogin())
+                    Result.failure(ServerResponse.WrongPasswordOrLogin())
                 }
 
                 404 -> {
-                    return Result.failure(ServerResponse.Unreachable())
+                    Result.failure(ServerResponse.Unreachable())
                 }
 
                 else -> {
-                    return Result.failure(ServerResponse.UnknownServerError())
+                    Result.failure(ServerResponse.UnknownServerError())
                 }
             }
         }.onFailure {
@@ -206,6 +212,9 @@ object Client {
         }
     }
 
+    /**
+     * checks if we are currently playing a game
+     */
     suspend fun isPlaying(): Long? {
         val jwtTokenState = jwtToken
         require(jwtTokenState != null)
@@ -255,6 +264,9 @@ object Client {
         }
     }
 
+    /**
+     * waits for game searching result
+     */
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun awaitForGameSearchEnd(): Result<Long>? {
         return searchingForGameJob?.await()
@@ -313,9 +325,10 @@ sealed class ServerResponse : Exception() {
      */
     class WrongPasswordOrLogin : ServerResponse()
 
+    /**
+     * this means that server is currently unreachable
+     */
     class Unreachable : ServerResponse()
-
-    class AlreadySearching : ServerResponse()
 
     /**
      * Represents a server response indicating an unknown error.
