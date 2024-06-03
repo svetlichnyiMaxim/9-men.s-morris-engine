@@ -29,9 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.kr8ne.mensMorris.BUTTON_WIDTH
+import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.R
-import com.kr8ne.mensMorris.common.game.Position
-import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
+import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 
 /**

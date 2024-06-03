@@ -13,7 +13,6 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  */
 class OnlineGameViewModel(@Suppress("UnusedPrivateProperty") navController: NavHostController?) :
     ViewModelI() {
-    // TODO: finish this
     override val data = OnlineGameData(Client.gameId!!)
     override var render: ScreenModel = OnlineGameScreen(data.gameBoard)
 }

@@ -3,9 +3,9 @@ package com.kr8ne.mensMorris.viewModel.impl
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
-import com.kr8ne.mensMorris.common.game.Position
-import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
+import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.data.impl.GameBoardData
+import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.ui.impl.GameBoardScreen
 import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 

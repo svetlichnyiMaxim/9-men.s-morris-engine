@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import com.kr8ne.mensMorris.common.BLUE_
 import com.kr8ne.mensMorris.BUTTON_WIDTH
+import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.common.EMPTY
 import com.kr8ne.mensMorris.common.GREEN
 import com.kr8ne.mensMorris.R
-import com.kr8ne.mensMorris.common.game.Position
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel

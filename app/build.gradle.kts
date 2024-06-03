@@ -37,6 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
     compileOptions {
@@ -74,4 +75,8 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))
     debugImplementation("androidx.compose.ui:ui-tooling:1.7.0-beta02")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+
+    // my own dependencies
+    implementation("com.github.kroune:9-men-s-morris-lib:0587ceebca")
+    implementation("com.github.kroune:9-men-s-morris-shared:2ef33b461d")
 }

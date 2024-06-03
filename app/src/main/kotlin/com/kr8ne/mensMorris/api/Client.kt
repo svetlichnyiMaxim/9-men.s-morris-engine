@@ -3,7 +3,7 @@ package com.kr8ne.mensMorris.api
 import androidx.core.content.edit
 import androidx.lifecycle.MutableLiveData
 import com.kr8ne.mensMorris.activity
-import com.kr8ne.mensMorris.common.game.Movement
+import com.kr8ne.mensMorris.move.Movement
 import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp

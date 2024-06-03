@@ -4,10 +4,10 @@ import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import com.kr8ne.mensMorris.common.game.Movement
-import com.kr8ne.mensMorris.common.game.Position
-import com.kr8ne.mensMorris.common.game.utils.CacheUtils
+import com.kr8ne.mensMorris.Position
+import com.kr8ne.mensMorris.cache.Cache
 import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.move.Movement
 import kotlin.math.max
 
 /**
@@ -19,6 +19,11 @@ class GameAnalyzeData(
      */
     val pos: MutableState<Position>
 ) : DataModel {
+
+    /**
+     * shows if this position was analyzed or not
+     */
+    private var previousAnalyzedPosition: Position? = null
 
     /**
      * search depth
@@ -58,10 +63,10 @@ class GameAnalyzeData(
      * gets analyze result (winning sequence)
      */
     fun getAnalyzeResult(ignoreCache: Boolean = false): MutableList<Movement>? {
-        if (CacheUtils.hasCacheWithDepth && !ignoreCache) {
+        if (previousAnalyzedPosition == pos.value && !ignoreCache) {
             return null
         }
-        CacheUtils.hasCacheWithDepth = true
+        previousAnalyzedPosition = pos.value
         return pos.value.solve(depth.intValue.toUByte()).second
     }
 
@@ -69,7 +74,7 @@ class GameAnalyzeData(
      * hides analyze gui and delete it's result
      */
     private fun stopAnalyze() {
-        CacheUtils.resetCachedPositions()
+        Cache.resetCacheDepth()
         solveResult.value = mutableListOf()
     }
 }

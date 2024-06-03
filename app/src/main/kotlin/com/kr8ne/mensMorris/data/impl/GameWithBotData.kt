@@ -2,11 +2,11 @@ package com.kr8ne.mensMorris.data.impl
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
-import com.kr8ne.mensMorris.common.game.utils.CacheUtils
-import com.kr8ne.mensMorris.common.game.utils.GameState
-import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
+import com.kr8ne.mensMorris.GameState
+import com.kr8ne.mensMorris.cache.Cache
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
+import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.viewModel.impl.GameAnalyzeViewModel
 import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -56,14 +56,14 @@ class GameWithBotData(
         botJob?.cancel()
         botJob = viewModelScope.launch {
             delay(800)
-            while (!position.value.pieceToMove) {
+            while (!position.value.pieceToMove && position.value.gameState() != GameState.End) {
                 launchBot()
             }
         }
     }
 
     override suspend fun invokeBackend() {
-        CacheUtils.resetCachedPositions()
+        Cache.resetCacheDepth()
     }
 
     private var botJob: Job? = null
@@ -75,12 +75,12 @@ class GameWithBotData(
         if (!position.value.pieceToMove
             && position.value.gameState() != GameState.End
         ) {
+            Cache.resetCacheDepth()
             val solveResultValue = analyze.data.getAnalyzeResult()
             analyze.data.solveResult.value = solveResultValue!!
             withContext(Dispatchers.Main) {
                 gameBoard.data.processMove(analyze.data.solveResult.value.last())
             }
-            CacheUtils.resetCachedPositions()
         }
     }
 }

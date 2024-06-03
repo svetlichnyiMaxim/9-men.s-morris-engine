@@ -1,11 +1,9 @@
 package com.kr8ne.mensMorris.data.impl
 
-import androidx.compose.runtime.mutableStateOf
 import com.kr8ne.mensMorris.api.Client
-import com.kr8ne.mensMorris.common.game.Movement
-import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
+import com.kr8ne.mensMorris.move.Movement
 import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.utils.io.printStack
@@ -66,10 +64,10 @@ class OnlineGameData(
                     while (true) {
                         // send all our moves
                         while (Client.movesQueue.isNotEmpty()) {
-                            val string = Json.encodeToString<Movement>(Client.movesQueue.peek()!!)
+                            val string = Json.encodeToString<Movement>(Client.movesQueue.poll()!!)
                             // post our move
+                            println(string)
                             send(string)
-                            Client.movesQueue.remove()
                         }
                         try {
                             // receive the server's data

@@ -5,14 +5,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.GAME_END_SCREEN
-import com.kr8ne.mensMorris.common.game.Movement
-import com.kr8ne.mensMorris.common.game.Position
-import com.kr8ne.mensMorris.common.game.utils.CacheUtils
-import com.kr8ne.mensMorris.common.game.utils.GameState
-import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
-import com.kr8ne.mensMorris.common.game.utils.moveProvider
+import com.kr8ne.mensMorris.GameState
+import com.kr8ne.mensMorris.Position
+import com.kr8ne.mensMorris.cache.Cache
 import com.kr8ne.mensMorris.common.utils.positionToNuke
 import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.gameStartPosition
+import com.kr8ne.mensMorris.move.Movement
+import com.kr8ne.mensMorris.move.moveProvider
 import java.util.Stack
 
 /**
@@ -96,8 +96,7 @@ class GameBoardData(
             undoneMoveHistory.push(movesHistory.peek())
             movesHistory.pop()
             pos.value = movesHistory.lastOrNull() ?: gameStartPosition
-            CacheUtils.resetCachedPositions()
-            CacheUtils.hasCacheWithDepth = false
+            Cache.resetCacheDepth()
             moveHints.value = arrayListOf()
             selectedButton.value = null
             onUndo()
@@ -113,8 +112,7 @@ class GameBoardData(
             undoneMoveHistory.pop()
             pos.value = movesHistory.lastOrNull() ?: gameStartPosition
             selectedButton.value = null
-            CacheUtils.resetCachedPositions()
-            CacheUtils.hasCacheWithDepth = false
+            Cache.resetCacheDepth()
             moveHints.value = arrayListOf()
             onUndo()
         }
@@ -126,8 +124,7 @@ class GameBoardData(
     fun processMove(move: Movement) {
         pos.value = move.producePosition(pos.value).copy()
         selectedButton.value = null
-        CacheUtils.resetCachedPositions()
-        CacheUtils.hasCacheWithDepth = false
+        Cache.resetCacheDepth()
         saveMove(pos.value)
         if (pos.value.gameState() == GameState.End) {
             positionToNuke = pos.value

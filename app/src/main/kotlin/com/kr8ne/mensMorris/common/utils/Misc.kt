@@ -6,10 +6,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.kr8ne.mensMorris.common.game.Movement
-import com.kr8ne.mensMorris.common.game.Position
-import com.kr8ne.mensMorris.common.game.utils.gameStartPosition
-import kotlin.random.Random
+import com.kr8ne.mensMorris.Position
+import com.kr8ne.mensMorris.gameStartPosition
+import com.kr8ne.mensMorris.move.Movement
 
 /**
  * provides a way to get an element from pair
@@ -71,7 +70,7 @@ fun MutableList<Movement>.displayAsPositions(startPos: Position) {
         println(it.removalCount)
         println(it.evaluate())
         println("${it.bluePiecesAmount} ${it.greenPiecesAmount}")
-        it.display()
+        println(it.toString())
     }
     println()
     println("finished output")
