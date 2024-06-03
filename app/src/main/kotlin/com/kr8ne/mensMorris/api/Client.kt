@@ -1,10 +1,8 @@
 package com.kr8ne.mensMorris.api
 
 import androidx.core.content.edit
-import androidx.lifecycle.MutableLiveData
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.move.Movement
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.websocket.WebSockets
@@ -17,15 +15,12 @@ import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
-import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.util.LinkedList
 import java.util.Queue
 

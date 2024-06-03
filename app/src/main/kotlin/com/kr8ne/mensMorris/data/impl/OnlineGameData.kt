@@ -1,10 +1,15 @@
 package com.kr8ne.mensMorris.data.impl
 
+import androidx.navigation.NavHostController
+import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
+import com.kr8ne.mensMorris.Position
+import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.move.Movement
 import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kroune.MoveResponse
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.utils.io.printStack
 import io.ktor.websocket.Frame
@@ -19,19 +24,24 @@ import kotlinx.serialization.json.Json
  * data for online game screen
  */
 class OnlineGameData(
-    private val gameId: Long
+    private val gameId: Long,
+    val navController: NavHostController?
 ) : GameBoardInterface, DataModel {
 
+    private var isGreen: Boolean? = null
     override val gameBoard = GameBoardViewModel(
         onClick = { index, func -> response(index, func) },
         navController = null
     )
 
     private fun response(index: Int, func: (index: Int) -> Unit) {
-        gameBoard.data.getMovement(index)?.let {
-            Client.movesQueue.add(it)
+        // check if we can make this move
+        if (isGreen == true && gameBoard.data.pos.value.pieceToMove || isGreen == false && !gameBoard.data.pos.value.pieceToMove) {
+            gameBoard.data.getMovement(index)?.let {
+                Client.movesQueue.add(it)
+            }
+            func(index)
         }
-        func(index)
     }
 
     override suspend fun invokeBackend() {
@@ -61,10 +71,15 @@ class OnlineGameData(
                             parameters["gameId"] = gameId.toString()
                         }
                     }) {
+                    isGreen =
+                        (Json.decodeFromString<MoveResponse>((incoming.receive() as Frame.Text).readText())).message.toBoolean()
+                    gameBoard.data.pos.value =
+                        Json.decodeFromString<Position>(Json.decodeFromString<MoveResponse>((incoming.receive() as Frame.Text).readText()).message!!)
                     while (true) {
-                        // send all our moves
-                        while (Client.movesQueue.isNotEmpty()) {
-                            val string = Json.encodeToString<Movement>(Client.movesQueue.poll()!!)
+                        // send all our moves one by one
+                        if (Client.movesQueue.isNotEmpty()) {
+                            val moveToSend = Client.movesQueue.poll()!!
+                            val string = Json.encodeToString<Movement>(moveToSend)
                             // post our move
                             println(string)
                             send(string)
@@ -73,9 +88,30 @@ class OnlineGameData(
                             // receive the server's data
                             val serverMessage =
                                 incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
-                            val move = Json.decodeFromString<Movement>(serverMessage.readText())
-                            println("received move")
-                            gameBoard.data.processMove(move)
+                            println(serverMessage)
+                            val serverResponse =
+                                Json.decodeFromString<MoveResponse>(serverMessage.readText())
+                            when (serverResponse.code) {
+                                410 -> {
+                                    // game ended
+                                    println("game ended")
+                                    navController?.navigate(WELCOME_SCREEN)
+                                }
+
+                                200 -> {
+                                    val movement =
+                                        Json.decodeFromString<Movement>(serverResponse.message!!)
+                                    // apply move
+                                    gameBoard.data.pos.value =
+                                        movement.producePosition(gameBoard.data.pos.value)
+                                }
+
+                                else -> {
+                                    // we reload our game
+                                    navController?.navigate(ONLINE_GAME_SCREEN)
+                                    println("smth went wrong, reloading")
+                                }
+                            }
                         } catch (e: Exception) {
                             println("error when receiving move")
                             e.printStackTrace()
