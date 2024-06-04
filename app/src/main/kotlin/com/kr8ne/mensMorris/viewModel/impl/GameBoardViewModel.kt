@@ -26,6 +26,10 @@ class GameBoardViewModel(
      */
     onUndo: () -> Unit = {},
     /**
+     * what we should execute on redo
+     */
+    onRedo: () -> Unit = {},
+    /**
      * stores all pieces which can be moved (used for highlighting)
      */
     moveHints: MutableState<List<Int>> = mutableStateOf(listOf()),
@@ -42,13 +46,14 @@ class GameBoardViewModel(
         pos: Position,
         onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit = { _, _ -> },
         onUndo: () -> Unit = {},
+        onRedo: () -> Unit = {},
         moveHints: MutableState<List<Int>> = mutableStateOf(listOf()),
         selectedButton: MutableState<Int?> = mutableStateOf(null),
         navController: NavHostController?
-    ) : this(mutableStateOf(pos), onClick, onUndo, moveHints, selectedButton, navController)
+    ) : this(mutableStateOf(pos), onClick, onUndo, onRedo, moveHints, selectedButton, navController)
 
     override val data =
-        GameBoardData(pos, moveHints, onUndo, onClick, selectedButton, navController)
+        GameBoardData(pos, moveHints, onUndo, onRedo, onClick, selectedButton, navController)
     override var render = GameBoardScreen(
         data.pos,
         { index -> data.onClick(index) },

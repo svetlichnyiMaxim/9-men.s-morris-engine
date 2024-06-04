@@ -33,6 +33,10 @@ class GameBoardData(
      */
     val onUndo: () -> Unit = {},
     /**
+     * what we should execute on redo
+     */
+    val onRedo: () -> Unit = {},
+    /**
      * what will happen if we click some circle
      */
     var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit = { _, _ -> },
@@ -114,7 +118,7 @@ class GameBoardData(
             selectedButton.value = null
             Cache.resetCacheDepth()
             moveHints.value = arrayListOf()
-            onUndo()
+            onRedo()
         }
     }
 
