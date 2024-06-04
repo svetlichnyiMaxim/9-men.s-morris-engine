@@ -30,13 +30,14 @@ class OnlineGameData(
 
     private var isGreen: Boolean? = null
     override val gameBoard = GameBoardViewModel(
-        onClick = { index, func -> response(index, func) },
+        onClick = { index, func -> println("nothing") },
         navController = null
     )
 
     private fun response(index: Int, func: (index: Int) -> Unit) {
         // check if we can make this move
-        if (isGreen == true && gameBoard.data.pos.value.pieceToMove || isGreen == false && !gameBoard.data.pos.value.pieceToMove) {
+        println("isGreen - $isGreen; pieceToMove - ${gameBoard.data.pos.value.pieceToMove}")
+        if ((isGreen == true && gameBoard.data.pos.value.pieceToMove) || (isGreen == false && !gameBoard.data.pos.value.pieceToMove)) {
             gameBoard.data.getMovement(index)?.let {
                 Client.movesQueue.add(it)
             }
@@ -71,10 +72,16 @@ class OnlineGameData(
                             parameters["gameId"] = gameId.toString()
                         }
                     }) {
-                    isGreen =
-                        (Json.decodeFromString<MoveResponse>((incoming.receive() as Frame.Text).readText())).message.toBoolean()
-                    gameBoard.data.pos.value =
+                    val isGreenServerText = (incoming.receive() as Frame.Text).readText()
+                    println("isGreen new value - $isGreenServerText")
+                    val isGreenText = Json.decodeFromString<MoveResponse>(isGreenServerText)
+                    isGreen = isGreenText.message.toBoolean()
+                    println("isGreen = ${isGreen}")
+                    val newPosition =
                         Json.decodeFromString<Position>(Json.decodeFromString<MoveResponse>((incoming.receive() as Frame.Text).readText()).message!!)
+                    gameBoard.data.pos.value = newPosition
+                    // we change onClick function due to changes in response function
+                    gameBoard.data.onClick = { index, func -> response(index, func) }
                     while (true) {
                         // send all our moves one by one
                         if (Client.movesQueue.isNotEmpty()) {

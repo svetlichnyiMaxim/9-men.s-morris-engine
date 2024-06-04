@@ -207,19 +207,37 @@ object Client {
         }
     }
 
+    suspend fun checkJwtToken(): Result<Boolean> {
+        return runCatching {
+            val jwtTokenState = jwtToken
+            require(jwtTokenState != null)
+            val result = network.get("http$SERVER_ADDRESS$USER_API/check-jwt-token") {
+                method = HttpMethod.Get
+                url {
+                    parameters["jwtToken"] = jwtTokenState
+                }
+            }
+            result.bodyAsText().toBoolean()
+        }
+    }
     /**
      * checks if we are currently playing a game
      */
-    suspend fun isPlaying(): Long? {
-        val jwtTokenState = jwtToken
-        require(jwtTokenState != null)
-        val result = network.get("http$SERVER_ADDRESS$USER_API/is-playing") {
-            method = HttpMethod.Get
-            url {
-                parameters["jwtToken"] = jwtTokenState
+    suspend fun isPlaying(): Result<Long?> {
+        return runCatching {
+            val jwtTokenState = jwtToken
+            require(jwtTokenState != null)
+            val result = network.get("http$SERVER_ADDRESS$USER_API/is-playing") {
+                method = HttpMethod.Get
+                url {
+                    parameters["jwtToken"] = jwtTokenState
+                }
             }
+            result.bodyAsText().toLongOrNull()
+        }.onFailure {
+            println("error accessing ${"http$SERVER_ADDRESS$USER_API/is-playing"}")
+            it.printStack()
         }
-        return result.bodyAsText().toLongOrNull()
     }
 
     /**
@@ -267,44 +285,6 @@ object Client {
         return searchingForGameJob?.await()
     }
 }
-
-/**
- * used to serialize data (position) from the server
- */
-@Serializable
-class PositionAdapter(
-    /**
-     * current position
-     */
-    @Serializable val positions: Array<Boolean?>,
-    /**
-     * free pieces
-     */
-    @Serializable val freePieces: Pair<UByte, UByte> = Pair(0U, 0U),
-    /**
-     * piece to move
-     */
-    @Serializable val pieceToMove: Boolean,
-    /**
-     * amount of removals
-     */
-    @Serializable val removalCount: Byte = 0
-)
-
-/**
- * used to serialize data (movement) from the server
- */
-@Serializable
-class MovementAdapter(
-    /**
-     * movement start index
-     */
-    @Serializable val startIndex: Int?,
-    /**
-     * movement end index
-     */
-    @Serializable val endIndex: Int?
-)
 
 /**
  * Represents the server's response to client requests.

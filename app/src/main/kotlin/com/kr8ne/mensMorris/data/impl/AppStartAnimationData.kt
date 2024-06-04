@@ -5,4 +5,4 @@ import com.kr8ne.mensMorris.data.interfaces.DataModel
 /**
  * data for loading animation screen
  */
-class LoadingAnimationData : DataModel
+class AppStartAnimationData : DataModel

@@ -15,7 +15,7 @@ import com.kr8ne.mensMorris.common.utils.positionToNuke
 import com.kr8ne.mensMorris.viewModel.impl.GameEndViewModel
 import com.kr8ne.mensMorris.viewModel.impl.GameWithBotViewModel
 import com.kr8ne.mensMorris.viewModel.impl.GameWithFriendViewModel
-import com.kr8ne.mensMorris.viewModel.impl.LoadingAnimationViewModel
+import com.kr8ne.mensMorris.viewModel.impl.AppStartAnimationViewModel
 import com.kr8ne.mensMorris.viewModel.impl.OnlineGameViewModel
 import com.kr8ne.mensMorris.viewModel.impl.SearchingForGameViewModel
 import com.kr8ne.mensMorris.viewModel.impl.SignInViewModel
@@ -58,7 +58,6 @@ class MainActivity : ComponentActivity() {
             "com.kr8ne.mensMorris",
             MODE_PRIVATE
         )
-        var counter = 0
         setContent {
             navController = rememberNavController()
             NavHost(
@@ -92,13 +91,10 @@ class MainActivity : ComponentActivity() {
                     SearchingForGameViewModel(navController).Invoke()
                 }
                 composable(ONLINE_GAME_SCREEN) {
-                    counter++
-                    if (counter % 3 == 0) {
-                        OnlineGameViewModel(navController).Invoke()
-                    }
+                    OnlineGameViewModel(navController).Invoke()
                 }
                 composable(LOADING_ANIMATION_SCREEN) {
-                    LoadingAnimationViewModel(navController).Invoke()
+                    AppStartAnimationViewModel(navController).Invoke()
                 }
             }
         }

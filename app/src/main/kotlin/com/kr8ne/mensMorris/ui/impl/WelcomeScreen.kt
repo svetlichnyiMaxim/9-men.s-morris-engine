@@ -38,6 +38,7 @@ import com.kr8ne.mensMorris.common.utils.AppTheme
 import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.tutorial.TutorialViewModel
+import kotlinx.coroutines.runBlocking
 
 /**
  * this screen is shown at the start of the game
@@ -156,10 +157,15 @@ class WelcomeScreen(
                     }
                     Button(
                         onClick = {
-                            if (Client.jwtToken == null) {
-                                navController?.navigate(SIGN_IN_SCREEN)
-                            } else {
-                                navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                            // TODO: rework this
+                            runBlocking {
+                                if (Client.jwtToken != null && Client.checkJwtToken()
+                                        .getOrNull() == true
+                                ) {
+                                    navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                                } else {
+                                    navController?.navigate(SIGN_IN_SCREEN)
+                                }
                             }
                         },
                         shape = RoundedCornerShape(5.dp),

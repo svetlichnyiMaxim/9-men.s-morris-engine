@@ -30,7 +30,7 @@ import kotlin.math.sin
  * this screen is shown at the start of the app
  * data loading should start here
  */
-class LoadingAnimationScreen(
+class AppStartAnimationScreen(
     /**
      * navigation controller
      */

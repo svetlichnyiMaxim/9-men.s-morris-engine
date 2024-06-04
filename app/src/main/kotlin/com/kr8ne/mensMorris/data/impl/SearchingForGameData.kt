@@ -18,7 +18,7 @@ class SearchingForGameData(
 ) : DataModel {
     override suspend fun invokeBackend() {
         while (true) {
-            val playingStatus = Client.isPlaying()
+            val playingStatus = Client.isPlaying().getOrNull()
             if (playingStatus != null) {
                 println("recovering game status")
                 Client.gameId = playingStatus
