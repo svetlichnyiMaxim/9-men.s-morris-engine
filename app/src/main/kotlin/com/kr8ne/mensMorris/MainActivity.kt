@@ -54,6 +54,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = this
+        val context = applicationContext
         sharedPreferences = getSharedPreferences(
             "com.kr8ne.mensMorris",
             MODE_PRIVATE
@@ -70,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     fadeOut()
                 }) {
                 composable(WELCOME_SCREEN) {
-                    WelcomeViewModel(navController).Invoke()
+                    WelcomeViewModel(navController, sharedPreferences).Invoke()
                 }
                 composable(GAME_WITH_BOT_SCREEN) {
                     GameWithBotViewModel(navController).Invoke()

@@ -1,10 +1,10 @@
-package com.kr8ne.mensMorris.data.impl.game
+package com.kr8ne.mensMorris.data.local.impl.game
 
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
-import com.kr8ne.mensMorris.api.Client
-import com.kr8ne.mensMorris.api.Client.awaitForGameSearchEnd
-import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.data.remote.Client
+import com.kr8ne.mensMorris.data.remote.Client.awaitForGameSearchEnd
+import com.kr8ne.mensMorris.data.local.interfaces.DataModel
 import kotlinx.coroutines.delay
 
 /**

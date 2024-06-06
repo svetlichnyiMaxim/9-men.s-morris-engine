@@ -1,6 +1,7 @@
 package com.kr8ne.mensMorris.viewModel.impl.tutorial
 
-import com.kr8ne.mensMorris.data.impl.tutorial.TutorialData
+import android.content.SharedPreferences
+import com.kr8ne.mensMorris.data.local.impl.tutorial.TutorialData
 import com.kr8ne.mensMorris.ui.impl.tutorial.TutorialScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
@@ -8,7 +9,7 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 /**
  * view model for tutorials
  */
-class TutorialViewModel(progress: Float) : ViewModelI() {
+class TutorialViewModel(progress: Float, sharedPreferences: SharedPreferences) : ViewModelI() {
     override val data: TutorialData = TutorialData(progress)
-    override var render: ScreenModel = TutorialScreen(data.progress)
+    override var render: ScreenModel = TutorialScreen(data.progress, sharedPreferences)
 }

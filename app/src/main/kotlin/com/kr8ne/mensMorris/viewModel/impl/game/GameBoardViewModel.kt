@@ -4,7 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.Position
-import com.kr8ne.mensMorris.data.impl.game.GameBoardData
+import com.kr8ne.mensMorris.data.local.impl.game.GameBoardData
 import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.ui.impl.game.GameBoardScreen
 import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI

@@ -4,8 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import com.kr8ne.mensMorris.api.Client
+import com.kr8ne.mensMorris.data.remote.Client
 import com.kr8ne.mensMorris.common.AppTheme
+import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
@@ -35,7 +36,7 @@ class OnlineGameScreen(
                         Text("Waiting for server info")
                     }
                 }
-                Text(Client.jwtToken.toString())
+                Text(jwtToken.toString())
             }
         }
     }

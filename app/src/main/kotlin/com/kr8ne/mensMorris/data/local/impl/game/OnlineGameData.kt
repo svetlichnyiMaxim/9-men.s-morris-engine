@@ -1,14 +1,20 @@
-package com.kr8ne.mensMorris.data.impl.game
+package com.kr8ne.mensMorris.data.local.impl.game
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.PendingIntentCompat.send
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.WELCOME_SCREEN
-import com.kr8ne.mensMorris.api.Client
-import com.kr8ne.mensMorris.data.interfaces.DataModel
-import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
+import com.kr8ne.mensMorris.common.SERVER_ADDRESS
+import com.kr8ne.mensMorris.common.USER_API
+import com.kr8ne.mensMorris.data.remote.Client
+import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.GameBoardInterface
+import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
+import com.kr8ne.mensMorris.data.remote.network
+import com.kr8ne.mensMorris.data.remote.networkScope
 import com.kr8ne.mensMorris.move.Movement
 import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 import com.kroune.MoveResponse
@@ -70,12 +76,12 @@ class OnlineGameData(
          */
         println("invoke as $someInt")
         println(Client.gameId.toString())
-        CoroutineScope(Client.networkScope).launch {
+        CoroutineScope(networkScope).launch {
             runCatching {
-                val jwtTokenState = Client.jwtToken
+                val jwtTokenState = jwtToken
                 require(jwtTokenState != null)
-                Client.network.webSocket(
-                    "ws${Client.SERVER_ADDRESS}${Client.USER_API}/game",
+                network.webSocket(
+                    "ws${SERVER_ADDRESS}${USER_API}/game",
                     request = {
                         url {
                             parameters["jwtToken"] = jwtTokenState
@@ -142,7 +148,7 @@ class OnlineGameData(
                     }
                 }
             }.onFailure {
-                println("error accessing ${"${Client.SERVER_ADDRESS}${Client.USER_API}/game; gameId = $gameId"} $someInt")
+                println("error accessing ${"${SERVER_ADDRESS}${USER_API}/game; gameId = $gameId"} $someInt")
                 it.printStack()
             }
         }

@@ -1,7 +1,7 @@
-package com.kr8ne.mensMorris.data.impl.tutorial
+package com.kr8ne.mensMorris.data.local.impl.tutorial
 
 import androidx.compose.runtime.mutableFloatStateOf
-import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataModel
 
 /**
  * used for storing tutorials data (completion progress)

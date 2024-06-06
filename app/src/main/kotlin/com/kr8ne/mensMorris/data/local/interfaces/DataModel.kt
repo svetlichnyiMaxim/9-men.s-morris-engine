@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.interfaces
+package com.kr8ne.mensMorris.data.local.interfaces
 
 /**
  * model we use for all data providing classes

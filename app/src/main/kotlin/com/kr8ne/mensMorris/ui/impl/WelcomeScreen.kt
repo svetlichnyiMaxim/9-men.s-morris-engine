@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl
 
+import android.content.SharedPreferences
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -32,9 +33,10 @@ import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
-import com.kr8ne.mensMorris.activity
-import com.kr8ne.mensMorris.api.Client
+import com.kr8ne.mensMorris.data.remote.Client
 import com.kr8ne.mensMorris.common.AppTheme
+import com.kr8ne.mensMorris.data.remote.Auth
+import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.tutorial.TutorialViewModel
@@ -47,10 +49,11 @@ class WelcomeScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController?
+    val navController: NavHostController?,
+    val sharedPreferences: SharedPreferences
 ) : ScreenModel {
-    private val hasSeen = activity?.sharedPreferences?.getBoolean("hasSeenTutorial", false) ?: true
-    private val tutorialViewModel = TutorialViewModel(if (hasSeen) 0f else -1f)
+    private val hasSeen = sharedPreferences.getBoolean("hasSeenTutorial", false)
+    private val tutorialViewModel = TutorialViewModel(if (hasSeen) 0f else -1f, sharedPreferences)
 
     /**
      * draws game modes options
@@ -101,10 +104,10 @@ class WelcomeScreen(
                         .align(Alignment.Center),
                     contentAlignment = Alignment.TopEnd
                 ) {
-                    if (Client.jwtToken != null) {
+                    if (jwtToken != null) {
                         IconButton(
                             onClick = {
-                                Client.jwtToken = null
+                                jwtToken = null
                                 Client.gameId = null
                                 //navController?.navigate(VIEW_ACCOUNT_SCREEN)
                             }
@@ -159,7 +162,7 @@ class WelcomeScreen(
                         onClick = {
                             // TODO: rework this
                             runBlocking {
-                                if (Client.jwtToken != null && Client.checkJwtToken()
+                                if (jwtToken != null && Auth.checkJwtToken()
                                         .getOrNull() == true
                                 ) {
                                     navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)

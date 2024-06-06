@@ -3,7 +3,7 @@ package com.kr8ne.mensMorris.viewModel.interfaces
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
-import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataModel
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 
 /**

@@ -1,6 +1,6 @@
-package com.kr8ne.mensMorris.data.impl.game
+package com.kr8ne.mensMorris.data.local.impl.game
 
-import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**

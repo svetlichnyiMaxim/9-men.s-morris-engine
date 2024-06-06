@@ -6,7 +6,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.common.toPositions
-import com.kr8ne.mensMorris.data.impl.game.GameAnalyzeData
+import com.kr8ne.mensMorris.data.local.impl.game.GameAnalyzeData
 import com.kr8ne.mensMorris.ui.impl.game.GameAnalyzeScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI

@@ -24,9 +24,12 @@ import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
-import com.kr8ne.mensMorris.api.Client
-import com.kr8ne.mensMorris.api.ServerResponse
+import com.kr8ne.mensMorris.data.remote.Client
+import com.kr8ne.mensMorris.data.remote.ServerResponse
 import com.kr8ne.mensMorris.common.AppTheme
+import com.kr8ne.mensMorris.data.remote.Auth
+import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
+import com.kr8ne.mensMorris.data.remote.networkScope
 import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import kotlinx.coroutines.CoroutineScope
@@ -66,7 +69,7 @@ class SignUpScreen(
                 val serverResponse = remember { mutableStateOf<Result<String>?>(null) }
                 val requestInProcess = remember { mutableStateOf(false) }
                 val isUsernameValid = remember { mutableStateOf(false) }
-                val usernameOrEmail = remember { mutableStateOf("") }
+                val username = remember { mutableStateOf("") }
                 serverResponse.value?.onFailure { exception ->
                     when (exception) {
                         is ServerResponse.LoginInUse -> {
@@ -84,7 +87,7 @@ class SignUpScreen(
                 }
                 serverResponse.value?.onSuccess {
                     if (!isSwitchingScreens) {
-                        Client.jwtToken = it
+                        jwtToken = it
                         navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
                         // we make sure to only change screen once
                         isSwitchingScreens = true
@@ -96,10 +99,9 @@ class SignUpScreen(
                             painter = painterResource(id = R.drawable.username),
                             "your preferred username"
                         )
-                        TextField(usernameOrEmail.value, { newValue ->
-                            usernameOrEmail.value = newValue
-                            Client.updateUserLogin(newValue)
-                            isUsernameValid.value = loginValidator(usernameOrEmail.value)
+                        TextField(username.value, { newValue ->
+                            username.value = newValue
+                            isUsernameValid.value = loginValidator(username.value)
                         }, label = {
                             Row {
                                 if (!isUsernameValid.value) {
@@ -125,7 +127,6 @@ class SignUpScreen(
                         )
                         TextField(password.value, { newValue ->
                             password.value = newValue
-                            Client.updateUserPassword(newValue)
                             isPasswordValid.value = passwordValidator(password.value)
                             isPassword2Valid.value = (password2.value == password.value)
                         }, label = {
@@ -170,8 +171,8 @@ class SignUpScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
                         requestInProcess.value = true
-                        CoroutineScope(Client.networkScope).launch {
-                            serverResponse.value = Client.register()
+                        CoroutineScope(networkScope).launch {
+                            serverResponse.value = Auth.register(username.value, password.value)
                             requestInProcess.value = false
                         }
                     },

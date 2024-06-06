@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.impl.game
+package com.kr8ne.mensMorris.data.local.impl.game
 
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.cache.Cache
-import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataModel
 import com.kr8ne.mensMorris.move.Movement
 import kotlin.math.max
 

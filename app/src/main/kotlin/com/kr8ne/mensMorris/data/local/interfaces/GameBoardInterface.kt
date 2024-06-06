@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.interfaces
+package com.kr8ne.mensMorris.data.local.interfaces
 
 import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 

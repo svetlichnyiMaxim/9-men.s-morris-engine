@@ -1,12 +1,13 @@
-package com.kr8ne.mensMorris.data.impl.auth
+package com.kr8ne.mensMorris.data.local.impl.auth
 
-import com.kr8ne.mensMorris.api.Client
-import com.kr8ne.mensMorris.data.interfaces.DataModel
+import com.kr8ne.mensMorris.data.remote.Client
+import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.remote.Auth
 
 /**
  * This class provides data for sign in screen.
  */
-class SignUpData : DataModel {
+class SignInData : DataModel {
     /**
      * Validates the provided login.
      *
@@ -14,7 +15,7 @@ class SignUpData : DataModel {
      * @return True if the login is valid, false otherwise.
      */
     fun loginValidator(login: String): Boolean {
-        return Client.loginValidator(login)
+        return Auth.loginValidator(login)
     }
 
     /**
@@ -24,6 +25,6 @@ class SignUpData : DataModel {
      * @return True if the password is valid, false otherwise.
      */
     fun passwordValidator(password: String): Boolean {
-        return Client.passwordValidator(password)
+        return Auth.passwordValidator(password)
     }
 }

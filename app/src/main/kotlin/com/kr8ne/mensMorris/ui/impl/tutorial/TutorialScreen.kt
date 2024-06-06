@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl.tutorial
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -38,7 +39,8 @@ import kotlin.math.roundToInt
  * screen that shows tutorial on how to play this game
  */
 class TutorialScreen(
-    private val progress: MutableState<Float>
+    private val progress: MutableState<Float>,
+    val sharedPreferences: SharedPreferences
 ) : ScreenModel {
     /**
      * stores order of tutorials (used for slider)
@@ -126,7 +128,7 @@ class TutorialScreen(
         val swipeUpState =
             rememberSwipeableState(if (progress.value != 0f) SwipeStates.FULL else SwipeStates.CLOSED)
         if (swipeUpState.currentValue == SwipeStates.CLOSED) {
-            activity?.sharedPreferences?.edit(commit = true) {
+            sharedPreferences.edit(commit = true) {
                 this.putBoolean("hasSeenTutorial", true)
             }
         }
