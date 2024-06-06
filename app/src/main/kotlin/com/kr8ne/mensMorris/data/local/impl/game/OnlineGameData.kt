@@ -3,7 +3,6 @@ package com.kr8ne.mensMorris.data.local.impl.game
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
-import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.common.SERVER_ADDRESS
@@ -36,10 +35,6 @@ class OnlineGameData(
     val navController: NavHostController?
 ) : GameBoardInterface, DataModel {
 
-    /**
-     * [Volatile] annotation is needed to prevent [response] function from using cache version
-     */
-    @Volatile
     var isGreen: MutableState<Boolean?> = mutableStateOf(null)
     override val gameBoard = GameBoardViewModel(
         onClick = { index -> this.response(index) },
@@ -48,6 +43,7 @@ class OnlineGameData(
 
     private fun GameBoardData.response(index: Int) {
         // check if we can make this move
+        println("isGreen - $isGreen; pieceToMove - ${gameBoard.data.pos.value.pieceToMove}")
         if (isGreen.value == gameBoard.data.pos.value.pieceToMove) {
             gameBoard.data.getMovement(index)?.let {
                 println("added move")
@@ -92,6 +88,7 @@ class OnlineGameData(
                         println("isGreen new value - $isGreenData")
                         val isGreenText = Json.decodeFromString<MoveResponse>(isGreenData)
                         isGreen.value = isGreenText.message.toBoolean()
+                        println("check - ${isGreen}")
 
                         val positionServerData = (incoming.receive() as Frame.Text).readText()
                         println("position new value - $positionServerData")
@@ -132,7 +129,7 @@ class OnlineGameData(
 
                                     else -> {
                                         // we reload our game
-                                        navController?.navigate(ONLINE_GAME_SCREEN)
+                                        navController?.navigate("ONLINE_GAME_SCREEN/$gameId")
                                         println("smth went wrong, reloading")
                                     }
                                 }

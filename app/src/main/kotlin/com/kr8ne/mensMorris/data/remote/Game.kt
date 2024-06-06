@@ -64,19 +64,6 @@ object Game {
         return searchingForGameJob?.await()
     }
 
-
-    /**
-     * current game id
-     */
-    @Volatile
-    var gameId: Long? = activity?.sharedPreferences?.getString("gameId", null)?.toLongOrNull()
-        set(value) {
-            field = value
-            activity?.sharedPreferences?.edit(commit = true) {
-                putString("gameId", value.toString()).apply()
-            }
-        }
-
     /**
      * job created when searching for a game
      */

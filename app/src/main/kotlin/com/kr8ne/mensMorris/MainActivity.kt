@@ -8,9 +8,11 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.kr8ne.mensMorris.common.positionToNuke
 import com.kr8ne.mensMorris.viewModel.impl.AppStartAnimationViewModel
 import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
@@ -54,7 +56,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = this
-        val context = applicationContext
         sharedPreferences = getSharedPreferences(
             "com.kr8ne.mensMorris",
             MODE_PRIVATE
@@ -92,8 +93,15 @@ class MainActivity : ComponentActivity() {
                 composable(SEARCHING_ONLINE_GAME_SCREEN) {
                     SearchingForGameViewModel(navController, resources).Invoke()
                 }
-                composable(ONLINE_GAME_SCREEN) {
-                    OnlineGameViewModel(navController).Invoke()
+                composable(
+                    "$ONLINE_GAME_SCREEN/{idValue}",
+                    arguments = listOf(navArgument("idValue") { type = NavType.LongType })
+                ) { gameEntry ->
+                    println("some text")
+                    OnlineGameViewModel(
+                        navController,
+                        gameEntry.arguments!!.getLong("idValue")
+                    ).Invoke()
                 }
                 composable(LOADING_ANIMATION_SCREEN) {
                     AppStartAnimationViewModel(navController).Invoke()

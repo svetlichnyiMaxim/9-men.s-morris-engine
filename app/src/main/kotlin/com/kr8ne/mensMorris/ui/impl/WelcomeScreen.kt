@@ -109,8 +109,6 @@ class WelcomeScreen(
                     if (jwtToken != null) {
                         IconButton(
                             onClick = {
-                                jwtToken = null
-                                Game.gameId = null
                                 //navController?.navigate(VIEW_ACCOUNT_SCREEN)
                             }
                         ) {

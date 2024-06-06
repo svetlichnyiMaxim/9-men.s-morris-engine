@@ -11,8 +11,8 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  * welcome model
  * called when app is launched
  */
-class OnlineGameViewModel(navController: NavHostController?) :
+class OnlineGameViewModel(navController: NavHostController?, id: Long) :
     ViewModelI() {
-    override val data = OnlineGameData(Game.gameId!!, navController)
+    override val data = OnlineGameData(id, navController)
     override var render: ScreenModel = OnlineGameScreen(data.gameBoard, data.isGreen)
 }

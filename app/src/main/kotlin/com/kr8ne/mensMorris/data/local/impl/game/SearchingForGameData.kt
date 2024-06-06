@@ -20,15 +20,13 @@ class SearchingForGameData(
             val playingStatus = Game.isPlaying().getOrNull()
             if (playingStatus != null) {
                 println("recovering game status")
-                Game.gameId = playingStatus
-                navController?.navigate(ONLINE_GAME_SCREEN)
+                navController?.navigate("$ONLINE_GAME_SCREEN/$playingStatus")
                 return
             }
             Game.startSearchingGame()
             val newGameId = Game.awaitForGameSearchEnd()?.getOrNull()
             if (newGameId != null) {
-                Game.gameId = newGameId
-                navController?.navigate(ONLINE_GAME_SCREEN)
+                navController?.navigate("$ONLINE_GAME_SCREEN/$newGameId")
                 break
             } else {
                 delay(20000L)
