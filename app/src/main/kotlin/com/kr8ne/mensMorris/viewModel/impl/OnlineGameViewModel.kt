@@ -14,5 +14,5 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 class OnlineGameViewModel(navController: NavHostController?) :
     ViewModelI() {
     override val data = OnlineGameData(Client.gameId!!, navController)
-    override var render: ScreenModel = OnlineGameScreen(data.gameBoard)
+    override var render: ScreenModel = OnlineGameScreen(data.gameBoard, data.isGreen)
 }

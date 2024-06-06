@@ -127,8 +127,6 @@ class GameAnalyzeScreen(
                         Row {
                             GameBoardViewModel(
                                 remember { mutableStateOf(it) },
-                                { _, _ -> },
-                                {},
                                 navController = null
                             ).InvokeRender()
                         }

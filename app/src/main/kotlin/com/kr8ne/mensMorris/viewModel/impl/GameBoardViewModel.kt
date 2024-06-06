@@ -20,7 +20,10 @@ class GameBoardViewModel(
     /**
      * what will happen if we click some circle
      */
-    onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit = { _, _ -> },
+    onClick: GameBoardData.(index: Int) -> Unit = { index ->
+        handleClick(index)
+        handleHighLighting()
+    },
     /**
      * what we should additionally do on undo
      */
@@ -44,7 +47,7 @@ class GameBoardViewModel(
 ) : ViewModelI() {
     constructor(
         pos: Position,
-        onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit = { _, _ -> },
+        onClick: GameBoardData.(index: Int) -> Unit = { },
         onUndo: () -> Unit = {},
         onRedo: () -> Unit = {},
         moveHints: MutableState<List<Int>> = mutableStateOf(listOf()),

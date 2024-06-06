@@ -21,8 +21,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.serialization.Serializable
+import java.util.Collections
 import java.util.LinkedList
 import java.util.Queue
+import java.util.concurrent.ConcurrentLinkedQueue
+import java.util.concurrent.SynchronousQueue
 
 /**
  * Object representing the client for interacting with the server.
@@ -79,7 +82,7 @@ object Client {
      * queue of the moves that player performed
      * TODO: implement premoves with this one
      */
-    val movesQueue: Queue<Movement> = LinkedList()
+    val movesQueue = ConcurrentLinkedQueue<Movement>()
 
     /**
      * The network client for making HTTP requests.

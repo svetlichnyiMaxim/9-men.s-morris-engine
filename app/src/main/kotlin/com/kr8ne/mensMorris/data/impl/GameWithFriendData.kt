@@ -15,8 +15,6 @@ class GameWithFriendData(navController: NavHostController?) :
     DataModel, GameBoardInterface {
     override val gameBoard = GameBoardViewModel(
         pos = mutableStateOf(gameStartPosition),
-        onClick = { index, func -> func(index) },
-        onUndo = {},
         navController = navController
     )
 

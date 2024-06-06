@@ -30,7 +30,7 @@ class GameWithBotData(
     val position = mutableStateOf(gameStartPosition)
     override val gameBoard = GameBoardViewModel(
         pos = position,
-        onClick = { index, func -> response(index, func) },
+        onClick = { index -> this.response(index) },
         onUndo = { onUndo() },
         navController = navController
     )
@@ -41,9 +41,10 @@ class GameWithBotData(
      * @param index index of the clicked element
      * @param func function that handles our click
      */
-    private fun response(index: Int, func: (index: Int) -> Unit) {
+    private fun GameBoardData.response(index: Int) {
         if (position.value.pieceToMove) {
-            func(index)
+            handleClick(index)
+            handleHighLighting()
             botJob = viewModelScope.launch {
                 while (!position.value.pieceToMove) {
                     launchBot()

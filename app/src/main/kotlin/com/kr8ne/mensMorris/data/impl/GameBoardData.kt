@@ -39,7 +39,7 @@ class GameBoardData(
     /**
      * what will happen if we click some circle
      */
-    var onClick: (index: Int, func: (elementIndex: Int) -> Unit) -> Unit = { _, _ -> },
+    var onClick: GameBoardData.(index: Int) -> Unit = {},
     /**
      * used for storing info of the previous (valid one) clicked button
      */
@@ -49,18 +49,6 @@ class GameBoardData(
      */
     val navController: NavHostController?
 ) : DataModel {
-
-    /**
-     * handles user click
-     */
-    fun onClick(index: Int) {
-        onClick(
-            index
-        ) {
-            handleClick(index)
-            handleHighLighting()
-        }
-    }
 
     /**
      * stores all movements (positions) history
@@ -192,7 +180,7 @@ class GameBoardData(
      * handles click on the pieces
      * @param elementIndex element that got clicked
      */
-    private fun handleClick(elementIndex: Int) {
+    fun handleClick(elementIndex: Int) {
         when (pos.value.gameState()) {
             GameState.Placement -> {
                 if (pos.value.positions[elementIndex] == null) {
