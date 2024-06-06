@@ -2,9 +2,8 @@ package com.kr8ne.mensMorris.data.local.impl.game
 
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
-import com.kr8ne.mensMorris.data.remote.Client
-import com.kr8ne.mensMorris.data.remote.Client.awaitForGameSearchEnd
 import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.remote.Game
 import kotlinx.coroutines.delay
 
 /**
@@ -18,17 +17,17 @@ class SearchingForGameData(
 ) : DataModel {
     override suspend fun invokeBackend() {
         while (true) {
-            val playingStatus = Client.isPlaying().getOrNull()
+            val playingStatus = Game.isPlaying().getOrNull()
             if (playingStatus != null) {
                 println("recovering game status")
-                Client.gameId = playingStatus
+                Game.gameId = playingStatus
                 navController?.navigate(ONLINE_GAME_SCREEN)
                 return
             }
-            Client.startSearchingGame()
-            val newGameId = awaitForGameSearchEnd()?.getOrNull()
+            Game.startSearchingGame()
+            val newGameId = Game.awaitForGameSearchEnd()?.getOrNull()
             if (newGameId != null) {
-                Client.gameId = newGameId
+                Game.gameId = newGameId
                 navController?.navigate(ONLINE_GAME_SCREEN)
                 break
             } else {

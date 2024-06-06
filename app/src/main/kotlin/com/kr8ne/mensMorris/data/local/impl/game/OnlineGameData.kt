@@ -2,17 +2,16 @@ package com.kr8ne.mensMorris.data.local.impl.game
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.core.app.PendingIntentCompat.send
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.common.SERVER_ADDRESS
 import com.kr8ne.mensMorris.common.USER_API
-import com.kr8ne.mensMorris.data.remote.Client
 import com.kr8ne.mensMorris.data.local.interfaces.DataModel
 import com.kr8ne.mensMorris.data.local.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
+import com.kr8ne.mensMorris.data.remote.Game
 import com.kr8ne.mensMorris.data.remote.network
 import com.kr8ne.mensMorris.data.remote.networkScope
 import com.kr8ne.mensMorris.move.Movement
@@ -52,7 +51,7 @@ class OnlineGameData(
         if (isGreen.value == gameBoard.data.pos.value.pieceToMove) {
             gameBoard.data.getMovement(index)?.let {
                 println("added move")
-                Client.movesQueue.add(it)
+                Game.movesQueue.add(it)
             }
             handleClick(index)
             handleHighLighting()
@@ -75,7 +74,7 @@ class OnlineGameData(
          * FUCK THIS SHIT
          */
         println("invoke as $someInt")
-        println(Client.gameId.toString())
+        println(gameId.toString())
         CoroutineScope(networkScope).launch {
             runCatching {
                 val jwtTokenState = jwtToken
@@ -102,7 +101,7 @@ class OnlineGameData(
                         gameBoard.data.pos.value = newPosition
                         while (true) {
                             // send all our moves one by one
-                            val moveToSend = Client.movesQueue.poll()
+                            val moveToSend = Game.movesQueue.poll()
                             if (moveToSend != null) {
                                 val string = Json.encodeToString<Movement>(moveToSend)
                                 // post our move

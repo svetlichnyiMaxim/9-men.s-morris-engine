@@ -4,7 +4,6 @@ import androidx.core.content.edit
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.SERVER_ADDRESS
 import com.kr8ne.mensMorris.common.USER_API
-import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.move.Movement
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.get
@@ -20,53 +19,7 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import java.util.concurrent.ConcurrentLinkedQueue
 
-/**
- * Object representing the client for interacting with the server.
- */
-object Client {
-    /**
-     * current game id
-     */
-    @Volatile
-    var gameId: Long? = activity?.sharedPreferences?.getString("gameId", null)?.toLongOrNull()
-        set(value) {
-            field = value
-            activity?.sharedPreferences?.edit(commit = true) {
-                putString("gameId", value.toString()).apply()
-            }
-        }
-
-    /**
-     * job created when searching for a game
-     */
-    var searchingForGameJob: Deferred<Result<Long>>? = null
-
-    /**
-     * queue of the moves that player performed
-     * TODO: implement pre-moves with this one
-     */
-    val movesQueue = ConcurrentLinkedQueue<Movement>()
-
-    /**
-     * checks if we are currently playing a game
-     */
-    suspend fun isPlaying(): Result<Long?> {
-        return runCatching {
-            val jwtTokenState = jwtToken
-            require(jwtTokenState != null)
-            val result = network.get("http$SERVER_ADDRESS$USER_API/is-playing") {
-                method = HttpMethod.Get
-                url {
-                    parameters["jwtToken"] = jwtTokenState
-                }
-            }
-            result.bodyAsText().toLongOrNull()
-        }.onFailure {
-            println("error accessing ${"http$SERVER_ADDRESS$USER_API/is-playing"}")
-            it.printStack()
-        }
-    }
-
+object Game {
     /**
      * Starts searching for a game.
      *
@@ -78,7 +31,7 @@ object Client {
         }
         searchingForGameJob = CoroutineScope(networkScope).async {
             runCatching {
-                val jwtTokenState = jwtToken
+                val jwtTokenState = Auth.jwtToken
                 require(jwtTokenState != null)
                 var gameId: String? = null
                 network.webSocket("ws$SERVER_ADDRESS$USER_API/search-for-game", request = {
@@ -109,5 +62,49 @@ object Client {
      */
     suspend fun awaitForGameSearchEnd(): Result<Long>? {
         return searchingForGameJob?.await()
+    }
+
+
+    /**
+     * current game id
+     */
+    @Volatile
+    var gameId: Long? = activity?.sharedPreferences?.getString("gameId", null)?.toLongOrNull()
+        set(value) {
+            field = value
+            activity?.sharedPreferences?.edit(commit = true) {
+                putString("gameId", value.toString()).apply()
+            }
+        }
+
+    /**
+     * job created when searching for a game
+     */
+    var searchingForGameJob: Deferred<Result<Long>>? = null
+
+    /**
+     * queue of the moves that player performed
+     * TODO: implement pre-moves with this one
+     */
+    val movesQueue = ConcurrentLinkedQueue<Movement>()
+
+    /**
+     * checks if we are currently playing a game
+     */
+    suspend fun isPlaying(): Result<Long?> {
+        return runCatching {
+            val jwtTokenState = Auth.jwtToken
+            require(jwtTokenState != null)
+            val result = network.get("http$SERVER_ADDRESS$USER_API/is-playing") {
+                method = HttpMethod.Get
+                url {
+                    parameters["jwtToken"] = jwtTokenState
+                }
+            }
+            result.bodyAsText().toLongOrNull()
+        }.onFailure {
+            println("error accessing ${"http$SERVER_ADDRESS$USER_API/is-playing"}")
+            it.printStack()
+        }
     }
 }

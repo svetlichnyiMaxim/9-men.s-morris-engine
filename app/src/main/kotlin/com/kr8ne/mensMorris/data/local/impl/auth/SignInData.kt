@@ -1,6 +1,5 @@
 package com.kr8ne.mensMorris.data.local.impl.auth
 
-import com.kr8ne.mensMorris.data.remote.Client
 import com.kr8ne.mensMorris.data.local.interfaces.DataModel
 import com.kr8ne.mensMorris.data.remote.Auth
 
