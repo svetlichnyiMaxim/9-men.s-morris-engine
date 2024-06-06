@@ -1,6 +1,7 @@
 package com.kr8ne.mensMorris.ui.impl
 
 import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -37,7 +38,6 @@ import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.data.remote.Auth
 import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.data.remote.Game
-import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.tutorial.TutorialViewModel
 import kotlinx.coroutines.runBlocking
@@ -50,10 +50,12 @@ class WelcomeScreen(
      * navigation controller
      */
     val navController: NavHostController?,
-    val sharedPreferences: SharedPreferences
+    val sharedPreferences: SharedPreferences,
+    val resources: Resources
 ) : ScreenModel {
     private val hasSeen = sharedPreferences.getBoolean("hasSeenTutorial", false)
-    private val tutorialViewModel = TutorialViewModel(if (hasSeen) 0f else -1f, sharedPreferences)
+    private val tutorialViewModel =
+        TutorialViewModel(if (hasSeen) 0f else -1f, sharedPreferences, resources)
 
     /**
      * draws game modes options
@@ -142,7 +144,7 @@ class WelcomeScreen(
                         colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
                     ) {
                         Text(
-                            text = getString(R.string.play_game_with_friends),
+                            text = resources.getString(R.string.play_game_with_friends),
                             color = Color.White
                         )
                     }
@@ -154,7 +156,7 @@ class WelcomeScreen(
                         colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
                     ) {
                         Text(
-                            text = getString(R.string.play_game_with_bot),
+                            text = resources.getString(R.string.play_game_with_bot),
                             color = Color.White
                         )
                     }
@@ -175,7 +177,7 @@ class WelcomeScreen(
                         colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
                     ) {
                         Text(
-                            text = getString(R.string.play_online_game),
+                            text = resources.getString(R.string.play_online_game),
                             color = Color.White
                         )
                     }

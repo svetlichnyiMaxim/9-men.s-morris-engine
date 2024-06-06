@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl.tutorial.domain
 
+import android.content.res.Resources
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -9,20 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import com.kr8ne.mensMorris.common.BLUE_
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.Position
+import com.kr8ne.mensMorris.R
+import com.kr8ne.mensMorris.common.BLUE_
 import com.kr8ne.mensMorris.common.EMPTY
 import com.kr8ne.mensMorris.common.GREEN
-import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
-import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * this screen tells about information indicators provide
  */
-class IndicatorsTutorialScreen : ScreenModel {
+class IndicatorsTutorialScreen(val resources: Resources) : ScreenModel {
     private val position = Position(
         // @formatter:off
         arrayOf(
@@ -52,8 +52,8 @@ class IndicatorsTutorialScreen : ScreenModel {
         ) {
             Column {
                 gameBoard.InvokeRender()
-                Text(text = getString(R.string.tutorial_indicator_piece_count))
-                Text(text = getString(R.string.tutorial_fly_condition))
+                Text(text = resources.getString(R.string.tutorial_indicator_piece_count))
+                Text(text = resources.getString(R.string.tutorial_fly_condition))
             }
         }
     }

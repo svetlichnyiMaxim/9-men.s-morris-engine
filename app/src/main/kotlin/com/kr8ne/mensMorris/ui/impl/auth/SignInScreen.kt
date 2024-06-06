@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl.auth
 
+import android.content.res.Resources
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,6 @@ import com.kr8ne.mensMorris.data.remote.Auth
 import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.data.remote.ServerResponse
 import com.kr8ne.mensMorris.data.remote.networkScope
-import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -58,7 +58,8 @@ class SignInScreen(
      *
      * @return True if the password is valid, false otherwise.
      */
-    val passwordValidator: (String) -> Boolean
+    val passwordValidator: (String) -> Boolean,
+    val resources: Resources
 ) : ScreenModel {
     @Composable
     override fun InvokeRender() {
@@ -76,15 +77,15 @@ class SignInScreen(
                 serverResponse.value?.onFailure { exception ->
                     when (exception) {
                         is ServerResponse.WrongPasswordOrLogin -> {
-                            Text(text = getString(R.string.wrong_pass_or_login))
+                            Text(text = resources.getString(R.string.wrong_pass_or_login))
                         }
 
                         is ServerResponse.Unreachable, is SocketException -> {
-                            Text(text = getString(R.string.network_error))
+                            Text(text = resources.getString(R.string.network_error))
                         }
 
                         else -> {
-                            Text(text = getString(R.string.server_error))
+                            Text(text = resources.getString(R.string.server_error))
                         }
                     }
                 }
@@ -108,14 +109,14 @@ class SignInScreen(
                             Row {
                                 if (!isUsernameValid.value) {
                                     Text(
-                                        getString(R.string.invalid_login),
+                                        resources.getString(R.string.invalid_login),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp
                                     )
                                 }
                             }
-                        }, placeholder = { Text(getString(R.string.username)) })
+                        }, placeholder = { Text(resources.getString(R.string.username)) })
                     }
                 }
                 val isPasswordValid = remember { mutableStateOf(false) }
@@ -132,14 +133,14 @@ class SignInScreen(
                             Row {
                                 if (!isPasswordValid.value) {
                                     Text(
-                                        getString(R.string.invalid_password),
+                                        resources.getString(R.string.invalid_password),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp
                                     )
                                 }
                             }
-                        }, placeholder = { Text(getString(R.string.password)) })
+                        }, placeholder = { Text(resources.getString(R.string.password)) })
                     }
                 }
                 Spacer(modifier = Modifier.height(100.dp))
@@ -155,14 +156,14 @@ class SignInScreen(
                     enabled = isUsernameValid.value && isPasswordValid.value
                             && !requestInProcess.value
                 ) {
-                    Text(getString(R.string.sign_in))
+                    Text(resources.getString(R.string.sign_in))
                 }
                 Spacer(modifier = Modifier.height(100.dp))
                 Box {
                     Button(modifier = Modifier, onClick = {
                         navController?.navigate(SIGN_UP_SCREEN)
                     }) {
-                        Text(getString(R.string.no_account_sign_up))
+                        Text(resources.getString(R.string.no_account_sign_up))
                     }
                 }
             }

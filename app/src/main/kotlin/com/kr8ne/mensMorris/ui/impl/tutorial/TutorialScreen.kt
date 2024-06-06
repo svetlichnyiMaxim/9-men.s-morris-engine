@@ -1,6 +1,7 @@
 package com.kr8ne.mensMorris.ui.impl.tutorial
 
 import android.content.SharedPreferences
+import android.content.res.Resources
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -23,7 +24,6 @@ import androidx.wear.compose.material.FractionalThreshold
 import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.kr8ne.mensMorris.R
-import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.FlyingMovesTutorialScreen
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.IndicatorsTutorialScreen
@@ -40,19 +40,20 @@ import kotlin.math.roundToInt
  */
 class TutorialScreen(
     private val progress: MutableState<Float>,
-    val sharedPreferences: SharedPreferences
+    val sharedPreferences: SharedPreferences,
+    resources: Resources
 ) : ScreenModel {
     /**
      * stores order of tutorials (used for slider)
      */
     private val screensOrder = listOf(
-        IndicatorsTutorialScreen(),
-        LoseTutorialScreen(),
-        PlacementTutorialScreen(),
-        NormalMovesTutorialScreen(),
-        FlyingMovesTutorialScreen(),
-        TriplesTutorialScreen(),
-        RemovalMovesTutorialScreen()
+        IndicatorsTutorialScreen(resources),
+        LoseTutorialScreen(resources),
+        PlacementTutorialScreen(resources),
+        NormalMovesTutorialScreen(resources),
+        FlyingMovesTutorialScreen(resources),
+        TriplesTutorialScreen(resources),
+        RemovalMovesTutorialScreen(resources)
     )
 
     /**

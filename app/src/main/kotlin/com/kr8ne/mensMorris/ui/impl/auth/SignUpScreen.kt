@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl.auth
 
+import android.content.res.Resources
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +30,6 @@ import com.kr8ne.mensMorris.data.remote.Auth
 import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.data.remote.ServerResponse
 import com.kr8ne.mensMorris.data.remote.networkScope
-import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -54,7 +54,8 @@ class SignUpScreen(
     /**
      * A function that validates the provided password.
      */
-    val passwordValidator: (String) -> Boolean
+    val passwordValidator: (String) -> Boolean,
+    val resources: Resources
 ) : ScreenModel {
     @Composable
     override fun InvokeRender() {
@@ -72,15 +73,15 @@ class SignUpScreen(
                 serverResponse.value?.onFailure { exception ->
                     when (exception) {
                         is ServerResponse.LoginInUse -> {
-                            Text(text = getString(R.string.login_in_use))
+                            Text(text = resources.getString(R.string.login_in_use))
                         }
 
                         is ServerResponse.Unreachable, is SocketException -> {
-                            Text(text = getString(R.string.network_error))
+                            Text(text = resources.getString(R.string.network_error))
                         }
 
                         else -> {
-                            Text(text = getString(R.string.server_error))
+                            Text(text = resources.getString(R.string.server_error))
                         }
                     }
                 }
@@ -105,14 +106,14 @@ class SignUpScreen(
                             Row {
                                 if (!isUsernameValid.value) {
                                     Text(
-                                        getString(R.string.invalid_login),
+                                        resources.getString(R.string.invalid_login),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp
                                     )
                                 }
                             }
-                        }, placeholder = { Text(getString(R.string.username)) })
+                        }, placeholder = { Text(resources.getString(R.string.username)) })
                     }
                 }
                 val isPasswordValid = remember { mutableStateOf(false) }
@@ -132,21 +133,21 @@ class SignUpScreen(
                             Row {
                                 if (!isPasswordValid.value) {
                                     Text(
-                                        getString(R.string.invalid_password),
+                                        resources.getString(R.string.invalid_password),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp
                                     )
                                 }
                             }
-                        }, placeholder = { Text(getString(R.string.password)) })
+                        }, placeholder = { Text(resources.getString(R.string.password)) })
                     }
                 }
                 Box {
                     Row {
                         Icon(
                             painter = painterResource(id = R.drawable.password),
-                            getString(R.string.repeat_pass)
+                            resources.getString(R.string.repeat_pass)
                         )
                         TextField(password2.value, { newValue ->
                             password2.value = newValue
@@ -155,14 +156,14 @@ class SignUpScreen(
                             Row {
                                 if (!isPassword2Valid.value) {
                                     Text(
-                                        getString(R.string.pass_doesnt_match),
+                                        resources.getString(R.string.pass_doesnt_match),
                                         modifier = Modifier,
                                         color = Color.Red,
                                         fontSize = 12.sp
                                     )
                                 }
                             }
-                        }, placeholder = { Text(getString(R.string.repeat_pass)) })
+                        }, placeholder = { Text(resources.getString(R.string.repeat_pass)) })
                     }
                 }
                 Spacer(modifier = Modifier.height(100.dp))
@@ -178,14 +179,14 @@ class SignUpScreen(
                     enabled = isUsernameValid.value && isPasswordValid.value &&
                             isPassword2Valid.value && !requestInProcess.value
                 ) {
-                    Text(getString(R.string.sign_up))
+                    Text(resources.getString(R.string.sign_up))
                 }
                 Spacer(modifier = Modifier.height(100.dp))
                 Box {
                     Button(modifier = Modifier, onClick = {
                         navController?.navigate(SIGN_IN_SCREEN)
                     }) {
-                        Text(getString(R.string.have_account_sign_in))
+                        Text(resources.getString(R.string.have_account_sign_in))
                     }
                 }
             }

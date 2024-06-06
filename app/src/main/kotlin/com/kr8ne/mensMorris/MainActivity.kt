@@ -13,14 +13,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kr8ne.mensMorris.common.positionToNuke
 import com.kr8ne.mensMorris.viewModel.impl.AppStartAnimationViewModel
+import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
+import com.kr8ne.mensMorris.viewModel.impl.auth.SignInViewModel
+import com.kr8ne.mensMorris.viewModel.impl.auth.SignUpViewModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameEndViewModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameWithBotViewModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameWithFriendViewModel
 import com.kr8ne.mensMorris.viewModel.impl.game.OnlineGameViewModel
 import com.kr8ne.mensMorris.viewModel.impl.game.SearchingForGameViewModel
-import com.kr8ne.mensMorris.viewModel.impl.auth.SignInViewModel
-import com.kr8ne.mensMorris.viewModel.impl.auth.SignUpViewModel
-import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
 
 /**
  * shows how thick our pieces & board will be
@@ -59,6 +59,7 @@ class MainActivity : ComponentActivity() {
             "com.kr8ne.mensMorris",
             MODE_PRIVATE
         )
+        val resources = resources
         setContent {
             navController = rememberNavController()
             NavHost(
@@ -71,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     fadeOut()
                 }) {
                 composable(WELCOME_SCREEN) {
-                    WelcomeViewModel(navController, sharedPreferences).Invoke()
+                    WelcomeViewModel(navController, sharedPreferences, resources).Invoke()
                 }
                 composable(GAME_WITH_BOT_SCREEN) {
                     GameWithBotViewModel(navController).Invoke()
@@ -83,13 +84,13 @@ class MainActivity : ComponentActivity() {
                     GameEndViewModel(positionToNuke, navController).Invoke()
                 }
                 composable(SIGN_UP_SCREEN) {
-                    SignUpViewModel(navController).Invoke()
+                    SignUpViewModel(navController, resources).Invoke()
                 }
                 composable(SIGN_IN_SCREEN) {
-                    SignInViewModel(navController).Invoke()
+                    SignInViewModel(navController, resources).Invoke()
                 }
                 composable(SEARCHING_ONLINE_GAME_SCREEN) {
-                    SearchingForGameViewModel(navController).Invoke()
+                    SearchingForGameViewModel(navController, resources).Invoke()
                 }
                 composable(ONLINE_GAME_SCREEN) {
                     OnlineGameViewModel(navController).Invoke()
