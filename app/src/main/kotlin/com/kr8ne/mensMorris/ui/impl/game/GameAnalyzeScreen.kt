@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.ui.impl
+package com.kr8ne.mensMorris.ui.impl.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * game analyzing screen

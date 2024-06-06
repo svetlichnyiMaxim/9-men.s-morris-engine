@@ -1,6 +1,6 @@
 package com.kr8ne.mensMorris.data.interfaces
 
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * interface with game board value

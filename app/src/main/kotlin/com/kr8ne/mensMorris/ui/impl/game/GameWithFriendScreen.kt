@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.ui.impl
+package com.kr8ne.mensMorris.ui.impl.game
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -9,10 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.kr8ne.mensMorris.BUTTON_WIDTH
-import com.kr8ne.mensMorris.common.utils.AppTheme
+import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.GameAnalyzeViewModel
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameAnalyzeViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * Game main screen

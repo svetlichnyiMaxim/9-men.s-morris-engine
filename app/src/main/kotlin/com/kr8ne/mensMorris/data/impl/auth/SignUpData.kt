@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.impl
+package com.kr8ne.mensMorris.data.impl.auth
 
 import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.data.interfaces.DataModel
@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.data.interfaces.DataModel
 /**
  * This class provides data for sign in screen.
  */
-class SignInData : DataModel {
+class SignUpData : DataModel {
     /**
      * Validates the provided login.
      *

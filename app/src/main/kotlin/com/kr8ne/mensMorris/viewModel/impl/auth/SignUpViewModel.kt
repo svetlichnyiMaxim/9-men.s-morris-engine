@@ -1,8 +1,8 @@
-package com.kr8ne.mensMorris.viewModel.impl
+package com.kr8ne.mensMorris.viewModel.impl.auth
 
 import androidx.navigation.NavHostController
-import com.kr8ne.mensMorris.data.impl.SignUpData
-import com.kr8ne.mensMorris.ui.impl.SignUpScreen
+import com.kr8ne.mensMorris.data.impl.auth.SignUpData
+import com.kr8ne.mensMorris.ui.impl.auth.SignUpScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 

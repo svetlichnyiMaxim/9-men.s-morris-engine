@@ -23,7 +23,7 @@ import androidx.wear.compose.material.rememberSwipeableState
 import androidx.wear.compose.material.swipeable
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.activity
-import com.kr8ne.mensMorris.common.utils.AppTheme
+import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.FlyingMovesTutorialScreen
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.IndicatorsTutorialScreen
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.LoseTutorialScreen

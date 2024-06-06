@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.impl
+package com.kr8ne.mensMorris.data.impl.game
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
@@ -6,7 +6,7 @@ import com.kr8ne.mensMorris.cache.Cache
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.gameStartPosition
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * data for game with friend screen

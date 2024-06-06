@@ -34,7 +34,7 @@ import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.api.Client
-import com.kr8ne.mensMorris.common.utils.AppTheme
+import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.tutorial.TutorialViewModel

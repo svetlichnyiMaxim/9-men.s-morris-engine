@@ -11,15 +11,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.kr8ne.mensMorris.common.utils.positionToNuke
-import com.kr8ne.mensMorris.viewModel.impl.GameEndViewModel
-import com.kr8ne.mensMorris.viewModel.impl.GameWithBotViewModel
-import com.kr8ne.mensMorris.viewModel.impl.GameWithFriendViewModel
+import com.kr8ne.mensMorris.common.positionToNuke
 import com.kr8ne.mensMorris.viewModel.impl.AppStartAnimationViewModel
-import com.kr8ne.mensMorris.viewModel.impl.OnlineGameViewModel
-import com.kr8ne.mensMorris.viewModel.impl.SearchingForGameViewModel
-import com.kr8ne.mensMorris.viewModel.impl.SignInViewModel
-import com.kr8ne.mensMorris.viewModel.impl.SignUpViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameEndViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameWithBotViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameWithFriendViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.OnlineGameViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.SearchingForGameViewModel
+import com.kr8ne.mensMorris.viewModel.impl.auth.SignInViewModel
+import com.kr8ne.mensMorris.viewModel.impl.auth.SignUpViewModel
 import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
 
 /**

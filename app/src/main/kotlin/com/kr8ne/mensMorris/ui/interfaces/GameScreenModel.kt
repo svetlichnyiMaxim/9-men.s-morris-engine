@@ -1,6 +1,6 @@
 package com.kr8ne.mensMorris.ui.interfaces
 
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * extends game screen model

@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.ui.impl
+package com.kr8ne.mensMorris.ui.impl.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -18,9 +18,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.WELCOME_SCREEN
-import com.kr8ne.mensMorris.common.utils.AppTheme
+import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * screen that is shown at the end

@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.ui.impl
+package com.kr8ne.mensMorris.ui.impl.game
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

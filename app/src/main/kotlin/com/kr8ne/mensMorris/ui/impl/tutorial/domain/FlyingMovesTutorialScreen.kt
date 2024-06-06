@@ -18,7 +18,7 @@ import com.kr8ne.mensMorris.common.GREEN
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.getString
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 
 /**
  * this screen tells about information indicators provide

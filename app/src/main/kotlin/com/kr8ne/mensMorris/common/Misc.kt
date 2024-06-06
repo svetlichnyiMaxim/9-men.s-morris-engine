@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.common.utils
+package com.kr8ne.mensMorris.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

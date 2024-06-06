@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.impl
+package com.kr8ne.mensMorris.data.impl.game
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
@@ -8,7 +8,7 @@ import com.kr8ne.mensMorris.GAME_END_SCREEN
 import com.kr8ne.mensMorris.GameState
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.cache.Cache
-import com.kr8ne.mensMorris.common.utils.positionToNuke
+import com.kr8ne.mensMorris.common.positionToNuke
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.move.Movement

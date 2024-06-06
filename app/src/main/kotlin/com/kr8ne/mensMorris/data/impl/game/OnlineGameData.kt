@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.impl
+package com.kr8ne.mensMorris.data.impl.game
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -10,7 +10,7 @@ import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.data.interfaces.DataModel
 import com.kr8ne.mensMorris.data.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.move.Movement
-import com.kr8ne.mensMorris.viewModel.impl.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
 import com.kroune.MoveResponse
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.utils.io.printStack

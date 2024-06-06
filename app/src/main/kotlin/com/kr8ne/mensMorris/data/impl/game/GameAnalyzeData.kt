@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.impl
+package com.kr8ne.mensMorris.data.impl.game
 
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState

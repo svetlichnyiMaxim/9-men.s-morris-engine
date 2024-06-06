@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.ui.impl
+package com.kr8ne.mensMorris.ui.impl.auth
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +26,7 @@ import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
 import com.kr8ne.mensMorris.api.Client
 import com.kr8ne.mensMorris.api.ServerResponse
-import com.kr8ne.mensMorris.common.utils.AppTheme
+import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.getString
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import kotlinx.coroutines.CoroutineScope

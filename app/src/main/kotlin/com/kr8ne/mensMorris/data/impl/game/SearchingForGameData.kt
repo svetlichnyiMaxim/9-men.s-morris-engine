@@ -1,4 +1,4 @@
-package com.kr8ne.mensMorris.data.impl
+package com.kr8ne.mensMorris.data.impl.game
 
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.ONLINE_GAME_SCREEN
