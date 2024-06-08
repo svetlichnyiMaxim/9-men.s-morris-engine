@@ -17,7 +17,7 @@
     <string name="play_game_with_friends">play with friends</string>
     <string name="play_game_with_bot">play with bot</string>
     <string name="sign_in">Sign in</string>
-    <string name="no_account_sign_up">Don\'t have an account? Sign up</string>
+    <string name="no_account_question">Don\'t have an account?</string>
     <string name="password">Passowrd</string>
     <string name="invalid_password">Your password is invalid</string>
     <string name="invalid_login">Your login is invalid</string>

@@ -8,9 +8,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_UP_SCREEN
@@ -43,19 +47,26 @@ class SignInScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController?,
-    val resources: Resources
+    val navController: NavHostController?, val resources: Resources = Resources.getSystem()
 ) : ScreenModel {
     @Composable
     override fun InvokeRender() {
-        var isSwitchingScreens = false
+        val serverResponse = remember { mutableStateOf<Result<String>?>(null) }
+        var isSwitchingScreens = remember { false }
+        serverResponse.value?.onSuccess {
+            if (!isSwitchingScreens) {
+                jwtToken = it
+                navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                // we make sure to only change screen once
+                isSwitchingScreens = true
+            }
+        }
         AppTheme {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val serverResponse = remember { mutableStateOf<Result<String>?>(null) }
                 val requestInProcess = remember { mutableStateOf(false) }
                 val isUsernameValid = remember { mutableStateOf(false) }
                 val username = remember { mutableStateOf("") }
@@ -63,59 +74,53 @@ class SignInScreen(
                     // TODO: finish this
                     Text(text = resources.getString(R.string.server_error))
                 }
-                serverResponse.value?.onSuccess {
-                    if (!isSwitchingScreens) {
-                        jwtToken = it
-                        navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
-                        // we make sure to only change screen once
-                        isSwitchingScreens = true
-                    }
-                }
-                Box {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.username), "your username"
-                        )
-                        TextField(username.value, { newValue ->
-                            username.value = newValue
-                            isUsernameValid.value = viewModel.loginValidator(username.value)
-                        }, label = {
-                            Row {
-                                if (!isUsernameValid.value) {
-                                    Text(
-                                        resources.getString(R.string.invalid_login),
-                                        modifier = Modifier,
-                                        color = Color.Red,
-                                        fontSize = 12.sp
-                                    )
-                                }
+                Spacer(modifier = Modifier.height(300.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.username), "your username"
+                    )
+                    TextField(username.value, { newValue ->
+                        username.value = newValue
+                        isUsernameValid.value = viewModel.loginValidator(username.value)
+                    }, label = {
+                        Row {
+                            if (!isUsernameValid.value) {
+                                Text(
+                                    resources.getString(R.string.invalid_login),
+                                    modifier = Modifier,
+                                    color = Color.Red,
+                                    fontSize = 12.sp
+                                )
                             }
-                        }, placeholder = { Text(resources.getString(R.string.username)) })
-                    }
+                        }
+                    }, placeholder = { Text(resources.getString(R.string.username)) })
                 }
+                Spacer(modifier = Modifier.height(25.dp))
                 val isPasswordValid = remember { mutableStateOf(false) }
                 val password = remember { mutableStateOf("") }
-                Box {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.password), "your password"
-                        )
-                        TextField(password.value, { newValue ->
-                            password.value = newValue
-                            isPasswordValid.value = viewModel.passwordValidator(password.value)
-                        }, label = {
-                            Row {
-                                if (!isPasswordValid.value) {
-                                    Text(
-                                        resources.getString(R.string.invalid_password),
-                                        modifier = Modifier,
-                                        color = Color.Red,
-                                        fontSize = 12.sp
-                                    )
-                                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.password), "your password"
+                    )
+                    TextField(password.value, { newValue ->
+                        password.value = newValue
+                        isPasswordValid.value = viewModel.passwordValidator(password.value)
+                    }, label = {
+                        Row {
+                            if (!isPasswordValid.value) {
+                                Text(
+                                    resources.getString(R.string.invalid_password),
+                                    modifier = Modifier,
+                                    color = Color.Red,
+                                    fontSize = 12.sp
+                                )
                             }
-                        }, placeholder = { Text(resources.getString(R.string.password)) })
-                    }
+                        }
+                    }, placeholder = { Text(resources.getString(R.string.password)) })
                 }
                 Spacer(modifier = Modifier.height(100.dp))
                 Button(
@@ -127,22 +132,38 @@ class SignInScreen(
                             requestInProcess.value = false
                         }
                     },
-                    enabled = isUsernameValid.value && isPasswordValid.value
-                            && !requestInProcess.value
+                    enabled = isUsernameValid.value && isPasswordValid.value && !requestInProcess.value
                 ) {
                     Text(resources.getString(R.string.sign_in))
                 }
-                Spacer(modifier = Modifier.height(100.dp))
-                Box {
-                    Button(modifier = Modifier, onClick = {
-                        navController?.navigate(SIGN_UP_SCREEN)
-                    }) {
-                        Text(resources.getString(R.string.no_account_sign_up))
+                Box(
+                    modifier = Modifier
+                        .padding(bottom = BUTTON_WIDTH)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(resources.getString(R.string.no_account_question))
+                        TextButton(modifier = Modifier, onClick = {
+                            navController?.navigate(SIGN_UP_SCREEN)
+                        }) {
+                            resources.getColor(R.color.purple_700, null)
+                            Text(resources.getString(R.string.sign_up), color = Color.Blue)
+                        }
                     }
                 }
             }
         }
     }
 
-    override val viewModel = SignInViewModel(navController, resources)
+    override val viewModel = SignInViewModel()
+}
+
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Composable
+fun prev() {
+    SignInScreen(null).InvokeRender()
 }

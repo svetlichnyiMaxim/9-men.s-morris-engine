@@ -1,18 +1,14 @@
 package com.kr8ne.mensMorris.ui.impl.game
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -20,28 +16,35 @@ import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.common.AppTheme
-import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
+import com.kr8ne.mensMorris.gameStartPosition
+import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameEndViewModel
 
 /**
  * screen that is shown at the end
  */
 class GameEndScreen(
-    var gameBoard: GameBoardScreen,
+    pos: Position,
     /**
      * navigation controller
      */
     val navController: NavHostController?
-) : ScreenModel {
-    constructor(pos: Position, navController: NavHostController) : this(
-        GameBoardScreen(pos = pos, navController = navController), navController
-    )
+) : GameScreenModel {
+    override val gameBoard: GameBoardScreen =
+        GameBoardScreen(pos = pos, navController = navController)
 
     @Composable
     override fun InvokeRender() {
         AppTheme {
-            DrawButtons()
-            gameBoard.InvokeRender()
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box {
+                    gameBoard.InvokeRender()
+                    gameBoard.RenderPieceCount()
+                }
+                DrawButtons()
+            }
         }
     }
 
@@ -54,53 +57,25 @@ class GameEndScreen(
     private fun DrawButtons() {
         Box(
             modifier = Modifier
-                .fillMaxWidth(), Alignment.Center
+                .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .padding(0.dp, BUTTON_WIDTH * 0.5f, 0.dp, 0.dp)
-                    .fillMaxSize(), Alignment.Center
-            ) {
-                Text(fontSize = 30.sp, text = "Game has ended")
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(), Alignment.TopStart
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(
-                            BUTTON_WIDTH * if (gameBoard.posState.value.pieceToMove
-                            ) 1.5f else 1f
-                        )
-                        .background(Color.Green, CircleShape), Alignment.Center
-                ) {
-                    Text(color = Color.Blue, text = gameBoard.posState.value.freePieces.first.toString())
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(), Alignment.TopEnd
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(BUTTON_WIDTH * if (!gameBoard.posState.value.pieceToMove) 1.5f else 1f)
-                        .background(Color.Blue, CircleShape), Alignment.Center
-                ) {
-                    Text(color = Color.Green, text = gameBoard.posState.value.freePieces.second.toString())
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .padding(0.dp, BUTTON_WIDTH * 10, 0.dp, 0.dp)
-                    .fillMaxSize(), Alignment.Center
-            ) {
-                Button(onClick = {
-                    navController?.navigate(WELCOME_SCREEN)
-                }) {
-                    Text("Reset")
-                }
+            Text(fontSize = 30.sp, text = "Game has ended")
+        }
+        Box(
+            modifier = Modifier
+                .padding(0.dp, BUTTON_WIDTH * 6, 0.dp, 0.dp)
+        ) {
+            Button(onClick = {
+                navController?.navigate(WELCOME_SCREEN)
+            }) {
+                Text("Reset")
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun draw() {
+    GameEndScreen(gameStartPosition, null).InvokeRender()
 }

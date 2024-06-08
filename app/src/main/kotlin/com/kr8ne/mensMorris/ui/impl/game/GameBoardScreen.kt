@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
@@ -96,8 +98,7 @@ class GameBoardScreen(
                 modifier = Modifier
                     .padding(BUTTON_WIDTH)
                     .clip(RoundedCornerShape(15))
-                    .width(BUTTON_WIDTH * 9)
-                    .height(BUTTON_WIDTH * 9)
+                    .size(BUTTON_WIDTH * 8.25f)
                     .background(Color(0xFF8F8F8F)),
                 Alignment.Center,
             ) {
@@ -362,27 +363,25 @@ class GameBoardScreen(
      */
     @Composable
     fun RenderUndoRedo() {
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxSize(),
-            Alignment.BottomStart
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.Bottom
         ) {
-            Button(modifier = Modifier
-                .background(Color.Black.copy(alpha = 0.5f), CircleShape),
+            FilledIconButton(
+                modifier = Modifier
+                    .size(BUTTON_WIDTH * 2f),
                 onClick = {
                     viewModel.handleUndo()
-                }) {
+                },
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.redo_move), "undo"
                 )
             }
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-            Alignment.BottomEnd
-        ) {
-            Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
+            FilledIconButton(modifier = Modifier
+                .size(BUTTON_WIDTH * 2f),
                 onClick = {
                     viewModel.handleRedo()
                 }) {

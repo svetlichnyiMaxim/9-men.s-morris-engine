@@ -69,14 +69,15 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview:1.7.0-beta02")
     implementation("androidx.compose.material3:material3:1.3.0-beta02")
     implementation("androidx.wear.compose:compose-material:1.4.0-beta02")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.1")
     implementation("androidx.navigation:navigation-compose:2.8.0-beta02")
-    implementation("io.ktor:ktor-client-core:3.0.0-beta-1")
-    implementation("io.ktor:ktor-client-okhttp:3.0.0-beta-1")
-    implementation("io.ktor:ktor-client-auth:3.0.0-beta-1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))
     debugImplementation("androidx.compose.ui:ui-tooling:1.7.0-beta02")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
+
+    // ktor
+    implementation("io.ktor:ktor-client-core:3.0.0-beta-1")
+    implementation("io.ktor:ktor-client-okhttp:3.0.0-beta-1")
+    implementation("io.ktor:ktor-client-auth:3.0.0-beta-1")
 
     // test dependencies
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
@@ -87,5 +88,5 @@ dependencies {
 
     // my own dependencies
     implementation("com.github.kroune:9-men-s-morris-lib:0587ceebca")
-    implementation("com.github.kroune:9-men-s-morris-shared:2ef33b461d")
+    implementation("com.github.kroune:9-men-s-morris-shared:6d370a2760")
 }

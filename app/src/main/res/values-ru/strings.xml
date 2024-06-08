@@ -16,7 +16,7 @@
     <string name="play_game_with_friends">играть с друзьями</string>
     <string name="play_game_with_bot">играть против бота</string>
     <string name="sign_in">Войдите в аккаунт</string>
-    <string name="no_account_sign_up">Нет аккаунта? Зарегистрируйся</string>
+    <string name="no_account_question">Нет аккаунта?</string>
     <string name="password">Пароль</string>
     <string name="invalid_password">Ваш пароль не корректен</string>
     <string name="invalid_login">Ваш логин не корректен</string>

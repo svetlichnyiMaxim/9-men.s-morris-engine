@@ -18,7 +18,7 @@ import com.kr8ne.mensMorris.viewModel.impl.game.GameWithFriendViewModel
  * Game main screen
  */
 class GameWithFriendScreen(
-    val navController: NavHostController,
+    val navController: NavHostController?,
     override var gameBoard: GameBoardScreen = GameBoardScreen(navController = navController),
 ) : GameScreenModel {
 
@@ -39,7 +39,7 @@ class GameWithFriendScreen(
     private fun DrawMainPage() {
         Box(
             modifier = Modifier
-                .padding(0.dp, BUTTON_WIDTH * 10.5f, 0.dp, 0.dp)
+                .padding(0.dp, BUTTON_WIDTH * 9.5f, 0.dp, 0.dp)
                 .height(IntrinsicSize.Max)
                 .fillMaxWidth()
         ) {
