@@ -12,11 +12,12 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  *
  * @param navController The [NavHostController] instance to navigate between screens.
  */
-class SignUpViewModel(navController: NavHostController?, resources: Resources) : ViewModelI() {
+class SignUpViewModel : ViewModelI() {
     override val data: SignUpData = SignUpData()
-    override val render: ScreenModel = SignUpScreen(navController,
-        { login -> data.loginValidator(login) },
-        { password -> data.passwordValidator(password) },
-        resources
-    )
+    fun loginValidator(login: String): Boolean {
+        return data.loginValidator(login)
+    }
+    fun passwordValidator(password: String): Boolean {
+        return data.passwordValidator(password)
+    }
 }

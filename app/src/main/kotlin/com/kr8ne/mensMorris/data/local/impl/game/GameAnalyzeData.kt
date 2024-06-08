@@ -1,13 +1,14 @@
 package com.kr8ne.mensMorris.data.local.impl.game
 
-import androidx.compose.runtime.MutableIntState
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.cache.Cache
-import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataI
 import com.kr8ne.mensMorris.move.Movement
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 /**
@@ -17,29 +18,36 @@ class GameAnalyzeData(
     /**
      * position in our analyze
      */
-    val pos: MutableState<Position>
-) : DataModel {
+    val pos: MutableStateFlow<Position>
+) : DataI() {
 
     /**
      * shows if this position was analyzed or not
      */
     private var previousAnalyzedPosition: Position? = null
+    private var previousAnalyzeDepth: Int? = null
 
-    /**
-     * search depth
-     */
-    val depth: MutableIntState = mutableIntStateOf(3)
+    private var depthValue: Int = 3
+        set(value) {
+            field = value
+            result.value = result.value.copy(depth = value)
+        }
 
-    /**
-     * result of position analyze (best move)
-     */
-    val solveResult: MutableState<List<Movement>> = mutableStateOf(listOf())
+    @Volatile
+    private var movementsValue: List<Movement> = listOf()
+        set(value) {
+            field = value
+            result.value = result.value.copy(positions = value)
+        }
+
+    val result: MutableStateFlow<GameAnalyzeDataState> =
+        MutableStateFlow(GameAnalyzeDataState(movementsValue, depthValue))
 
     /**
      * decreases search depth
      */
     fun decreaseDepth() {
-        depth.intValue = max(0, depth.intValue - 1)
+        depthValue = max(0, depthValue - 1)
         stopAnalyze()
     }
 
@@ -47,34 +55,36 @@ class GameAnalyzeData(
      * increases search depth
      */
     fun increaseDepth() {
-        depth.intValue++
+        depthValue++
         stopAnalyze()
     }
 
+    var analyzeJob: Job? = null
     /**
      * starts board analyze
      */
     fun startAnalyze() {
-        val solveResultValue = getAnalyzeResult() ?: return
-        solveResult.value = solveResultValue
-    }
-
-    /**
-     * gets analyze result (winning sequence)
-     */
-    fun getAnalyzeResult(ignoreCache: Boolean = false): MutableList<Movement>? {
-        if (previousAnalyzedPosition == pos.value && !ignoreCache) {
-            return null
+        if (previousAnalyzedPosition == pos.value && previousAnalyzeDepth == depthValue) {
+            return
         }
-        previousAnalyzedPosition = pos.value
-        return pos.value.solve(depth.intValue.toUByte()).second
+        analyzeJob = CoroutineScope(Dispatchers.Default).launch {
+            previousAnalyzedPosition = pos.value
+            previousAnalyzeDepth = depthValue
+            movementsValue = pos.value.solve(depthValue.toUByte()).second
+        }
+        analyzeJob?.start()
     }
-
     /**
      * hides analyze gui and delete it's result
      */
     private fun stopAnalyze() {
+        analyzeJob?.cancel()
         Cache.resetCacheDepth()
-        solveResult.value = mutableListOf()
+        movementsValue = listOf()
     }
 }
+
+data class GameAnalyzeDataState(
+    val positions: List<Movement>,
+    val depth: Int
+)

@@ -17,31 +17,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
+import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.common.AppTheme
-import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameEndViewModel
 
 /**
  * screen that is shown at the end
  */
 class GameEndScreen(
-    override var gameBoard: GameBoardViewModel,
+    var gameBoard: GameBoardScreen,
     /**
      * navigation controller
      */
     val navController: NavHostController?
-) : GameScreenModel {
-
-    private val pos = gameBoard.data.pos
+) : ScreenModel {
+    constructor(pos: Position, navController: NavHostController) : this(
+        GameBoardScreen(pos = pos, navController = navController), navController
+    )
 
     @Composable
     override fun InvokeRender() {
         AppTheme {
             DrawButtons()
-            gameBoard.render.InvokeRender()
+            gameBoard.InvokeRender()
         }
     }
+
+    override val viewModel = GameEndViewModel(gameBoard, navController)
 
     /**
      * draws screen after the game has ended
@@ -65,10 +69,13 @@ class GameEndScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (pos.value.pieceToMove) 1.5f else 1f)
+                        .size(
+                            BUTTON_WIDTH * if (gameBoard.posState.value.pieceToMove
+                            ) 1.5f else 1f
+                        )
                         .background(Color.Green, CircleShape), Alignment.Center
                 ) {
-                    Text(color = Color.Blue, text = pos.value.freePieces.first.toString())
+                    Text(color = Color.Blue, text = gameBoard.posState.value.freePieces.first.toString())
                 }
             }
             Box(
@@ -77,10 +84,10 @@ class GameEndScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (!pos.value.pieceToMove) 1.5f else 1f)
+                        .size(BUTTON_WIDTH * if (!gameBoard.posState.value.pieceToMove) 1.5f else 1f)
                         .background(Color.Blue, CircleShape), Alignment.Center
                 ) {
-                    Text(color = Color.Green, text = pos.value.freePieces.second.toString())
+                    Text(color = Color.Green, text = gameBoard.posState.value.freePieces.second.toString())
                 }
             }
             Box(

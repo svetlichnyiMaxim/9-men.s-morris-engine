@@ -34,9 +34,13 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+        }
+        debug {
+            isMinifyEnabled = false
+            isShrinkResources = false
             signingConfig = signingConfigs.getByName("debug")
         }
     }
@@ -70,11 +74,16 @@ dependencies {
     implementation("io.ktor:ktor-client-core:3.0.0-beta-1")
     implementation("io.ktor:ktor-client-okhttp:3.0.0-beta-1")
     implementation("io.ktor:ktor-client-auth:3.0.0-beta-1")
-    testImplementation(platform("org.junit:junit-bom:5.11.0-M2"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0-M2")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))
     debugImplementation("androidx.compose.ui:ui-tooling:1.7.0-beta02")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
+
+    // test dependencies
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    testImplementation(platform("org.junit:junit-bom:5.11.0-M2"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.0-M2")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.7")
+
 
     // my own dependencies
     implementation("com.github.kroune:9-men-s-morris-lib:0587ceebca")

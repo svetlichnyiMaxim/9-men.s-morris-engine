@@ -9,10 +9,11 @@ import com.kr8ne.mensMorris.GameState
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.cache.Cache
 import com.kr8ne.mensMorris.common.positionToNuke
-import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataI
 import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.move.Movement
 import com.kr8ne.mensMorris.move.moveProvider
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Stack
 
 /**
@@ -22,12 +23,11 @@ class GameBoardData(
     /**
      * stores current position
      */
-    @Volatile
-    var pos: MutableState<Position> = mutableStateOf(gameStartPosition),
+    var pos: MutableStateFlow<Position> = MutableStateFlow(gameStartPosition),
     /**
      * stores all pieces which can be moved (used for highlighting)
      */
-    private var moveHints: MutableState<List<Int>> = mutableStateOf(listOf()),
+    val moveHints: MutableStateFlow<List<Int>> = MutableStateFlow(listOf()),
     /**
      * what we should execute on undo
      */
@@ -43,12 +43,12 @@ class GameBoardData(
     /**
      * used for storing info of the previous (valid one) clicked button
      */
-    private var selectedButton: MutableState<Int?> = mutableStateOf(null),
+    val selectedButton: MutableState<Int?> = mutableStateOf(null),
     /**
      * navigation controller
      */
     val navController: NavHostController?
-) : DataModel {
+) : DataI() {
 
     /**
      * stores all movements (positions) history
@@ -62,28 +62,9 @@ class GameBoardData(
     private val undoneMoveHistory: Stack<Position> = Stack()
 
     /**
-     * calculates alpha of the button
-     */
-    fun calculateAlpha(index: Int): Float {
-        return if (moveHints.value.contains(index)) {
-            0.7f
-        } else {
-            if (selectedButton.value == index) {
-                0.6f
-            } else {
-                if (pos.value.positions[index] == null) {
-                    0f
-                } else {
-                    1f
-                }
-            }
-        }
-    }
-
-    /**
      * undoes the last move
      */
-    fun handleUndo() {
+    var handleUndo = {
         if (!movesHistory.empty()) {
             undoneMoveHistory.push(movesHistory.peek())
             movesHistory.pop()
@@ -98,7 +79,7 @@ class GameBoardData(
     /**
      * handles redo (re applies moves we have undone)
      */
-    fun handleRedo() {
+    var handleRedo = {
         if (!undoneMoveHistory.empty()) {
             movesHistory.push(undoneMoveHistory.peek())
             undoneMoveHistory.pop()

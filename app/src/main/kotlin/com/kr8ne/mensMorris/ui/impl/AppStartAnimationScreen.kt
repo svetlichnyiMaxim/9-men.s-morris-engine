@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -24,6 +25,8 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
+import com.kr8ne.mensMorris.viewModel.impl.AppStartAnimationViewModel
+import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 import kotlin.math.sin
 
 /**
@@ -42,6 +45,8 @@ class AppStartAnimationScreen(
         DrawAnimation()
         StartButton()
     }
+
+    override val viewModel = AppStartAnimationViewModel()
 
     /**
      * draw good looking animation

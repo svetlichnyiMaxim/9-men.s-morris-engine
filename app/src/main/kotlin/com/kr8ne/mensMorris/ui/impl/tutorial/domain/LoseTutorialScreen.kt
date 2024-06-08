@@ -16,8 +16,10 @@ import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.common.BLUE_
 import com.kr8ne.mensMorris.common.EMPTY
 import com.kr8ne.mensMorris.common.GREEN
+import com.kr8ne.mensMorris.ui.impl.game.GameBoardScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 
 /**
  * this screen tells about information indicators provide
@@ -38,12 +40,12 @@ class LoseTutorialScreen(val resources: Resources) : ScreenModel {
         freePieces = Pair(0u, 0u), pieceToMove = true, removalCount = 0
     )
 
-    private val gameBoard = GameBoardViewModel(position, navController = null)
+    private val gameBoard = GameBoardScreen(position, navController = null)
 
     @Composable
     override fun InvokeRender() {
         // TODO: add animations
-        gameBoard.render.RenderPieceCount()
+        gameBoard.RenderPieceCount()
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15))
@@ -56,4 +58,7 @@ class LoseTutorialScreen(val resources: Resources) : ScreenModel {
             }
         }
     }
+
+    override val viewModel: ViewModelI
+        get() = TODO("Not yet implemented")
 }

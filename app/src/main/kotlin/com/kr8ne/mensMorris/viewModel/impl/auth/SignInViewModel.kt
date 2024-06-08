@@ -14,6 +14,11 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  */
 class SignInViewModel(navController: NavHostController?, resources: Resources) : ViewModelI() {
     override val data: SignInData = SignInData()
-    override val render: ScreenModel = SignInScreen(navController,
-        { login -> data.loginValidator(login) }, { password -> data.passwordValidator(password) }, resources)
+
+    fun loginValidator(login: String): Boolean {
+        return data.loginValidator(login)
+    }
+    fun passwordValidator(password: String): Boolean {
+        return data.passwordValidator(password)
+    }
 }

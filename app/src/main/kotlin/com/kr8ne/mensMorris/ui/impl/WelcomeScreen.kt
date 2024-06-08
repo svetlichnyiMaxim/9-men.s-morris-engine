@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,9 +38,9 @@ import com.kr8ne.mensMorris.SIGN_IN_SCREEN
 import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.data.remote.Auth
 import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
-import com.kr8ne.mensMorris.data.remote.Game
+import com.kr8ne.mensMorris.ui.impl.tutorial.TutorialScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.tutorial.TutorialViewModel
+import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -54,8 +55,10 @@ class WelcomeScreen(
     val resources: Resources
 ) : ScreenModel {
     private val hasSeen = sharedPreferences.getBoolean("hasSeenTutorial", false)
-    private val tutorialViewModel =
-        TutorialViewModel(if (hasSeen) 0f else -1f, sharedPreferences, resources)
+    private val tutorialScreen =
+        TutorialScreen(
+            mutableStateOf(if (hasSeen) 0f else -1f), sharedPreferences, resources
+        )
 
     /**
      * draws game modes options
@@ -64,18 +67,18 @@ class WelcomeScreen(
     private fun DrawGameModesOptions() {
         val height = LocalConfiguration.current.screenHeightDp
         //val width = LocalConfiguration.current.screenWidthDp
-        val progress = tutorialViewModel.data.progress
+        val progress = tutorialScreen.progress
         Box(
             modifier = Modifier.fillMaxSize()
         ) {
             Box(
                 modifier = Modifier
-                    .zIndex(if (progress.floatValue < 1f) -1f else 1f)
+                    .zIndex(if (progress.value < 1f) -1f else 1f)
             ) {
-                tutorialViewModel.Invoke()
+                tutorialScreen.InvokeRender()
             }
             AnimatedVisibility(
-                visible = progress.floatValue == 0f,
+                visible = progress.value == 0f,
                 enter = slideInVertically(
                     animationSpec = tween(
                         durationMillis = 300,
@@ -190,4 +193,6 @@ class WelcomeScreen(
             DrawGameModesOptions()
         }
     }
+
+    override val viewModel = WelcomeViewModel()
 }

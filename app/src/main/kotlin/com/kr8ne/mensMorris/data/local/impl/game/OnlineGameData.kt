@@ -7,15 +7,16 @@ import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.common.SERVER_ADDRESS
 import com.kr8ne.mensMorris.common.USER_API
-import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataI
 import com.kr8ne.mensMorris.data.local.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.data.remote.Game
 import com.kr8ne.mensMorris.data.remote.network
 import com.kr8ne.mensMorris.data.remote.networkScope
+import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.move.Movement
-import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
-import com.kroune.MoveResponse
+import com.kr8ne.mensMorris.ui.impl.game.GameBoardScreen
+import com.kroune.NetworkResponse
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.utils.io.printStack
 import io.ktor.websocket.Frame
@@ -33,19 +34,20 @@ import kotlin.random.Random
 class OnlineGameData(
     private val gameId: Long,
     val navController: NavHostController?
-) : GameBoardInterface, DataModel {
+) : GameBoardInterface, DataI() {
 
     var isGreen: MutableState<Boolean?> = mutableStateOf(null)
-    override val gameBoard = GameBoardViewModel(
+    override val gameBoard = GameBoardScreen(
+        pos = gameStartPosition,
         onClick = { index -> this.response(index) },
         navController = null
     )
 
     private fun GameBoardData.response(index: Int) {
         // check if we can make this move
-        println("isGreen - $isGreen; pieceToMove - ${gameBoard.data.pos.value.pieceToMove}")
-        if (isGreen.value == gameBoard.data.pos.value.pieceToMove) {
-            gameBoard.data.getMovement(index)?.let {
+        println("isGreen - $isGreen; pieceToMove - ${gameBoard.pos.pieceToMove}")
+        if (isGreen.value == gameBoard.pos.pieceToMove) {
+            gameBoard.viewModel.data.getMovement(index)?.let {
                 println("added move")
                 Game.movesQueue.add(it)
             }
@@ -55,7 +57,7 @@ class OnlineGameData(
     }
 
     private val someInt = Random.nextInt()
-    override suspend fun invokeBackend() {
+    override fun invokeBackend() {
         /**
          * if you even see this debug message in logs more than once you should know
          * that you are FUCKED
@@ -86,16 +88,16 @@ class OnlineGameData(
                     try {
                         val isGreenData = (incoming.receive() as Frame.Text).readText()
                         println("isGreen new value - $isGreenData")
-                        val isGreenText = Json.decodeFromString<MoveResponse>(isGreenData)
+                        val isGreenText = Json.decodeFromString<NetworkResponse>(isGreenData)
                         isGreen.value = isGreenText.message.toBoolean()
                         println("check - ${isGreen}")
 
                         val positionServerData = (incoming.receive() as Frame.Text).readText()
                         println("position new value - $positionServerData")
                         val positionString =
-                            Json.decodeFromString<MoveResponse>(positionServerData).message!!
+                            Json.decodeFromString<NetworkResponse>(positionServerData).message!!
                         val newPosition = Json.decodeFromString<Position>(positionString)
-                        gameBoard.data.pos.value = newPosition
+                        gameBoard.pos = newPosition
                         while (true) {
                             // send all our moves one by one
                             val moveToSend = Game.movesQueue.poll()
@@ -111,7 +113,7 @@ class OnlineGameData(
                                     incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
                                 println(serverMessage)
                                 val serverResponse =
-                                    Json.decodeFromString<MoveResponse>(serverMessage.readText())
+                                    Json.decodeFromString<NetworkResponse>(serverMessage.readText())
                                 when (serverResponse.code) {
                                     410 -> {
                                         // game ended
@@ -124,7 +126,7 @@ class OnlineGameData(
                                             Json.decodeFromString<Movement>(serverResponse.message!!)
                                         // apply move
                                         println("new move")
-                                        gameBoard.data.processMove(movement)
+                                        gameBoard.viewModel.data.processMove(movement)
                                     }
 
                                     else -> {

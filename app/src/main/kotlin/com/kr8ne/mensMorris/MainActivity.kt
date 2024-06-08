@@ -14,15 +14,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.kr8ne.mensMorris.common.positionToNuke
-import com.kr8ne.mensMorris.viewModel.impl.AppStartAnimationViewModel
-import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
-import com.kr8ne.mensMorris.viewModel.impl.auth.SignInViewModel
-import com.kr8ne.mensMorris.viewModel.impl.auth.SignUpViewModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameEndViewModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameWithBotViewModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameWithFriendViewModel
-import com.kr8ne.mensMorris.viewModel.impl.game.OnlineGameViewModel
-import com.kr8ne.mensMorris.viewModel.impl.game.SearchingForGameViewModel
+import com.kr8ne.mensMorris.ui.impl.AppStartAnimationScreen
+import com.kr8ne.mensMorris.ui.impl.WelcomeScreen
+import com.kr8ne.mensMorris.ui.impl.auth.SignInScreen
+import com.kr8ne.mensMorris.ui.impl.auth.SignUpScreen
+import com.kr8ne.mensMorris.ui.impl.game.GameEndScreen
+import com.kr8ne.mensMorris.ui.impl.game.GameWithBotScreen
+import com.kr8ne.mensMorris.ui.impl.game.GameWithFriendScreen
+import com.kr8ne.mensMorris.ui.impl.game.OnlineGameScreen
+import com.kr8ne.mensMorris.ui.impl.game.SearchingForGameScreen
 
 /**
  * shows how thick our pieces & board will be
@@ -73,38 +73,38 @@ class MainActivity : ComponentActivity() {
                     fadeOut()
                 }) {
                 composable(WELCOME_SCREEN) {
-                    WelcomeViewModel(navController, sharedPreferences, resources).Invoke()
+                    WelcomeScreen(navController, sharedPreferences, resources).InvokeRender()
                 }
                 composable(GAME_WITH_BOT_SCREEN) {
-                    GameWithBotViewModel(navController).Invoke()
+                    GameWithBotScreen(navController = navController).InvokeRender()
                 }
                 composable(GAME_WITH_FRIEND_SCREEN) {
-                    GameWithFriendViewModel(navController).Invoke()
+                    GameWithFriendScreen(navController).InvokeRender()
                 }
                 composable(GAME_END_SCREEN) {
-                    GameEndViewModel(positionToNuke, navController).Invoke()
+                    GameEndScreen(positionToNuke, navController).InvokeRender()
                 }
                 composable(SIGN_UP_SCREEN) {
-                    SignUpViewModel(navController, resources).Invoke()
+                    SignUpScreen(navController, resources).InvokeRender()
                 }
                 composable(SIGN_IN_SCREEN) {
-                    SignInViewModel(navController, resources).Invoke()
+                    SignInScreen(navController, resources).InvokeRender()
                 }
                 composable(SEARCHING_ONLINE_GAME_SCREEN) {
-                    SearchingForGameViewModel(navController, resources).Invoke()
+                    SearchingForGameScreen(navController, resources).InvokeRender()
                 }
                 composable(
                     "$ONLINE_GAME_SCREEN/{idValue}",
                     arguments = listOf(navArgument("idValue") { type = NavType.LongType })
                 ) { gameEntry ->
                     println("some text")
-                    OnlineGameViewModel(
-                        navController,
-                        gameEntry.arguments!!.getLong("idValue")
-                    ).Invoke()
+                    OnlineGameScreen(
+                        gameEntry.arguments!!.getLong("idValue"),
+                        navController
+                    ).InvokeRender()
                 }
                 composable(LOADING_ANIMATION_SCREEN) {
-                    AppStartAnimationViewModel(navController).Invoke()
+                    AppStartAnimationScreen(navController).InvokeRender()
                 }
             }
         }

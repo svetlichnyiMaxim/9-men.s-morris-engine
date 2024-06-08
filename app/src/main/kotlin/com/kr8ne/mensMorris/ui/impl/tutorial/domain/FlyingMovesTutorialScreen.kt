@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,8 +16,9 @@ import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.common.BLUE_
 import com.kr8ne.mensMorris.common.EMPTY
 import com.kr8ne.mensMorris.common.GREEN
+import com.kr8ne.mensMorris.ui.impl.game.GameBoardScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 
 /**
  * this screen tells about information indicators provide
@@ -39,14 +39,16 @@ class FlyingMovesTutorialScreen(val resources: Resources) : ScreenModel {
         freePieces = Pair(0u, 0u), pieceToMove = true, removalCount = 0
     )
 
-    private val gameBoard = GameBoardViewModel(
-        position, selectedButton = mutableStateOf(3), navController = null
+    private val gameBoard = GameBoardScreen(
+        pos = position,
+        //TODO selectedButton = mutableStateOf(3),
+        navController = null
     )
 
     @Composable
     override fun InvokeRender() {
         // TODO: add animations
-        gameBoard.render.RenderPieceCount()
+        gameBoard.RenderPieceCount()
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15))
@@ -54,11 +56,14 @@ class FlyingMovesTutorialScreen(val resources: Resources) : ScreenModel {
             Alignment.BottomCenter
         ) {
             Column {
-                gameBoard.data.handleHighLighting()
+                gameBoard.viewModel.data.handleHighLighting()
                 gameBoard.InvokeRender()
                 Text(text = resources.getString(R.string.tutorial_fly_condition))
                 Text(text = resources.getString(R.string.tutorial_fly_highlighting))
             }
         }
     }
+
+    override val viewModel: ViewModelI
+        get() = TODO("Not yet implemented")
 }

@@ -1,23 +1,28 @@
 package com.kr8ne.mensMorris.ui.impl.game
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.common.AppTheme
-import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameWithBotViewModel
 
 /**
  * Game main screen
  */
 class GameWithBotScreen(
-    override val gameBoard: GameBoardViewModel
-) : GameScreenModel {
+    val navController: NavHostController
+) : ScreenModel {
 
     @Composable
     override fun InvokeRender() {
         AppTheme {
-            gameBoard.render.InvokeRender()
-            gameBoard.render.RenderPieceCount()
-            gameBoard.render.RenderUndoRedo()
+            viewModel.gameBoard.let {
+                it.InvokeRender()
+                it.RenderPieceCount()
+                it.RenderUndoRedo()
+            }
         }
     }
+
+    override val viewModel = GameWithBotViewModel(navController)
 }

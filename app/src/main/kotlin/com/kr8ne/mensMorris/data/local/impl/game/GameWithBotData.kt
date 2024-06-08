@@ -1,20 +1,16 @@
 package com.kr8ne.mensMorris.data.local.impl.game
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.GameState
 import com.kr8ne.mensMorris.cache.Cache
-import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataI
 import com.kr8ne.mensMorris.data.local.interfaces.GameBoardInterface
 import com.kr8ne.mensMorris.gameStartPosition
-import com.kr8ne.mensMorris.viewModel.impl.game.GameAnalyzeViewModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import com.kr8ne.mensMorris.ui.impl.game.GameBoardScreen
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * data for game with bot screen
@@ -22,31 +18,28 @@ import kotlinx.coroutines.withContext
 class GameWithBotData(
     navController: NavHostController?,
     private val viewModelScope: CoroutineScope
-) :
-    DataModel, GameBoardInterface {
+) : DataI(), GameBoardInterface {
     /**
      * current game position
      */
-    val position = mutableStateOf(gameStartPosition)
-    override val gameBoard = GameBoardViewModel(
-        pos = position,
+    override val gameBoard = GameBoardScreen(
+        pos = gameStartPosition,
         onClick = { index -> this.response(index) },
-        onUndo = { onUndo() },
+        handleUndo = { onUndo() },
         navController = navController
     )
-    private val analyze = GameAnalyzeViewModel(gameBoard.data.pos)
+    private val analyze = GameAnalyzeData(gameBoard.positionStateFlow)
 
     /**
      * performs needed actions after click
      * @param index index of the clicked element
-     * @param func function that handles our click
      */
     private fun GameBoardData.response(index: Int) {
-        if (position.value.pieceToMove) {
+        if (gameBoard.pos.pieceToMove) {
             handleClick(index)
             handleHighLighting()
             botJob = viewModelScope.launch {
-                while (!position.value.pieceToMove) {
+                while (!gameBoard.pos.pieceToMove && gameBoard.pos.gameState() != GameState.End) {
                     launchBot()
                 }
             }
@@ -57,13 +50,13 @@ class GameWithBotData(
         botJob?.cancel()
         botJob = viewModelScope.launch {
             delay(800)
-            while (!position.value.pieceToMove && position.value.gameState() != GameState.End) {
+            while (!gameBoard.pos.pieceToMove && gameBoard.pos.gameState() != GameState.End) {
                 launchBot()
             }
         }
     }
 
-    override suspend fun invokeBackend() {
+    override fun invokeBackend() {
         Cache.resetCacheDepth()
     }
 
@@ -73,15 +66,13 @@ class GameWithBotData(
      * launches bot actions against player
      */
     private suspend fun launchBot() {
-        if (!position.value.pieceToMove
-            && position.value.gameState() != GameState.End
+        if (!gameBoard.pos.pieceToMove
+            && gameBoard.pos.gameState() != GameState.End
         ) {
             Cache.resetCacheDepth()
-            val solveResultValue = analyze.data.getAnalyzeResult()
-            analyze.data.solveResult.value = solveResultValue!!
-            withContext(Dispatchers.Main) {
-                gameBoard.data.processMove(analyze.data.solveResult.value.last())
-            }
+            analyze.startAnalyze()
+            analyze.analyzeJob?.join()
+            gameBoard.viewModel.data.processMove(analyze.result.value.positions.last())
         }
     }
 }

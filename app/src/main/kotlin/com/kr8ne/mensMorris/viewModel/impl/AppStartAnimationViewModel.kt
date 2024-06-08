@@ -9,7 +9,6 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 /**
  * ViewModel for the loading animation screen.
  */
-class AppStartAnimationViewModel(navController: NavHostController): ViewModelI() {
+class AppStartAnimationViewModel(): ViewModelI() {
     override val data: AppStartAnimationData = AppStartAnimationData()
-    override val render: ScreenModel = AppStartAnimationScreen(navController)
 }

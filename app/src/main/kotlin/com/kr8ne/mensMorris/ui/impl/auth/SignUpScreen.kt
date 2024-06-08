@@ -28,33 +28,22 @@ import com.kr8ne.mensMorris.SIGN_IN_SCREEN
 import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.data.remote.Auth
 import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
-import com.kr8ne.mensMorris.data.remote.ServerResponse
 import com.kr8ne.mensMorris.data.remote.networkScope
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
+import com.kr8ne.mensMorris.viewModel.impl.auth.SignUpViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import java.net.SocketException
 
 /**
  * Represents a screen for signing up a new user.
  *
  * @param navController The navigation controller to navigate to other screens.
- * @param loginValidator A function that validates the provided username or email.
- * @param passwordValidator A function that validates the provided password.
  */
 class SignUpScreen(
     /**
      * navigation controller
      */
     val navController: NavHostController?,
-    /**
-     * A function that validates the provided username or email.
-     */
-    val loginValidator: (String) -> Boolean,
-    /**
-     * A function that validates the provided password.
-     */
-    val passwordValidator: (String) -> Boolean,
     val resources: Resources
 ) : ScreenModel {
     @Composable
@@ -71,19 +60,8 @@ class SignUpScreen(
                 val isUsernameValid = remember { mutableStateOf(false) }
                 val username = remember { mutableStateOf("") }
                 serverResponse.value?.onFailure { exception ->
-                    when (exception) {
-                        is ServerResponse.LoginInUse -> {
-                            Text(text = resources.getString(R.string.login_in_use))
-                        }
-
-                        is ServerResponse.Unreachable, is SocketException -> {
-                            Text(text = resources.getString(R.string.network_error))
-                        }
-
-                        else -> {
-                            Text(text = resources.getString(R.string.server_error))
-                        }
-                    }
+                    // TODO: finish this
+                    Text(text = resources.getString(R.string.server_error))
                 }
                 serverResponse.value?.onSuccess {
                     if (!isSwitchingScreens) {
@@ -101,7 +79,7 @@ class SignUpScreen(
                         )
                         TextField(username.value, { newValue ->
                             username.value = newValue
-                            isUsernameValid.value = loginValidator(username.value)
+                            isUsernameValid.value = viewModel.loginValidator(username.value)
                         }, label = {
                             Row {
                                 if (!isUsernameValid.value) {
@@ -127,7 +105,7 @@ class SignUpScreen(
                         )
                         TextField(password.value, { newValue ->
                             password.value = newValue
-                            isPasswordValid.value = passwordValidator(password.value)
+                            isPasswordValid.value = viewModel.passwordValidator(password.value)
                             isPassword2Valid.value = (password2.value == password.value)
                         }, label = {
                             Row {
@@ -192,4 +170,6 @@ class SignUpScreen(
             }
         }
     }
+
+    override val viewModel = SignUpViewModel()
 }

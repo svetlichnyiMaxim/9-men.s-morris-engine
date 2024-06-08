@@ -11,10 +11,6 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  * view model for tutorials
  */
 class TutorialViewModel(
-    progress: Float,
-    sharedPreferences: SharedPreferences,
-    resources: Resources
 ) : ViewModelI() {
-    override val data: TutorialData = TutorialData(progress)
-    override var render: ScreenModel = TutorialScreen(data.progress, sharedPreferences, resources)
+    override val data: TutorialData = TutorialData()
 }

@@ -4,10 +4,12 @@ import androidx.core.content.edit
 import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.SERVER_ADDRESS
 import com.kr8ne.mensMorris.common.USER_API
+import com.kroune.NetworkResponse
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import io.ktor.utils.io.printStack
+import kotlinx.serialization.json.Json
 
 object Auth {
     /**
@@ -29,7 +31,9 @@ object Auth {
      * @return True if the login is valid, false otherwise.
      */
     fun loginValidator(login: String): Boolean {
-        return login.length >= 6
+        val length = login.length in 5..12
+        val content = login.all { it.isLetterOrDigit() }
+        return length && content
     }
 
     /**
@@ -39,7 +43,11 @@ object Auth {
      * @return True if the password is valid, false otherwise.
      */
     fun passwordValidator(password: String): Boolean {
-        return password.length >= 6
+        val length = password.length in 7..14
+        val validString = password.all { it.isLetterOrDigit() }
+        val anyDigits = password.any { it.isDigit() }
+        val anyLetters = password.any { it.isLetter() }
+        return length && validString && anyDigits && anyLetters
     }
 
 
@@ -57,26 +65,16 @@ object Auth {
                         parameters["login"] = login
                         parameters["password"] = password
                     }
-                }
-            return when (registerResult.status.value) {
+                }.bodyAsText()
+            val registerResultText = Json.decodeFromString<NetworkResponse>(registerResult)
+            return when (registerResultText.code) {
+                // TODO: finish this
                 200 -> {
-                    Result.success(registerResult.bodyAsText())
-                }
-
-                401 -> {
-                    Result.failure(ServerResponse.WrongPasswordOrLogin())
-                }
-
-                404 -> {
-                    Result.failure(ServerResponse.Unreachable())
-                }
-
-                409 -> {
-                    Result.failure(ServerResponse.LoginInUse())
+                    Result.success(registerResultText.message!!)
                 }
 
                 else -> {
-                    Result.failure(ServerResponse.UnknownServerError())
+                    Result.failure(ServerException(registerResultText.message!!))
                 }
             }
         }.onFailure {
@@ -99,22 +97,16 @@ object Auth {
                         parameters["login"] = login
                         parameters["password"] = password
                     }
-                }
-            return when (loginResult.status.value) {
+                }.bodyAsText()
+            val loginResultText = Json.decodeFromString<NetworkResponse>(loginResult)
+            return when (loginResultText.code) {
+                // TODO: finish this
                 200 -> {
-                    Result.success(loginResult.bodyAsText())
-                }
-
-                401 -> {
-                    Result.failure(ServerResponse.WrongPasswordOrLogin())
-                }
-
-                404 -> {
-                    Result.failure(ServerResponse.Unreachable())
+                    Result.success(loginResultText.message!!)
                 }
 
                 else -> {
-                    Result.failure(ServerResponse.UnknownServerError())
+                    Result.failure(ServerException(loginResultText.message!!))
                 }
             }
         }.onFailure {
@@ -141,24 +133,4 @@ object Auth {
 /**
  * Represents the server's response to client requests.
  */
-sealed class ServerResponse : Exception() {
-    /**
-     * Represents a server response indicating that the login is already in use.
-     */
-    class LoginInUse : ServerResponse()
-
-    /**
-     * Represents a server response indicating that the provided password or login is incorrect.
-     */
-    class WrongPasswordOrLogin : ServerResponse()
-
-    /**
-     * this means that server is currently unreachable
-     */
-    class Unreachable : ServerResponse()
-
-    /**
-     * Represents a server response indicating an unknown error.
-     */
-    class UnknownServerError : ServerResponse()
-}
+class ServerException(val text: String) : Exception()

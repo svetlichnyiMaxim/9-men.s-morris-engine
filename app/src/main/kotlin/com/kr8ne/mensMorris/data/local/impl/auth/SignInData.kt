@@ -1,12 +1,12 @@
 package com.kr8ne.mensMorris.data.local.impl.auth
 
-import com.kr8ne.mensMorris.data.local.interfaces.DataModel
+import com.kr8ne.mensMorris.data.local.interfaces.DataI
 import com.kr8ne.mensMorris.data.remote.Auth
 
 /**
  * This class provides data for sign in screen.
  */
-class SignInData : DataModel {
+class SignInData : DataI() {
     /**
      * Validates the provided login.
      *

@@ -8,27 +8,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.common.AppTheme
 import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameAnalyzeViewModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameWithFriendViewModel
 
 /**
  * Game main screen
  */
-class GameWithFriendScreen(override var gameBoard: GameBoardViewModel) : GameScreenModel {
+class GameWithFriendScreen(
+    val navController: NavHostController,
+    override var gameBoard: GameBoardScreen = GameBoardScreen(navController = navController),
+) : GameScreenModel {
 
 
     @Composable
     override fun InvokeRender() {
         AppTheme {
-            gameBoard.render.RenderPieceCount()
+            gameBoard.RenderPieceCount()
             DrawMainPage()
-            gameBoard.render.InvokeRender()
-            gameBoard.render.RenderUndoRedo()
+            gameBoard.InvokeRender()
+            gameBoard.RenderUndoRedo()
         }
     }
+
+    override val viewModel = GameWithFriendViewModel(navController)
 
     @Composable
     private fun DrawMainPage() {
@@ -38,7 +43,7 @@ class GameWithFriendScreen(override var gameBoard: GameBoardViewModel) : GameScr
                 .height(IntrinsicSize.Max)
                 .fillMaxWidth()
         ) {
-            GameAnalyzeViewModel(gameBoard.data.pos).Invoke()
+            GameAnalyzeScreen(gameBoard.positionStateFlow).InvokeRender()
         }
     }
 }

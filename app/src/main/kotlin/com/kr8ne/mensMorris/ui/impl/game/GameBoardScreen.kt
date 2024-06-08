@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl.game
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,8 +19,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -28,25 +29,63 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.R
+import com.kr8ne.mensMorris.data.local.impl.game.GameBoardData
 import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardUiState
+import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 /**
  * screen that is shown at the end
  */
 class GameBoardScreen(
-    /**
-     * stores current position
-     */
-    private val pos: MutableState<Position> = mutableStateOf(gameStartPosition),
-    private val onClick: (index: Int) -> Unit,
-    private val handleUndo: () -> Unit,
-    private val handleRedo: () -> Unit,
-    private val calculateAlpha: (Int) -> Float
+    pos: Position = gameStartPosition,
+    onClick: GameBoardData.(index: Int) -> Unit = { index ->
+        handleClick(index)
+        handleHighLighting()
+    },
+    handleUndo: () -> Unit = {},
+    handleRedo: () -> Unit = {},
+    navController: NavHostController?
 ) : ScreenModel {
+
+    override val viewModel = GameBoardViewModel(
+        pos = pos,
+        onClick = onClick,
+        onUndo = handleUndo,
+        onRedo = handleRedo,
+        navController = navController
+    )
+
+    // used for quick access to position
+    val posState: State<Position>
+        @Composable
+        get() {
+            return viewModel.data.pos.collectAsState()
+        }
+
+    val positionStateFlow: MutableStateFlow<Position>
+        get() {
+            return viewModel.data.pos
+        }
+    var pos: Position
+        get() {
+            return viewModel.data.pos.value
+        }
+        set(value) {
+            viewModel.data.pos = MutableStateFlow(value)
+        }
+
+    @Composable
+    fun getUiState(): GameBoardUiState {
+        return viewModel.uiState.collectAsState().value
+    }
+
     @Composable
     override fun InvokeRender() {
         Box(
@@ -82,12 +121,15 @@ class GameBoardScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (pos.value.pieceToMove) 1.5f else 1f)
+                        .size(BUTTON_WIDTH * if (getUiState().pos.pieceToMove) 1.5f else 1f)
                         .background(Color.Green, CircleShape)
-                        .alpha(if (pos.value.freePieces.first == 0.toUByte()) 0f else 1f),
+                        .alpha(if (getUiState().pos.freePieces.first == 0.toUByte()) 0f else 1f),
                     Alignment.Center
                 ) {
-                    Text(color = Color.Blue, text = pos.value.freePieces.first.toString())
+                    Text(
+                        color = Color.Blue,
+                        text = getUiState().pos.freePieces.first.toString()
+                    )
                 }
             }
             Box(
@@ -95,12 +137,15 @@ class GameBoardScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (!pos.value.pieceToMove) 1.5f else 1f)
+                        .size(BUTTON_WIDTH * if (!getUiState().pos.pieceToMove) 1.5f else 1f)
                         .background(Color.Blue, CircleShape)
-                        .alpha(if (pos.value.freePieces.second == 0.toUByte()) 0f else 1f),
+                        .alpha(if (getUiState().pos.freePieces.second == 0.toUByte()) 0f else 1f),
                     Alignment.Center
                 ) {
-                    Text(color = Color.Green, text = pos.value.freePieces.second.toString())
+                    Text(
+                        color = Color.Green,
+                        text = getUiState().pos.freePieces.second.toString()
+                    )
                 }
             }
         }
@@ -264,7 +309,7 @@ class GameBoardScreen(
         ) {
             for (i in range) {
                 CircledButton(elementIndex = i) {
-                    onClick(it)
+                    viewModel.onClick(it)
                 }
             }
         }
@@ -277,31 +322,39 @@ class GameBoardScreen(
      */
     @Composable
     private fun CircledButton(elementIndex: Int, onClick: (Int) -> Unit) {
-        Button(modifier = Modifier
-            .alpha(
-                calculateAlpha(elementIndex)
-            )
-            .size(BUTTON_WIDTH)
-            .background(Color.Transparent, CircleShape),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = when (pos.value.positions[elementIndex]) {
-                    null -> {
-                        Color.Black
-                    }
+        Box(
+            modifier = Modifier
+                .size(BUTTON_WIDTH)
+        ) {
+            Button(
+                modifier = Modifier
+                    .size(BUTTON_WIDTH * if (viewModel.data.selectedButton.value == elementIndex) 0.8f else 1f)
+                    .background(Color.Transparent, CircleShape),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = when (getUiState().pos.positions[elementIndex]) {
+                        null -> {
+                            Color.Transparent
+                        }
 
-                    true -> {
-                        Color.Green
-                    }
+                        true -> {
+                            Color.Green
+                        }
 
-                    false -> {
-                        Color.Blue
+                        false -> {
+                            Color.Blue
+                        }
                     }
-                }
-            ),
-            shape = CircleShape,
-            onClick = {
-                onClick(elementIndex)
-            }) {}
+                ),
+                shape = CircleShape,
+                onClick = {
+                    onClick(elementIndex)
+                },
+                border = if (!getUiState().moveHints.contains(elementIndex)) null else BorderStroke(
+                    BUTTON_WIDTH * 0.1f,
+                    Color.DarkGray
+                )
+            ) {}
+        }
     }
 
     /**
@@ -314,9 +367,10 @@ class GameBoardScreen(
                 .fillMaxSize(),
             Alignment.BottomStart
         ) {
-            Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
+            Button(modifier = Modifier
+                .background(Color.Black.copy(alpha = 0.5f), CircleShape),
                 onClick = {
-                    handleUndo()
+                    viewModel.handleUndo()
                 }) {
                 Icon(
                     painter = painterResource(id = R.drawable.redo_move), "undo"
@@ -330,7 +384,7 @@ class GameBoardScreen(
         ) {
             Button(modifier = Modifier.background(Color.Black.copy(alpha = 0.5f), CircleShape),
                 onClick = {
-                    handleRedo()
+                    viewModel.handleRedo()
                 }) {
                 Icon(
                     painter = painterResource(id = R.drawable.undo_move), "redo"

@@ -33,13 +33,15 @@ import com.kr8ne.mensMorris.ui.impl.tutorial.domain.PlacementTutorialScreen
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.RemovalMovesTutorialScreen
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.TriplesTutorialScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
+import com.kr8ne.mensMorris.viewModel.impl.tutorial.TutorialViewModel
+import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 import kotlin.math.roundToInt
 
 /**
  * screen that shows tutorial on how to play this game
  */
 class TutorialScreen(
-    private val progress: MutableState<Float>,
+    val progress: MutableState<Float>,
     val sharedPreferences: SharedPreferences,
     resources: Resources
 ) : ScreenModel {
@@ -160,6 +162,8 @@ class TutorialScreen(
             }
         }
     }
+
+    override val viewModel = TutorialViewModel()
 
     /**
      * switches to the next available screen

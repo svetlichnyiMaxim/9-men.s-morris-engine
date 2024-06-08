@@ -13,10 +13,6 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  * called when app is launched
  */
 class WelcomeViewModel(
-    navController: NavHostController?,
-    sharedPreferences: SharedPreferences,
-    resources: Resources
 ) : ViewModelI() {
-    override var render: ScreenModel = WelcomeScreen(navController, sharedPreferences, resources)
     override val data = WelcomeData()
 }

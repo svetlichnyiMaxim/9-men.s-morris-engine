@@ -17,8 +17,10 @@ import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.common.BLUE_
 import com.kr8ne.mensMorris.common.EMPTY
 import com.kr8ne.mensMorris.common.GREEN
+import com.kr8ne.mensMorris.ui.impl.game.GameBoardScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
+import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 
 /**
  * this screen tells about information indicators provide
@@ -39,14 +41,16 @@ class NormalMovesTutorialScreen(val resources: Resources) : ScreenModel {
         freePieces = Pair(0u, 0u), pieceToMove = false, removalCount = 0
     )
 
-    private val gameBoard = GameBoardViewModel(
-        position, selectedButton = mutableStateOf(22), navController = null
+    private val gameBoard = GameBoardScreen(
+        position,
+        //selectedButton = mutableStateOf(22),
+        navController = null
     )
 
     @Composable
     override fun InvokeRender() {
         // TODO: add animations
-        gameBoard.render.RenderPieceCount()
+        gameBoard.RenderPieceCount()
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(15))
@@ -54,11 +58,14 @@ class NormalMovesTutorialScreen(val resources: Resources) : ScreenModel {
             Alignment.BottomCenter
         ) {
             Column {
-                gameBoard.data.handleHighLighting()
-                gameBoard.render.InvokeRender()
+                gameBoard.viewModel.data.handleHighLighting()
+                gameBoard.InvokeRender()
                 Text(text = resources.getString(R.string.tutorial_normal_moves_condition))
                 Text(text = resources.getString(R.string.tutorial_normal_moves_highlighting))
             }
         }
     }
+
+    override val viewModel: ViewModelI
+        get() = TODO("Not yet implemented")
 }
