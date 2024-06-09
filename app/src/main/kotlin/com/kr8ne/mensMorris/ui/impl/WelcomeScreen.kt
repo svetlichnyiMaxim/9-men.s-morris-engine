@@ -2,18 +2,19 @@ package com.kr8ne.mensMorris.ui.impl
 
 import android.content.SharedPreferences
 import android.content.res.Resources
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -21,6 +22,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,7 +31,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
+import androidx.core.content.edit
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.GAME_WITH_BOT_SCREEN
 import com.kr8ne.mensMorris.GAME_WITH_FRIEND_SCREEN
@@ -41,7 +44,9 @@ import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
 import com.kr8ne.mensMorris.ui.impl.tutorial.TutorialScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.math.min
 
 /**
  * this screen is shown at the start of the game
@@ -51,61 +56,89 @@ class WelcomeScreen(
      * navigation controller
      */
     val navController: NavHostController?,
-    val sharedPreferences: SharedPreferences,
+    val sharedPreferences: SharedPreferences?,
     val resources: Resources
 ) : ScreenModel {
-    private val hasSeen = sharedPreferences.getBoolean("hasSeenTutorial", false)
-    private val tutorialScreen =
-        TutorialScreen(
-            mutableStateOf(if (hasSeen) 0f else -1f), sharedPreferences, resources
-        )
+    private var hasSeen = sharedPreferences?.getBoolean("hasSeenTutorial", false) ?: false
+        set(value) {
+            if (field != value) {
+                sharedPreferences?.edit {
+                    this.putBoolean("hasSeenTutorial", value)
+                }
+                field = value
+            }
+        }
+
+    val tutorialScreen = TutorialScreen(resources)
 
     /**
      * draws game modes options
      */
     @Composable
     private fun DrawGameModesOptions() {
+        val width = LocalConfiguration.current.screenWidthDp
         val height = LocalConfiguration.current.screenHeightDp
-        //val width = LocalConfiguration.current.screenWidthDp
-        val progress = tutorialScreen.progress
-        Box(
-            modifier = Modifier.fillMaxSize()
+        val scrollState = rememberScrollState(if (!hasSeen) Int.MAX_VALUE else 0)
+        val coroutine = rememberCoroutineScope()
+        val isWelcome = remember { mutableStateOf(true) }
+
+        class CustomFlingBehaviour : FlingBehavior {
+            override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
+                if (isWelcome.value) {
+                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue >= 0.25f) {
+                        isWelcome.value = false
+                        coroutine.launch {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+                    }
+                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue < 0.25f) {
+                        isWelcome.value = true
+                        coroutine.launch {
+                            scrollState.animateScrollTo(0)
+                        }
+                    }
+                } else {
+                    if (scrollState.value.toFloat() / scrollState.maxValue <= 0.75f) {
+                        isWelcome.value = true
+                        coroutine.launch {
+                            scrollState.animateScrollTo(0)
+                        }
+                    } else {
+                        isWelcome.value = false
+                        coroutine.launch {
+                            scrollState.animateScrollTo(scrollState.maxValue)
+                        }
+                    }
+                }
+                return 0f
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(
+                    state = scrollState,
+                    flingBehavior = CustomFlingBehaviour()
+                )
         ) {
             Box(
                 modifier = Modifier
-                    .zIndex(if (progress.value < 1f) -1f else 1f)
-            ) {
-                tutorialScreen.InvokeRender()
-            }
-            AnimatedVisibility(
-                visible = progress.value == 0f,
-                enter = slideInVertically(
-                    animationSpec = tween(
-                        durationMillis = 300,
-                        easing = FastOutSlowInEasing
-                    )
-                ),
-                exit = slideOutVertically(
-                    animationSpec = tween(
-                        durationMillis = 30,
-                        easing = FastOutSlowInEasing
-                    )
-                )
+                    .size(width.dp, height.dp),
             ) {
                 Canvas(
                     modifier = Modifier
                         .fillMaxSize()
-                        .align(Alignment.TopEnd)
                 ) {
+                    val length = min(size.width / 3f, size.height / 3f)
                     val path = Path()
-                    path.moveTo(2 * size.width / 3, 0f)
-                    path.lineTo(size.width, size.width / 3f)
+                    path.moveTo(size.width - length, 0f)
                     path.lineTo(size.width, 0f)
-                    drawPath(path, Color.Red)
+                    path.lineTo(size.width, length)
+                    drawPath(path, Color(0xFF696969))
                 }
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .size(width.dp, height.dp)
                         .align(Alignment.Center),
                     contentAlignment = Alignment.TopEnd
                 ) {
@@ -184,6 +217,13 @@ class WelcomeScreen(
                     }
                 }
             }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .size(height.dp)
+            ) {
+                tutorialScreen.InvokeRender()
+            }
         }
     }
 
@@ -196,3 +236,15 @@ class WelcomeScreen(
 
     override val viewModel = WelcomeViewModel()
 }
+//
+//@Preview(device = "spec:parent=pixel_5")
+//@Composable
+//fun prev() {
+//    WelcomeScreen(null, null).InvokeRender()
+//}
+//
+//@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+//@Composable
+//fun prev1() {
+//    WelcomeScreen(null, null).InvokeRender()
+//}

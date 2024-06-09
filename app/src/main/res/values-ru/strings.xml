@@ -2,8 +2,8 @@
 <resources>
     <string name="app_name">Мельница</string>
     <string name="tutorial_fly_condition">если у вас нет фигур, чтобы разместить и у вас есть ровно 3 фишки, то вы можете перемещать вашу фиишку из людой клетки в любую другую (пустую)</string>
-    <string name="tutorial_indicator_piece_count">Цифра внутри круга показывает, сколько еще фигур вы можете разместить</string>
     <string name="tutorial_fly_highlighting">Возможные перемещения подсвечиваются после выбора фишки</string>
+    <string name="tutorial_indicator_piece_count">В каждом из кругов в верху написано, сколько фигур соответствующего цвета еще не размещены</string>
     <string name="tutorial_indicator_piece_move_turn">размер круга показывает, чей сейчас ход</string>
     <string name="tutorial_lose_condition">если у вас меньше 3 фишек (включая те, которые вы можете разместить, то вы проиграли)</string>
     <string name="tutorial_normal_moves_condition">если у вас нет неразмещенных фигур и у вас больше 3 фишек, то вы можете двигать фишки в соседние клетки</string>

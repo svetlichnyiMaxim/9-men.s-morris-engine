@@ -4,7 +4,7 @@
     <string name="back_icon" translatable="false" />
     <string name="tutorial_fly_condition">If you don\'t have any figures to place and your pieces count = 3 you can fly (move to any empty place)</string>
     <string name="tutorial_fly_highlighting">Possible moves are highlighted when you have selected a piece to move</string>
-    <string name="tutorial_indicator_piece_count">Circle at the top shows how many piece you have left</string>
+    <string name="tutorial_indicator_piece_count">Each circle at the top shows how many pieces of the following color aren\'t placed yet</string>
     <string name="tutorial_indicator_piece_move_turn">Circle size shows whose turn it is</string>
     <string name="tutorial_lose_condition">If you have less than 3 pieces (including the ones you can place) you lose</string>
     <string name="tutorial_normal_moves_condition">If you don\'t have any figures to place and your pieces count > 3 you can move to the next cell (if it is empty)</string>

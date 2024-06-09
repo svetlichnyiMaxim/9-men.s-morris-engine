@@ -47,7 +47,7 @@ class SignInScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController?, val resources: Resources = Resources.getSystem()
+    val navController: NavHostController?, val resources: Resources
 ) : ScreenModel {
     @Composable
     override fun InvokeRender() {
@@ -160,10 +160,4 @@ class SignInScreen(
     }
 
     override val viewModel = SignInViewModel()
-}
-
-@Preview(device = "spec:parent=pixel_5,orientation=landscape")
-@Composable
-fun prev() {
-    SignInScreen(null).InvokeRender()
 }
