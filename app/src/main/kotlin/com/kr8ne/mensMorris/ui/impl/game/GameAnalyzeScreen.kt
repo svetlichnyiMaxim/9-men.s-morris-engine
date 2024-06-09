@@ -1,5 +1,6 @@
 package com.kr8ne.mensMorris.ui.impl.game
 
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,7 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kr8ne.mensMorris.BUTTON_WIDTH
@@ -48,10 +49,13 @@ class GameAnalyzeScreen(
      */
     @Composable
     fun DrawGameAnalyze() {
+        // I have tried to find a good placement of analyze screen, but it just doesn't suit
+        if (LocalConfiguration.current.orientation != ORIENTATION_PORTRAIT)
+            return
         val uiState = viewModel.uiState.collectAsState()
         val positions = uiState.value.positions
         if (positions.isNotEmpty()) {
-            DrawBestLine(positions)
+            DrawPositionsSequence(positions)
         }
         Box(
             modifier = Modifier
@@ -80,6 +84,8 @@ class GameAnalyzeScreen(
                                 Color.Unspecified
                             )
                         ) {
+                            // may be it is a bit better to use some icons
+                            // but I will leave it like this for now
                             Text("-", fontSize = 30.sp)
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -96,6 +102,8 @@ class GameAnalyzeScreen(
                                 Color.Unspecified
                             )
                         ) {
+                            // may be it is a bit better to use some icons
+                            // but I will leave it like this for now
                             Text("+", fontSize = 22.sp)
                         }
                     }
@@ -105,10 +113,10 @@ class GameAnalyzeScreen(
     }
 
     /**
-     * draws all best moves (main line)
+     * draws some positions sequence
      */
     @Composable
-    fun DrawBestLine(positions: List<Position>) {
+    fun DrawPositionsSequence(positions: List<Position>) {
         Box(
             modifier = Modifier
                 .padding(0.dp, BUTTON_WIDTH * 3f, 0.dp, 0.dp)
@@ -122,7 +130,6 @@ class GameAnalyzeScreen(
                         .weight(1f, false)
                 ) {
                     positions.forEach {
-                        println("DEBUG \n $it \n DEBUG")
                         GameBoardScreen(
                             it,
                             onClick = {},

@@ -5,27 +5,26 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.FlyingMovesTutorialScreen
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.IndicatorsTutorialScreen
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.LoseTutorialScreen
@@ -64,10 +63,9 @@ class TutorialScreen(
     private fun InvokeTutorialRendering() {
         val width = LocalConfiguration.current.screenWidthDp
         val height = LocalConfiguration.current.screenHeightDp
-        val scrollState = rememberScrollState()
         val coroutine = rememberCoroutineScope()
         val currentScreenIndex = remember { mutableIntStateOf(0) }
-
+        val listState = rememberLazyListState()
         class CustomFlingBehaviour : FlingBehavior {
             override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
                 /**
@@ -76,30 +74,25 @@ class TutorialScreen(
                 we divide by [tutorialScreens.size - 1] since
                 first screen doesn't affect [scrollState.maxValue]
                  */
-                val scrollWidth = scrollState.maxValue.toFloat() / (tutorialScreens.size - 1)
-                val delta = scrollState.value - scrollWidth * currentScreenIndex.intValue
+                val scrollWidth = listState.layoutInfo.viewportSize.width
                 when {
-                    (delta > 0.15f * scrollWidth) -> {
-                        currentScreenIndex.intValue++
+                    (listState.firstVisibleItemIndex < currentScreenIndex.intValue && listState.firstVisibleItemScrollOffset <= scrollWidth * 0.85) -> {
+                        currentScreenIndex.intValue--
                         coroutine.launch {
-                            scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt(),
-                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                            )
+                            listState.animateScrollToItem(currentScreenIndex.intValue)
                         }
                     }
 
-                    (delta < -0.15 * scrollWidth) -> {
-                        currentScreenIndex.intValue--
+                    (listState.firstVisibleItemScrollOffset > 0 && listState.firstVisibleItemScrollOffset >= scrollWidth * 0.15) -> {
+                        currentScreenIndex.intValue++
                         coroutine.launch {
-                            scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt(),
-                                animationSpec = tween(durationMillis = 300, easing = LinearEasing))
+                            listState.animateScrollToItem(currentScreenIndex.intValue)
                         }
                     }
 
                     else -> {
                         coroutine.launch {
-                            scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt(),
-                                animationSpec = tween(durationMillis = 300, easing = LinearEasing))
+                            listState.animateScrollToItem(currentScreenIndex.intValue)
                         }
                     }
                 }
@@ -108,21 +101,21 @@ class TutorialScreen(
         }
         LazyRow(
             modifier = Modifier
-                .height(height.dp)
-                .width(width.dp)
-                .horizontalScroll(
-                    state = scrollState, flingBehavior = CustomFlingBehaviour()
-                )
+                .fillMaxSize()
+                .widthIn(0.dp, width.dp),
+            state = listState,
+            flingBehavior = CustomFlingBehaviour()
         ) {
-            tutorialScreens.forEach {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .height(height.dp)
-                            .width(width.dp)
-                    ) {
-                        it.InvokeRender()
-                    }
+            items(count = tutorialScreens.size,
+                key = {
+                    it
+                }) {
+                Box(
+                    modifier = Modifier
+                        .height(height.dp)
+                        .width(width.dp)
+                ) {
+                    tutorialScreens[it].InvokeRender()
                 }
             }
         }

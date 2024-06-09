@@ -80,7 +80,6 @@ class GameAnalyzeData(
     private fun stopAnalyze() {
         analyzeJob?.cancel()
         Cache.resetCacheDepth()
-        movementsValue = listOf()
     }
 }
 

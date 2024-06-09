@@ -23,7 +23,7 @@ android {
 
     defaultConfig {
         applicationId = "ru.maxim.mensMorris"
-        minSdk = 26
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -68,7 +68,6 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:2024.05.00"))
     implementation("androidx.compose.ui:ui-tooling-preview:1.7.0-beta02")
     implementation("androidx.compose.material3:material3:1.3.0-beta02")
-    implementation("androidx.wear.compose:compose-material:1.4.0-beta02")
     implementation("androidx.navigation:navigation-compose:2.8.0-beta02")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))
     debugImplementation("androidx.compose.ui:ui-tooling:1.7.0-beta02")
