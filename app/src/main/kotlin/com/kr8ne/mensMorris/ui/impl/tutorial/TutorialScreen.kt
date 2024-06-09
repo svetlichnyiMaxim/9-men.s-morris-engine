@@ -1,6 +1,8 @@
 package com.kr8ne.mensMorris.ui.impl.tutorial
 
 import android.content.res.Resources
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.horizontalScroll
@@ -8,8 +10,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -20,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.ui.impl.tutorial.domain.FlyingMovesTutorialScreen
@@ -59,6 +63,7 @@ class TutorialScreen(
     @Composable
     private fun InvokeTutorialRendering() {
         val width = LocalConfiguration.current.screenWidthDp
+        val height = LocalConfiguration.current.screenHeightDp
         val scrollState = rememberScrollState()
         val coroutine = rememberCoroutineScope()
         val currentScreenIndex = remember { mutableIntStateOf(0) }
@@ -73,43 +78,51 @@ class TutorialScreen(
                  */
                 val scrollWidth = scrollState.maxValue.toFloat() / (tutorialScreens.size - 1)
                 val delta = scrollState.value - scrollWidth * currentScreenIndex.intValue
-                if (delta > 0) {
-                    currentScreenIndex.intValue++
-                    coroutine.launch {
-                        scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt())
+                when {
+                    (delta > 0.15f * scrollWidth) -> {
+                        currentScreenIndex.intValue++
+                        coroutine.launch {
+                            scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt(),
+                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                            )
+                        }
                     }
-                }
-                if (delta < 0) {
-                    currentScreenIndex.intValue--
-                    coroutine.launch {
-                        scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt())
+
+                    (delta < -0.15 * scrollWidth) -> {
+                        currentScreenIndex.intValue--
+                        coroutine.launch {
+                            scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt(),
+                                animationSpec = tween(durationMillis = 300, easing = LinearEasing))
+                        }
+                    }
+
+                    else -> {
+                        coroutine.launch {
+                            scrollState.animateScrollTo((scrollWidth * currentScreenIndex.intValue).roundToInt(),
+                                animationSpec = tween(durationMillis = 300, easing = LinearEasing))
+                        }
                     }
                 }
                 return 0f
             }
         }
-        Box(
-            modifier = Modifier.fillMaxSize(), Alignment.TopCenter
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.down_arrow),
-                "you can swipe this page down"
-            )
-        }
-        Row(
+        LazyRow(
             modifier = Modifier
-                .fillMaxSize()
+                .height(height.dp)
+                .width(width.dp)
                 .horizontalScroll(
                     state = scrollState, flingBehavior = CustomFlingBehaviour()
                 )
         ) {
             tutorialScreens.forEach {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(width.dp)
-                ) {
-                    it.InvokeRender()
+                item {
+                    Box(
+                        modifier = Modifier
+                            .height(height.dp)
+                            .width(width.dp)
+                    ) {
+                        it.InvokeRender()
+                    }
                 }
             }
         }
@@ -121,4 +134,16 @@ class TutorialScreen(
     }
 
     override val viewModel = TutorialViewModel()
+}
+
+@Preview(device = "spec:parent=pixel_5")
+@Composable
+fun prev() {
+    TutorialScreen(Resources.getSystem()).InvokeRender()
+}
+
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Composable
+fun prev1() {
+    TutorialScreen(Resources.getSystem()).InvokeRender()
 }

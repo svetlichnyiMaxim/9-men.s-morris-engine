@@ -1,7 +1,6 @@
 package com.kr8ne.mensMorris.ui.interfaces
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 
 /**
@@ -20,4 +19,7 @@ interface ScreenModel {
      * viewModel attached to the screen
      */
     val viewModel: ViewModelI
+        get() {
+            TODO("Not yet implemented")
+        }
 }

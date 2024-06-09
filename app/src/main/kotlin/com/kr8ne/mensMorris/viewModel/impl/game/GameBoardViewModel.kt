@@ -87,6 +87,10 @@ class GameBoardViewModel(
     fun handleRedo() {
         return data.handleRedo()
     }
+
+    fun handleHighLighting() {
+        data.handleHighLighting()
+    }
 }
 
 data class GameBoardUiState(val pos: Position, val moveHints: List<Int>)

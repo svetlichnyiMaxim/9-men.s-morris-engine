@@ -2,6 +2,8 @@ package com.kr8ne.mensMorris.ui.impl
 
 import android.content.SharedPreferences
 import android.content.res.Resources
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
@@ -85,28 +87,40 @@ class WelcomeScreen(
         class CustomFlingBehaviour : FlingBehavior {
             override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
                 if (isWelcome.value) {
-                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue >= 0.25f) {
+                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue >= 0.15f) {
                         isWelcome.value = false
                         coroutine.launch {
-                            scrollState.animateScrollTo(scrollState.maxValue)
+                            scrollState.animateScrollTo(
+                                scrollState.maxValue,
+                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                            )
                         }
                     }
-                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue < 0.25f) {
+                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue < 0.15f) {
                         isWelcome.value = true
                         coroutine.launch {
-                            scrollState.animateScrollTo(0)
+                            scrollState.animateScrollTo(
+                                0,
+                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                            )
                         }
                     }
                 } else {
-                    if (scrollState.value.toFloat() / scrollState.maxValue <= 0.75f) {
+                    if (scrollState.value.toFloat() / scrollState.maxValue <= 0.85f) {
                         isWelcome.value = true
                         coroutine.launch {
-                            scrollState.animateScrollTo(0)
+                            scrollState.animateScrollTo(
+                                0,
+                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                            )
                         }
                     } else {
                         isWelcome.value = false
                         coroutine.launch {
-                            scrollState.animateScrollTo(scrollState.maxValue)
+                            scrollState.animateScrollTo(
+                                scrollState.maxValue,
+                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                            )
                         }
                     }
                 }
@@ -236,15 +250,3 @@ class WelcomeScreen(
 
     override val viewModel = WelcomeViewModel()
 }
-//
-//@Preview(device = "spec:parent=pixel_5")
-//@Composable
-//fun prev() {
-//    WelcomeScreen(null, null).InvokeRender()
-//}
-//
-//@Preview(device = "spec:parent=pixel_5,orientation=landscape")
-//@Composable
-//fun prev1() {
-//    WelcomeScreen(null, null).InvokeRender()
-//}

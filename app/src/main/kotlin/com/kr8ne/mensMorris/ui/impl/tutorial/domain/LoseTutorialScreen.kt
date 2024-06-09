@@ -1,15 +1,17 @@
 package com.kr8ne.mensMorris.ui.impl.tutorial.domain
 
 import android.content.res.Resources
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.R
@@ -18,8 +20,6 @@ import com.kr8ne.mensMorris.common.EMPTY
 import com.kr8ne.mensMorris.common.GREEN
 import com.kr8ne.mensMorris.ui.impl.game.GameBoardScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
-import com.kr8ne.mensMorris.viewModel.impl.game.GameBoardViewModel
-import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 
 /**
  * this screen tells about information indicators provide
@@ -44,21 +44,24 @@ class LoseTutorialScreen(val resources: Resources) : ScreenModel {
 
     @Composable
     override fun InvokeRender() {
-        // TODO: add animations
-        gameBoard.RenderPieceCount()
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(15))
-                .padding(bottom = BUTTON_WIDTH * 3),
-            Alignment.BottomCenter
+        val scrollState = rememberScrollState()
+        Column(
+            modifier = Modifier.verticalScroll(scrollState)
         ) {
-            Column {
+            Box {
+                gameBoard.RenderPieceCount()
                 gameBoard.InvokeRender()
-                Text(text = resources.getString(R.string.tutorial_lose_condition))
+            }
+            Column(
+                modifier = Modifier.padding(start = BUTTON_WIDTH, end = BUTTON_WIDTH),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = resources.getString(R.string.tutorial_lose_condition),
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
-
-    override val viewModel: ViewModelI
-        get() = TODO("Not yet implemented")
 }
