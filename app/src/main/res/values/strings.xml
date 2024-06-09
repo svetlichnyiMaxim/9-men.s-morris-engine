@@ -30,6 +30,6 @@
     <string name="login_in_use">This login is already in use</string>
     <string name="repeat_pass">repeat your new password</string>
     <string name="pass_doesnt_match">Your passwords doesn\'t match</string>
-    <string name="have_account_sign_in">Have an account? Sign in</string>
+    <string name="have_account_question">Have an account?</string>
     <string name="sign_up">Sign up</string>
 </resources>

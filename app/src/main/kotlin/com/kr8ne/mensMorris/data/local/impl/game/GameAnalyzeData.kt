@@ -30,17 +30,20 @@ class GameAnalyzeData(
     private var depthValue: Int = 3
         set(value) {
             field = value
-            result.value = result.value.copy(depth = value)
+            dataState.value = dataState.value.copy(depth = value)
         }
 
     @Volatile
     private var movementsValue: List<Movement> = listOf()
         set(value) {
             field = value
-            result.value = result.value.copy(positions = value)
+            dataState.value = dataState.value.copy(positions = value)
         }
 
-    val result: MutableStateFlow<GameAnalyzeDataState> =
+    /**
+     * data
+     */
+    val dataState: MutableStateFlow<GameAnalyzeDataState> =
         MutableStateFlow(GameAnalyzeDataState(movementsValue, depthValue))
 
     /**
@@ -59,7 +62,11 @@ class GameAnalyzeData(
         stopAnalyze()
     }
 
+    /**
+     * current analyze job
+     */
     var analyzeJob: Job? = null
+
     /**
      * starts board analyze
      */
@@ -74,6 +81,7 @@ class GameAnalyzeData(
         }
         analyzeJob?.start()
     }
+
     /**
      * hides analyze gui and delete it's result
      */
@@ -83,7 +91,16 @@ class GameAnalyzeData(
     }
 }
 
+/**
+ * represents data
+ */
 data class GameAnalyzeDataState(
+    /**
+     * analyze result
+     */
     val positions: List<Movement>,
+    /**
+     * current analyze depth
+     */
     val depth: Int
 )

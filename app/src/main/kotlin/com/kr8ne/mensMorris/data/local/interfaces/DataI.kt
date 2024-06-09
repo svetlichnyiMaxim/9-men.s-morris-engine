@@ -1,5 +1,8 @@
 package com.kr8ne.mensMorris.data.local.interfaces
 
+/**
+ * interface for all data files
+ */
 abstract class DataI : DataInterface {
     init {
         this.invokeBackend()

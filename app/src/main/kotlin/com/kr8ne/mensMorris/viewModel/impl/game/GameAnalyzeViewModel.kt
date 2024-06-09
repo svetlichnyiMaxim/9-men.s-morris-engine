@@ -1,6 +1,5 @@
 package com.kr8ne.mensMorris.viewModel.impl.game
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewModelScope
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.common.toPositions
@@ -24,12 +23,14 @@ class GameAnalyzeViewModel(
 
     private val _uiState: MutableStateFlow<GameAnalyzeUiState> =
         MutableStateFlow(GameAnalyzeUiState(mutableListOf(), 3))
+
+    @Suppress("UndocumentedPublicProperty")
     val uiState: StateFlow<GameAnalyzeUiState>
         get() = _uiState
 
     init {
         viewModelScope.launch {
-            data.result
+            data.dataState
                 .collect { (positions, depth) ->
                     positions.toPositions(data.pos.value).forEach {
                         println(it)
@@ -40,18 +41,38 @@ class GameAnalyzeViewModel(
         }
     }
 
+    /**
+     * quick access function
+     */
     fun increaseDepth() {
         data.increaseDepth()
     }
 
+    /**
+     * quick access function
+     */
     fun decreaseDepth() {
         data.decreaseDepth()
     }
 
+    /**
+     * quick access function
+     */
     fun startAnalyze() {
         data.startAnalyze()
     }
 }
 
-class GameAnalyzeUiState(val positions: List<Position>, val depth: Int)
-
+/**
+ * ui state of the game analyze screen
+ */
+class GameAnalyzeUiState(
+    /**
+     * currently analyzed position
+     */
+    val positions: List<Position>,
+    /**
+     * current analyze depth
+     */
+    val depth: Int
+)

@@ -1,12 +1,14 @@
 package com.kr8ne.mensMorris.data.local.impl.auth
 
 import com.kr8ne.mensMorris.data.local.interfaces.DataI
-import com.kr8ne.mensMorris.data.remote.Auth
+import com.kr8ne.mensMorris.data.remote.AuthRepository
 
 /**
  * This class provides data for sign in screen.
  */
-class SignInData : DataI() {
+class SignInData(
+    private val authRepository: AuthRepository = AuthRepository()
+) : DataI() {
     /**
      * Validates the provided login.
      *
@@ -14,7 +16,7 @@ class SignInData : DataI() {
      * @return True if the login is valid, false otherwise.
      */
     fun loginValidator(login: String): Boolean {
-        return Auth.loginValidator(login)
+        return authRepository.loginValidator(login)
     }
 
     /**
@@ -24,6 +26,6 @@ class SignInData : DataI() {
      * @return True if the password is valid, false otherwise.
      */
     fun passwordValidator(password: String): Boolean {
-        return Auth.passwordValidator(password)
+        return authRepository.passwordValidator(password)
     }
 }

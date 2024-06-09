@@ -1,7 +1,5 @@
 package com.kr8ne.mensMorris.data.remote
 
-import androidx.core.content.edit
-import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.SERVER_ADDRESS
 import com.kr8ne.mensMorris.common.USER_API
 import com.kroune.NetworkResponse
@@ -11,19 +9,10 @@ import io.ktor.http.HttpMethod
 import io.ktor.utils.io.printStack
 import kotlinx.serialization.json.Json
 
-object Auth {
-    /**
-     * Jwt token provided by the server
-     */
-    @Volatile
-    var jwtToken: String? = activity?.sharedPreferences?.getString("jwtToken", null)
-        set(value) {
-            field = value
-            activity?.sharedPreferences?.edit(commit = true) {
-                putString("jwtToken", value).apply()
-            }
-        }
-
+/**
+ * contains ways to authenticate
+ */
+class AuthRepository {
     /**
      * Validates the provided login.
      *
@@ -115,6 +104,9 @@ object Auth {
         }
     }
 
+    /**
+     * checks if jwt token is valid
+     */
     suspend fun checkJwtToken(): Result<Boolean> {
         return runCatching {
             val jwtTokenState = jwtToken
@@ -133,4 +125,9 @@ object Auth {
 /**
  * Represents the server's response to client requests.
  */
-class ServerException(val text: String) : Exception()
+class ServerException(
+    /**
+     * server exception description
+     */
+    val text: String
+) : Exception()

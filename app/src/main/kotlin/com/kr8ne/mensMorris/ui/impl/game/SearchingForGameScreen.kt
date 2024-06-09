@@ -12,8 +12,10 @@ import com.kr8ne.mensMorris.viewModel.impl.game.SearchingForGameViewModel
 /**
  * Game main screen
  */
-class SearchingForGameScreen(val navController: NavHostController, val resources: Resources) :
-    ScreenModel {
+class SearchingForGameScreen(
+    navController: NavHostController,
+    private val resources: Resources
+) : ScreenModel {
     @Composable
     override fun InvokeRender() {
         AppTheme {

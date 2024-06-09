@@ -8,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -16,7 +15,6 @@ import com.kr8ne.mensMorris.BUTTON_WIDTH
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.WELCOME_SCREEN
 import com.kr8ne.mensMorris.common.AppTheme
-import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.ui.interfaces.GameScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.game.GameEndViewModel
 
@@ -48,7 +46,7 @@ class GameEndScreen(
         }
     }
 
-    override val viewModel = GameEndViewModel(gameBoard, navController)
+    override val viewModel = GameEndViewModel(gameBoard)
 
     /**
      * draws screen after the game has ended
@@ -72,10 +70,4 @@ class GameEndScreen(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun draw() {
-    GameEndScreen(gameStartPosition, null).InvokeRender()
 }

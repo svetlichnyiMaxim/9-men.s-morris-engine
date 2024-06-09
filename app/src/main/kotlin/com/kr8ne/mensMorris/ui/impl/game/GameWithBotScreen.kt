@@ -10,7 +10,7 @@ import com.kr8ne.mensMorris.viewModel.impl.game.GameWithBotViewModel
  * Game main screen
  */
 class GameWithBotScreen(
-    val navController: NavHostController
+    navController: NavHostController
 ) : ScreenModel {
 
     @Composable

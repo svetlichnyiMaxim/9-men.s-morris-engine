@@ -12,7 +12,6 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
  * welcome model
  * called when app is launched
  */
-class WelcomeViewModel(
-) : ViewModelI() {
+class WelcomeViewModel : ViewModelI() {
     override val data = WelcomeData()
 }

@@ -10,7 +10,6 @@ import com.kr8ne.mensMorris.viewModel.interfaces.ViewModelI
 /**
  * view model for tutorials
  */
-class TutorialViewModel(
-) : ViewModelI() {
+class TutorialViewModel : ViewModelI() {
     override val data: TutorialData = TutorialData()
 }

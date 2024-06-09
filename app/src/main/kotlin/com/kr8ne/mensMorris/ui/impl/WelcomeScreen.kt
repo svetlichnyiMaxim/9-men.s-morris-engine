@@ -41,8 +41,8 @@ import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
 import com.kr8ne.mensMorris.common.AppTheme
-import com.kr8ne.mensMorris.data.remote.Auth
-import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
+import com.kr8ne.mensMorris.data.remote.AuthRepository
+import com.kr8ne.mensMorris.data.remote.jwtToken
 import com.kr8ne.mensMorris.ui.impl.tutorial.TutorialScreen
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.WelcomeViewModel
@@ -58,8 +58,9 @@ class WelcomeScreen(
      * navigation controller
      */
     val navController: NavHostController?,
-    val sharedPreferences: SharedPreferences?,
-    val resources: Resources
+    private val sharedPreferences: SharedPreferences?,
+    private val resources: Resources,
+    private val authRepository: AuthRepository = AuthRepository()
 ) : ScreenModel {
     private var hasSeen = sharedPreferences?.getBoolean("hasSeenTutorial", false) ?: false
         set(value) {
@@ -70,8 +71,6 @@ class WelcomeScreen(
                 field = value
             }
         }
-
-    val tutorialScreen = TutorialScreen(resources)
 
     /**
      * draws game modes options
@@ -212,7 +211,7 @@ class WelcomeScreen(
                         onClick = {
                             // TODO: rework this
                             runBlocking {
-                                if (jwtToken != null && Auth.checkJwtToken()
+                                if (jwtToken != null && authRepository.checkJwtToken()
                                         .getOrNull() == true
                                 ) {
                                     navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
@@ -236,7 +235,7 @@ class WelcomeScreen(
                     .fillMaxWidth()
                     .size(height.dp)
             ) {
-                tutorialScreen.InvokeRender()
+                TutorialScreen(resources).InvokeRender()
             }
         }
     }

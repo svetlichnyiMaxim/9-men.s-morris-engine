@@ -18,6 +18,9 @@ import com.kr8ne.mensMorris.viewModel.impl.game.GameWithFriendViewModel
  * Game main screen
  */
 class GameWithFriendScreen(
+    /**
+     * navigation controller
+     */
     val navController: NavHostController?,
     override var gameBoard: GameBoardScreen = GameBoardScreen(navController = navController),
 ) : GameScreenModel {
@@ -33,7 +36,7 @@ class GameWithFriendScreen(
         }
     }
 
-    override val viewModel = GameWithFriendViewModel(navController)
+    override val viewModel = GameWithFriendViewModel()
 
     @Composable
     private fun DrawMainPage() {
@@ -43,7 +46,7 @@ class GameWithFriendScreen(
                 .height(IntrinsicSize.Max)
                 .fillMaxWidth()
         ) {
-            GameAnalyzeScreen(gameBoard.positionStateFlow).InvokeRender()
+            GameAnalyzeScreen(gameBoard.pos).InvokeRender()
         }
     }
 }

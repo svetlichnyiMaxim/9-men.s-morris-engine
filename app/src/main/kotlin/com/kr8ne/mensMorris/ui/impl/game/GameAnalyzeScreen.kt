@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  * game analyzing screen
  */
 class GameAnalyzeScreen(
-    val pos: MutableStateFlow<Position>
+    pos: MutableStateFlow<Position>
 ) : ScreenModel {
     override val viewModel = GameAnalyzeViewModel(pos)
 

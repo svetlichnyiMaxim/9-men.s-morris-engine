@@ -14,6 +14,9 @@ import kotlinx.coroutines.flow.StateFlow
 class GameWithBotViewModel(navController: NavHostController?) : ViewModelI() {
     override val data = GameWithBotData(navController, viewModelScope)
 
+    /**
+     * quick access to the game board
+     */
     val gameBoard
         get() = data.gameBoard
 }

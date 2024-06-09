@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,15 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.R
 import com.kr8ne.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kr8ne.mensMorris.SIGN_IN_SCREEN
 import com.kr8ne.mensMorris.common.AppTheme
-import com.kr8ne.mensMorris.data.remote.Auth
-import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
+import com.kr8ne.mensMorris.data.remote.AuthRepository
+import com.kr8ne.mensMorris.data.remote.jwtToken
 import com.kr8ne.mensMorris.data.remote.networkScope
 import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 import com.kr8ne.mensMorris.viewModel.impl.auth.SignUpViewModel
@@ -36,121 +36,113 @@ import kotlinx.coroutines.launch
 
 /**
  * Represents a screen for signing up a new user.
- *
- * @param navController The navigation controller to navigate to other screens.
  */
 class SignUpScreen(
     /**
      * navigation controller
      */
     val navController: NavHostController?,
-    val resources: Resources
+    /**
+     * resources
+     * used for translations
+     */
+    val resources: Resources,
+    /**
+     * auth repository
+     */
+    private val authRepository: AuthRepository = AuthRepository()
 ) : ScreenModel {
     @Composable
     override fun InvokeRender() {
-        var isSwitchingScreens = false
+        val serverResponse = remember { mutableStateOf<Result<String>?>(null) }
+        val password = remember { mutableStateOf("") }
+        val isPasswordValid = remember { mutableStateOf(false) }
+        val password2 = remember { mutableStateOf("") }
+        val isPassword2Valid = remember { mutableStateOf(false) }
+        val requestInProcess = remember { mutableStateOf(false) }
+        val isUsernameValid = remember { mutableStateOf(false) }
+        val username = remember { mutableStateOf("") }
+        serverResponse.value?.onSuccess {
+            jwtToken = it
+            navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+        }
         AppTheme {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val serverResponse = remember { mutableStateOf<Result<String>?>(null) }
-                val requestInProcess = remember { mutableStateOf(false) }
-                val isUsernameValid = remember { mutableStateOf(false) }
-                val username = remember { mutableStateOf("") }
                 serverResponse.value?.onFailure { exception ->
                     // TODO: finish this
                     Text(text = resources.getString(R.string.server_error))
                 }
-                serverResponse.value?.onSuccess {
-                    if (!isSwitchingScreens) {
-                        jwtToken = it
-                        navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
-                        // we make sure to only change screen once
-                        isSwitchingScreens = true
-                    }
+                Spacer(modifier = Modifier.fillMaxHeight(0.25f))
+                Row {
+                    Icon(
+                        painter = painterResource(id = R.drawable.username),
+                        "your preferred username"
+                    )
+                    TextField(username.value, { newValue ->
+                        username.value = newValue
+                        isUsernameValid.value = viewModel.loginValidator(username.value)
+                    }, label = {
+                        if (!isUsernameValid.value) {
+                            Text(
+                                resources.getString(R.string.invalid_login),
+                                modifier = Modifier,
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }, placeholder = { Text(resources.getString(R.string.username)) })
                 }
-                Box {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.username),
-                            "your preferred username"
-                        )
-                        TextField(username.value, { newValue ->
-                            username.value = newValue
-                            isUsernameValid.value = viewModel.loginValidator(username.value)
-                        }, label = {
-                            Row {
-                                if (!isUsernameValid.value) {
-                                    Text(
-                                        resources.getString(R.string.invalid_login),
-                                        modifier = Modifier,
-                                        color = Color.Red,
-                                        fontSize = 12.sp
-                                    )
-                                }
-                            }
-                        }, placeholder = { Text(resources.getString(R.string.username)) })
-                    }
+                Spacer(modifier = Modifier.fillMaxHeight(0.025f))
+                Row {
+                    Icon(
+                        painter = painterResource(id = R.drawable.password), "your new password"
+                    )
+                    TextField(password.value, { newValue ->
+                        password.value = newValue
+                        isPasswordValid.value = viewModel.passwordValidator(password.value)
+                        isPassword2Valid.value = (password2.value == password.value)
+                    }, label = {
+                        if (!isPasswordValid.value) {
+                            Text(
+                                resources.getString(R.string.invalid_password),
+                                modifier = Modifier,
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }, placeholder = { Text(resources.getString(R.string.password)) })
                 }
-                val isPasswordValid = remember { mutableStateOf(false) }
-                val password = remember { mutableStateOf("") }
-                val isPassword2Valid = remember { mutableStateOf(false) }
-                val password2 = remember { mutableStateOf("") }
-                Box {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.password), "your new password"
-                        )
-                        TextField(password.value, { newValue ->
-                            password.value = newValue
-                            isPasswordValid.value = viewModel.passwordValidator(password.value)
-                            isPassword2Valid.value = (password2.value == password.value)
-                        }, label = {
-                            Row {
-                                if (!isPasswordValid.value) {
-                                    Text(
-                                        resources.getString(R.string.invalid_password),
-                                        modifier = Modifier,
-                                        color = Color.Red,
-                                        fontSize = 12.sp
-                                    )
-                                }
-                            }
-                        }, placeholder = { Text(resources.getString(R.string.password)) })
-                    }
+                Spacer(modifier = Modifier.fillMaxHeight(0.025f))
+                Row {
+                    Icon(
+                        painter = painterResource(id = R.drawable.password),
+                        resources.getString(R.string.repeat_pass)
+                    )
+                    TextField(password2.value, { newValue ->
+                        password2.value = newValue
+                        isPassword2Valid.value = (password2.value == password.value)
+                    }, label = {
+                        if (!isPassword2Valid.value) {
+                            Text(
+                                resources.getString(R.string.pass_doesnt_match),
+                                modifier = Modifier,
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }, placeholder = { Text(resources.getString(R.string.repeat_pass)) })
                 }
-                Box {
-                    Row {
-                        Icon(
-                            painter = painterResource(id = R.drawable.password),
-                            resources.getString(R.string.repeat_pass)
-                        )
-                        TextField(password2.value, { newValue ->
-                            password2.value = newValue
-                            isPassword2Valid.value = (password2.value == password.value)
-                        }, label = {
-                            Row {
-                                if (!isPassword2Valid.value) {
-                                    Text(
-                                        resources.getString(R.string.pass_doesnt_match),
-                                        modifier = Modifier,
-                                        color = Color.Red,
-                                        fontSize = 12.sp
-                                    )
-                                }
-                            }
-                        }, placeholder = { Text(resources.getString(R.string.repeat_pass)) })
-                    }
-                }
-                Spacer(modifier = Modifier.height(100.dp))
+                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
                         requestInProcess.value = true
                         CoroutineScope(networkScope).launch {
-                            serverResponse.value = Auth.register(username.value, password.value)
+                            serverResponse.value = authRepository.register(username.value, password.value)
                             requestInProcess.value = false
                         }
                     },
@@ -159,14 +151,25 @@ class SignUpScreen(
                 ) {
                     Text(resources.getString(R.string.sign_up))
                 }
-                Spacer(modifier = Modifier.height(100.dp))
-                Box {
-                    Button(modifier = Modifier, onClick = {
-                        navController?.navigate(SIGN_IN_SCREEN)
-                    }) {
-                        Text(resources.getString(R.string.have_account_sign_in))
+                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.BottomCenter
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(resources.getString(R.string.have_account_question))
+                        TextButton(modifier = Modifier, onClick = {
+                            navController?.navigate(SIGN_IN_SCREEN)
+                        }) {
+                            Text(resources.getString(R.string.sign_in))
+                        }
                     }
                 }
+                Spacer(modifier = Modifier.fillMaxHeight(0.1f))
             }
         }
     }

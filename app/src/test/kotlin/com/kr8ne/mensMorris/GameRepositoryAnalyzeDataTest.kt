@@ -10,19 +10,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class GameAnalyzeDataTest {
+class GameRepositoryAnalyzeDataTest {
     @Test
     fun depthValue() {
         val instance = GameAnalyzeData(MutableStateFlow(gameStartPosition))
         for (i in 3 downTo 0) {
-            assert(instance.result.value.depth == i)
+            assert(instance.dataState.value.depth == i)
             instance.decreaseDepth()
         }
-        assert(instance.result.value.depth == 0)
+        assert(instance.dataState.value.depth == 0)
         instance.decreaseDepth()
-        assert(instance.result.value.depth == 0)
+        assert(instance.dataState.value.depth == 0)
         for (i in 0..20) {
-            assert(instance.result.value.depth == i)
+            assert(instance.dataState.value.depth == i)
             instance.increaseDepth()
         }
     }

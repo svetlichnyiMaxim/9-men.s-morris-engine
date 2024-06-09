@@ -19,6 +19,7 @@ import java.util.Stack
 /**
  * data for game board
  */
+@Suppress("LongParameterList")
 class GameBoardData(
     /**
      * stores current position

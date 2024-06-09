@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 /**
  * view model for game board
  */
+@Suppress("LongParameterList")
 class GameBoardViewModel(
     /**
      * stores current position
@@ -59,6 +60,10 @@ class GameBoardViewModel(
 
     private val _uiState: MutableStateFlow<GameBoardUiState> =
         MutableStateFlow(GameBoardUiState(pos, moveHints))
+
+    /**
+     * current app ui state
+     */
     val uiState: StateFlow<GameBoardUiState> = _uiState
 
     init {
@@ -76,22 +81,46 @@ class GameBoardViewModel(
         }
     }
 
+    /**
+     * quick access
+     */
     fun onClick(index: Int) {
         return data.onClick(data, index)
     }
 
+    /**
+     * quick access
+     */
     fun handleUndo() {
         return data.handleUndo()
     }
 
+    /**
+     * quick access
+     */
     fun handleRedo() {
         return data.handleRedo()
     }
 
+    /**
+     * quick access
+     */
     fun handleHighLighting() {
         data.handleHighLighting()
     }
 }
 
-data class GameBoardUiState(val pos: Position, val moveHints: List<Int>)
+/**
+ * represents current ui state
+ */
+data class GameBoardUiState(
+    /**
+     * current position
+     */
+    val pos: Position,
+    /**
+     * all possible moves
+     */
+    val moveHints: List<Int>
+)
 

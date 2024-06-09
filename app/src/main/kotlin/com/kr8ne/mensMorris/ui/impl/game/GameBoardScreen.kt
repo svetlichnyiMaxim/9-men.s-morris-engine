@@ -20,7 +20,6 @@ import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +28,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.BUTTON_WIDTH
@@ -64,29 +62,17 @@ class GameBoardScreen(
         navController = navController
     )
 
-    // used for quick access to position
-    val posState: State<Position>
-        @Composable
-        get() {
-            return viewModel.data.pos.collectAsState()
-        }
-
-    val positionStateFlow: MutableStateFlow<Position>
+    /**
+     * used for quick access
+     * direct link to the data is kinda wrong, but it makes this code much cleaner
+     */
+    var pos: MutableStateFlow<Position>
         get() {
             return viewModel.data.pos
         }
-    var pos: Position
-        get() {
-            return viewModel.data.pos.value
-        }
         set(value) {
-            viewModel.data.pos = MutableStateFlow(value)
+            viewModel.data.pos = value
         }
-
-    @Composable
-    fun getUiState(): GameBoardUiState {
-        return viewModel.uiState.collectAsState().value
-    }
 
     @Composable
     override fun InvokeRender() {
@@ -114,6 +100,7 @@ class GameBoardScreen(
      */
     @Composable
     fun RenderPieceCount() {
+        val uiState = viewModel.uiState.collectAsState().value
         Box {
             Box(
                 modifier = Modifier
@@ -122,14 +109,14 @@ class GameBoardScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (getUiState().pos.pieceToMove) 1.5f else 1f)
+                        .size(BUTTON_WIDTH * if (uiState.pos.pieceToMove) 1.5f else 1f)
                         .background(Color.Green, CircleShape)
-                        .alpha(if (getUiState().pos.freePieces.first == 0.toUByte()) 0f else 1f),
+                        .alpha(if (uiState.pos.freePieces.first == 0.toUByte()) 0f else 1f),
                     Alignment.Center
                 ) {
                     Text(
                         color = Color.Blue,
-                        text = getUiState().pos.freePieces.first.toString()
+                        text = uiState.pos.freePieces.first.toString()
                     )
                 }
             }
@@ -138,14 +125,14 @@ class GameBoardScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(BUTTON_WIDTH * if (!getUiState().pos.pieceToMove) 1.5f else 1f)
+                        .size(BUTTON_WIDTH * if (!uiState.pos.pieceToMove) 1.5f else 1f)
                         .background(Color.Blue, CircleShape)
-                        .alpha(if (getUiState().pos.freePieces.second == 0.toUByte()) 0f else 1f),
+                        .alpha(if (uiState.pos.freePieces.second == 0.toUByte()) 0f else 1f),
                     Alignment.Center
                 ) {
                     Text(
                         color = Color.Green,
-                        text = getUiState().pos.freePieces.second.toString()
+                        text = uiState.pos.freePieces.second.toString()
                     )
                 }
             }
@@ -323,6 +310,7 @@ class GameBoardScreen(
      */
     @Composable
     private fun CircledButton(elementIndex: Int, onClick: (Int) -> Unit) {
+        val uiState = viewModel.uiState.collectAsState().value
         Box(
             modifier = Modifier
                 .size(BUTTON_WIDTH)
@@ -332,7 +320,7 @@ class GameBoardScreen(
                     .size(BUTTON_WIDTH * if (viewModel.data.selectedButton.value == elementIndex) 0.8f else 1f)
                     .background(Color.Transparent, CircleShape),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = when (getUiState().pos.positions[elementIndex]) {
+                    containerColor = when (uiState.pos.positions[elementIndex]) {
                         null -> {
                             Color.Transparent
                         }
@@ -350,7 +338,7 @@ class GameBoardScreen(
                 onClick = {
                     onClick(elementIndex)
                 },
-                border = if (!getUiState().moveHints.contains(elementIndex)) null else BorderStroke(
+                border = if (!uiState.moveHints.contains(elementIndex)) null else BorderStroke(
                     BUTTON_WIDTH * 0.1f,
                     Color.DarkGray
                 )

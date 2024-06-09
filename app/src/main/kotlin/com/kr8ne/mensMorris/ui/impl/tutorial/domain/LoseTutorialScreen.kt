@@ -24,7 +24,7 @@ import com.kr8ne.mensMorris.ui.interfaces.ScreenModel
 /**
  * this screen tells about information indicators provide
  */
-class LoseTutorialScreen(val resources: Resources) : ScreenModel {
+class LoseTutorialScreen(private val resources: Resources) : ScreenModel {
     private val position = Position(
         // @formatter:off
         arrayOf(

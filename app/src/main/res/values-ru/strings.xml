@@ -29,6 +29,6 @@
     <string name="login_in_use">Этот логин уже используется</string>
     <string name="repeat_pass">повторите ваш новый пароль</string>
     <string name="pass_doesnt_match">Ваши пароли не совпадают</string>
-    <string name="have_account_sign_in">Уже есть аккаунт? Войдите</string>
+    <string name="have_account_question">Уже есть аккаунт?</string>
     <string name="sign_up">Зарегистрируйтесь</string>
 </resources>

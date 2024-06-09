@@ -28,18 +28,18 @@ class GameWithBotData(
         handleUndo = { onUndo() },
         navController = navController
     )
-    private val analyze = GameAnalyzeData(gameBoard.positionStateFlow)
+    private val analyze = GameAnalyzeData(gameBoard.pos)
 
     /**
      * performs needed actions after click
      * @param index index of the clicked element
      */
     private fun GameBoardData.response(index: Int) {
-        if (gameBoard.pos.pieceToMove) {
+        if (gameBoard.pos.value.pieceToMove) {
             handleClick(index)
             handleHighLighting()
             botJob = viewModelScope.launch {
-                while (!gameBoard.pos.pieceToMove && gameBoard.pos.gameState() != GameState.End) {
+                while (!gameBoard.pos.value.pieceToMove && gameBoard.pos.value.gameState() != GameState.End) {
                     launchBot()
                 }
             }
@@ -50,7 +50,7 @@ class GameWithBotData(
         botJob?.cancel()
         botJob = viewModelScope.launch {
             delay(800)
-            while (!gameBoard.pos.pieceToMove && gameBoard.pos.gameState() != GameState.End) {
+            while (!gameBoard.pos.value.pieceToMove && gameBoard.pos.value.gameState() != GameState.End) {
                 launchBot()
             }
         }
@@ -66,13 +66,13 @@ class GameWithBotData(
      * launches bot actions against player
      */
     private suspend fun launchBot() {
-        if (!gameBoard.pos.pieceToMove
-            && gameBoard.pos.gameState() != GameState.End
+        if (!gameBoard.pos.value.pieceToMove
+            && gameBoard.pos.value.gameState() != GameState.End
         ) {
             Cache.resetCacheDepth()
             analyze.startAnalyze()
             analyze.analyzeJob?.join()
-            gameBoard.viewModel.data.processMove(analyze.result.value.positions.last())
+            gameBoard.viewModel.data.processMove(analyze.dataState.value.positions.last())
         }
     }
 }

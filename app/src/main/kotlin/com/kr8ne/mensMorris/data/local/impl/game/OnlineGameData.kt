@@ -9,8 +9,8 @@ import com.kr8ne.mensMorris.common.SERVER_ADDRESS
 import com.kr8ne.mensMorris.common.USER_API
 import com.kr8ne.mensMorris.data.local.interfaces.DataI
 import com.kr8ne.mensMorris.data.local.interfaces.GameBoardInterface
-import com.kr8ne.mensMorris.data.remote.Auth.jwtToken
-import com.kr8ne.mensMorris.data.remote.Game
+import com.kr8ne.mensMorris.data.remote.GameRepository
+import com.kr8ne.mensMorris.data.remote.jwtToken
 import com.kr8ne.mensMorris.data.remote.network
 import com.kr8ne.mensMorris.data.remote.networkScope
 import com.kr8ne.mensMorris.gameStartPosition
@@ -33,9 +33,13 @@ import kotlin.random.Random
  */
 class OnlineGameData(
     private val gameId: Long,
-    val navController: NavHostController?
+    private val navController: NavHostController?,
+    private val gameRepository: GameRepository = GameRepository()
 ) : GameBoardInterface, DataI() {
 
+    /**
+     * tells if user is green or blue
+     */
     var isGreen: MutableState<Boolean?> = mutableStateOf(null)
     override val gameBoard = GameBoardScreen(
         pos = gameStartPosition,
@@ -45,11 +49,11 @@ class OnlineGameData(
 
     private fun GameBoardData.response(index: Int) {
         // check if we can make this move
-        println("isGreen - $isGreen; pieceToMove - ${gameBoard.pos.pieceToMove}")
-        if (isGreen.value == gameBoard.pos.pieceToMove) {
+        println("isGreen - $isGreen; pieceToMove - ${gameBoard.pos.value.pieceToMove}")
+        if (isGreen.value == gameBoard.pos.value.pieceToMove) {
             gameBoard.viewModel.data.getMovement(index)?.let {
                 println("added move")
-                Game.movesQueue.add(it)
+                gameRepository.movesQueue.add(it)
             }
             handleClick(index)
             handleHighLighting()
@@ -57,20 +61,10 @@ class OnlineGameData(
     }
 
     private val someInt = Random.nextInt()
+
+    // TODO: remove suppression
+    @Suppress("LongMethod")
     override fun invokeBackend() {
-        /**
-         * if you even see this debug message in logs more than once you should know
-         * that you are FUCKED
-         * I have tried fixing this complete piece of shit for MANY hours
-         * I have made a "fix"
-         * but it is the shittiest piece of code I have written in more than 30 days
-         * I don't know what causes this issue
-         * I don't want to debug it
-         * I don't want to touch it
-         * YOU don't want to touch it, leave it as it is, don't waste your life
-         * I hope it will never break or at least I won't be the one responsible for it
-         * FUCK THIS SHIT
-         */
         println("invoke as $someInt")
         println(gameId.toString())
         CoroutineScope(networkScope).launch {
@@ -97,10 +91,10 @@ class OnlineGameData(
                         val positionString =
                             Json.decodeFromString<NetworkResponse>(positionServerData).message!!
                         val newPosition = Json.decodeFromString<Position>(positionString)
-                        gameBoard.pos = newPosition
+                        gameBoard.pos.value = newPosition
                         while (true) {
                             // send all our moves one by one
-                            val moveToSend = Game.movesQueue.poll()
+                            val moveToSend = gameRepository.movesQueue.poll()
                             if (moveToSend != null) {
                                 val string = Json.encodeToString<Movement>(moveToSend)
                                 // post our move

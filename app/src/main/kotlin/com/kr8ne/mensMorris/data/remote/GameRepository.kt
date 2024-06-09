@@ -1,7 +1,5 @@
 package com.kr8ne.mensMorris.data.remote
 
-import androidx.core.content.edit
-import com.kr8ne.mensMorris.activity
 import com.kr8ne.mensMorris.common.SERVER_ADDRESS
 import com.kr8ne.mensMorris.common.USER_API
 import com.kr8ne.mensMorris.move.Movement
@@ -19,7 +17,10 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import java.util.concurrent.ConcurrentLinkedQueue
 
-object Game {
+/**
+ * Repository for interacting with server games
+ */
+class GameRepository {
     /**
      * Starts searching for a game.
      *
@@ -31,7 +32,7 @@ object Game {
         }
         searchingForGameJob = CoroutineScope(networkScope).async {
             runCatching {
-                val jwtTokenState = Auth.jwtToken
+                val jwtTokenState = jwtToken
                 require(jwtTokenState != null)
                 var gameId: String? = null
                 network.webSocket("ws$SERVER_ADDRESS$USER_API/search-for-game", request = {
@@ -80,7 +81,7 @@ object Game {
      */
     suspend fun isPlaying(): Result<Long?> {
         return runCatching {
-            val jwtTokenState = Auth.jwtToken
+            val jwtTokenState = jwtToken
             require(jwtTokenState != null)
             val result = network.get("http$SERVER_ADDRESS$USER_API/is-playing") {
                 method = HttpMethod.Get
