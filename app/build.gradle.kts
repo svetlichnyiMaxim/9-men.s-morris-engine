@@ -4,6 +4,8 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.3"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.0"
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 tasks.withType<Test>() {
@@ -18,15 +20,15 @@ composeCompiler {
 }
 
 android {
-    namespace = "com.kr8ne.mensMorris"
+    namespace = "com.kroune.mensMorris"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "ru.maxim.mensMorris"
+        applicationId = "com.kroune.mensMorris"
         minSdk = 25
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.1"
     }
 
     buildTypes {
@@ -86,6 +88,15 @@ dependencies {
 
 
     // my own dependencies
-    implementation("com.github.kroune:9-men-s-morris-lib:0587ceebca")
+    implementation("com.github.kroune:9-men-s-morris-lib:177de1d29f")
     implementation("com.github.kroune:9-men-s-morris-shared:6d370a2760")
+
+    // di
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+}
+
+kapt {
+    correctErrorTypes = true
 }
