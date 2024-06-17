@@ -11,7 +11,7 @@ This project follows MVVM (Model - View - ViewModel) model
 - ktor
 - jitpack compose
 - jitpack compose navigation
-- android live data
+- dagger hilt (di)
 - jitpack compose activity
 - junit 5
 
