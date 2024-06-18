@@ -71,9 +71,4 @@ class GameAnalyzeDataTest {
             }
         }
     }
-
-    @BeforeEach
-    fun reset() {
-        Cache.wipeCache()
-    }
 }
