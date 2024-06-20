@@ -37,7 +37,7 @@ class NormalMovesTutorialScreen(private val resources: Resources) : ScreenModel 
             EMPTY,                  BLUE_,                  BLUE_
         ),
         // @formatter:on
-        0u, 0u, pieceToMove = false, removalCount = 0
+        0u, 0u, pieceToMove = false, removalCount = 0u
     )
 
     private val gameBoard = GameBoardScreen(

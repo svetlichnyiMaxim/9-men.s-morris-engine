@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(
                     "$GAME_END_SCREEN/{posAsString}",
-                    arguments = listOf(navArgument("posAsString") { type = NavType.LongType })
+                    arguments = listOf(navArgument("posAsString") { type = NavType.StringType })
                 ) { posEntry ->
                     val posAsString = posEntry.arguments!!.getString("posAsString")!!
                     val pos = Json.decodeFromString<Position>(posAsString)

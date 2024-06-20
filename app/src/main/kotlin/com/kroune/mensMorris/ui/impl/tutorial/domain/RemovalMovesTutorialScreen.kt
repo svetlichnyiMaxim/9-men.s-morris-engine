@@ -37,7 +37,7 @@ class RemovalMovesTutorialScreen(private val resources: Resources) : ScreenModel
             EMPTY,                  BLUE_,                  GREEN
         ),
         // @formatter:on
-        0u, 0u, pieceToMove = false, removalCount = 1
+        0u, 0u, pieceToMove = false, removalCount = 1u
     )
 
     private val gameBoard = GameBoardScreen(position, navController = null)

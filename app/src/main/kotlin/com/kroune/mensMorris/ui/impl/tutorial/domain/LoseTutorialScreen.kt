@@ -37,7 +37,7 @@ class LoseTutorialScreen(private val resources: Resources) : ScreenModel {
             EMPTY,                  BLUE_,                  EMPTY
         ),
         // @formatter:on
-        0u, 0u, pieceToMove = true, removalCount = 0
+        0u, 0u, pieceToMove = true, removalCount = 0u
     )
 
     private val gameBoard = GameBoardScreen(position, navController = null)

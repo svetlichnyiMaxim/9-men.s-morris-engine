@@ -32,9 +32,6 @@ class GameAnalyzeViewModel(
         viewModelScope.launch {
             data.dataState
                 .collect { (positions, depth) ->
-                    positions.toPositions(data.pos.value).forEach {
-                        println(it)
-                    }
                     _uiState.value =
                         GameAnalyzeUiState(positions.toPositions(data.pos.value), depth)
                 }

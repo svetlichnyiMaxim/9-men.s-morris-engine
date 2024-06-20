@@ -37,7 +37,7 @@ class IndicatorsTutorialScreen(private val resources: Resources) : ScreenModel {
             EMPTY,                  BLUE_,                  GREEN
         ),
         // @formatter:on
-        1u, 2u, pieceToMove = false, removalCount = 0
+        1u, 2u, pieceToMove = false, removalCount = 0u
     )
 
     private val gameBoard = GameBoardScreen(position, navController = null)

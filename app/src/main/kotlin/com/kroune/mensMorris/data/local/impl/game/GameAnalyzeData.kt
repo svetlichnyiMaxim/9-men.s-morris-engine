@@ -26,7 +26,7 @@ class GameAnalyzeData(
     private var previousAnalyzedPosition: Position? = null
     private var previousAnalyzeDepth: Int? = null
 
-    private var depthValue: Int = 3
+    private var depthValue: Int = 4
         set(value) {
             field = value
             dataState.value = dataState.value.copy(depth = value)
@@ -76,7 +76,14 @@ class GameAnalyzeData(
         analyzeJob = CoroutineScope(Dispatchers.Default).launch {
             previousAnalyzedPosition = pos.value
             previousAnalyzeDepth = depthValue
-            movementsValue = pos.value.solve(depthValue.toUByte()).second
+            val newMoves = mutableListOf<Movement>()
+            var currentPos = pos.value
+            for (i in 1..depthValue) {
+                val move = currentPos.findBestMove(depthValue.toUByte()) ?: break
+                newMoves.add(move)
+                currentPos = move.producePosition(currentPos)
+            }
+            movementsValue = newMoves.asReversed()
         }
         analyzeJob?.start()
     }

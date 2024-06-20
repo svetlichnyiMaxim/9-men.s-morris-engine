@@ -37,7 +37,7 @@ class FlyingMovesTutorialScreen(private val resources: Resources) : ScreenModel 
             EMPTY,                  BLUE_,                  BLUE_
         ),
         // @formatter:on
-        0u, 0u, pieceToMove = true, removalCount = 0
+        0u, 0u, pieceToMove = true, removalCount = 0u
     )
 
     private val gameBoard = GameBoardScreen(

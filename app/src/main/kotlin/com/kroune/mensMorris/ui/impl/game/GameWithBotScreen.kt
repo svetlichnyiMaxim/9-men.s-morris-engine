@@ -1,6 +1,8 @@
 package com.kroune.mensMorris.ui.impl.game
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.navigation.NavHostController
 import com.kroune.mensMorris.common.AppTheme
 import com.kroune.mensMorris.ui.interfaces.ScreenModel
@@ -18,7 +20,9 @@ class GameWithBotScreen(
         AppTheme {
             viewModel.gameBoard.let {
                 it.InvokeRender()
-                it.RenderPieceCount()
+                Box(contentAlignment = Alignment.Center) {
+                    it.RenderPieceCount()
+                }
                 it.RenderUndoRedo()
             }
         }

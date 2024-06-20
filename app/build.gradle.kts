@@ -86,7 +86,6 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0-M2")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.7")
 
-
     // my own dependencies
     implementation("com.github.kroune:9-men-s-morris-lib:177de1d29f")
     implementation("com.github.kroune:9-men-s-morris-shared:6d370a2760")
