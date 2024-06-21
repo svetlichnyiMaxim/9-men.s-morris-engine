@@ -9,11 +9,12 @@ This project follows MVVM (Model - View - ViewModel) model
 
 ##Libraries used in project
 - ktor
-- jitpack compose
-- jitpack compose navigation
-- android live data
+- jetpack compose
+- jetpack compose navigation
+- dagger hilt (di)
 - jitpack compose activity
 - junit 5
+- detekt
 
 # Project tree
  * [app](./app)
