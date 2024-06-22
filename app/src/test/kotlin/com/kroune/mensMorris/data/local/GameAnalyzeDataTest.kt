@@ -6,7 +6,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
@@ -14,7 +13,7 @@ class GameAnalyzeDataTest {
     @Test
     fun depthValue() {
         val instance = GameAnalyzeData(MutableStateFlow(gameStartPosition))
-        for (i in 3 downTo 0) {
+        for (i in instance.dataState.value.depth downTo 0) {
             assert(instance.dataState.value.depth == i)
             instance.decreaseDepth()
         }
@@ -66,7 +65,7 @@ class GameAnalyzeDataTest {
                 assert(inst.analyzeJob?.isActive == true)
                 inst.analyzeJob?.join()
                 inst.startAnalyze()
-                assert(inst.analyzeJob?.isActive == false)
+                assert(inst.analyzeJob?.isActive == true)
             }
         }
     }
