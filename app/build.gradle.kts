@@ -67,12 +67,12 @@ android {
 
 dependencies {
     implementation("androidx.activity:activity-compose:1.9.0")
-    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    implementation("androidx.compose.ui:ui-tooling-preview:1.7.0-beta02")
-    implementation("androidx.compose.material3:material3:1.3.0-beta02")
-    implementation("androidx.navigation:navigation-compose:2.8.0-beta02")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.05.00"))
-    debugImplementation("androidx.compose.ui:ui-tooling:1.7.0-beta02")
+    implementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    implementation("androidx.compose.ui:ui-tooling-preview:1.7.0-beta03")
+    implementation("androidx.compose.material3:material3:1.3.0-beta03")
+    implementation("androidx.navigation:navigation-compose:2.8.0-beta03")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
+    debugImplementation("androidx.compose.ui:ui-tooling:1.7.0-beta03")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
 
     // ktor
@@ -84,11 +84,11 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     testImplementation(platform("org.junit:junit-bom:5.11.0-M2"))
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.0-M2")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.7")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
 
     // my own dependencies
-    implementation("com.github.kroune:9-men-s-morris-lib:177de1d29f")
-    implementation("com.github.kroune:9-men-s-morris-shared:6d370a2760")
+    implementation("com.github.kroune:9-men-s-morris-lib:297220e0e1")
+    implementation("com.github.kroune:9-men-s-morris-shared:3c31cf7015")
 
     // di
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")

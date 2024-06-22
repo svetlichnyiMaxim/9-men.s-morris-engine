@@ -27,7 +27,6 @@ class GameWithBotData(
         handleUndo = { onUndo() },
         navController = navController
     )
-    private val analyze = GameAnalyzeData(gameBoard.pos)
 
     /**
      * performs needed actions after click
@@ -60,13 +59,8 @@ class GameWithBotData(
     /**
      * launches bot actions against player
      */
-    private suspend fun launchBot() {
-        if (!gameBoard.pos.value.pieceToMove
-            && gameBoard.pos.value.gameState() != GameState.End
-        ) {
-            analyze.startAnalyze()
-            analyze.analyzeJob?.join()
-            gameBoard.viewModel.data.processMove(analyze.dataState.value.positions.last())
-        }
+    private fun launchBot() {
+        val bestMove = gameBoard.pos.value.findBestMove(5u)
+        gameBoard.viewModel.data.processMove(bestMove!!)
     }
 }

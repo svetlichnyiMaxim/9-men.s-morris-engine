@@ -20,12 +20,6 @@ class GameAnalyzeData(
     val pos: MutableStateFlow<Position>
 ) : DataI() {
 
-    /**
-     * shows if this position was analyzed or not
-     */
-    private var previousAnalyzedPosition: Position? = null
-    private var previousAnalyzeDepth: Int? = null
-
     private var depthValue: Int = 4
         set(value) {
             field = value
@@ -70,12 +64,7 @@ class GameAnalyzeData(
      * starts board analyze
      */
     fun startAnalyze() {
-        if (previousAnalyzedPosition == pos.value && previousAnalyzeDepth == depthValue) {
-            return
-        }
         analyzeJob = CoroutineScope(Dispatchers.Default).launch {
-            previousAnalyzedPosition = pos.value
-            previousAnalyzeDepth = depthValue
             val newMoves = mutableListOf<Movement>()
             var currentPos = pos.value
             for (i in 1..depthValue) {

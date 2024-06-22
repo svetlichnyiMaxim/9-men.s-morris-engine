@@ -77,15 +77,13 @@ class SignUpScreen(
                     Text(text = resources.getString(R.string.server_error))
                 }
                 Spacer(modifier = Modifier.fillMaxHeight(0.25f))
-                Row {
-                    Icon(
-                        painter = painterResource(id = R.drawable.username),
-                        "your preferred username"
-                    )
-                    TextField(username.value, { newValue ->
+                TextField(
+                    username.value,
+                    { newValue ->
                         username.value = newValue
                         isUsernameValid.value = viewModel.loginValidator(username.value)
-                    }, label = {
+                    },
+                    label = {
                         if (!isUsernameValid.value) {
                             Text(
                                 resources.getString(R.string.invalid_login),
@@ -94,18 +92,24 @@ class SignUpScreen(
                                 fontSize = 12.sp
                             )
                         }
-                    }, placeholder = { Text(resources.getString(R.string.username)) })
-                }
+                    },
+                    placeholder = { Text(resources.getString(R.string.username)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.username),
+                            "your preferred username"
+                        )
+                    }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.025f))
-                Row {
-                    Icon(
-                        painter = painterResource(id = R.drawable.password), "your new password"
-                    )
-                    TextField(password.value, { newValue ->
+                TextField(
+                    password.value,
+                    { newValue ->
                         password.value = newValue
                         isPasswordValid.value = viewModel.passwordValidator(password.value)
                         isPassword2Valid.value = (password2.value == password.value)
-                    }, label = {
+                    },
+                    label = {
                         if (!isPasswordValid.value) {
                             Text(
                                 resources.getString(R.string.invalid_password),
@@ -114,18 +118,23 @@ class SignUpScreen(
                                 fontSize = 12.sp
                             )
                         }
-                    }, placeholder = { Text(resources.getString(R.string.password)) })
-                }
+                    },
+                    placeholder = { Text(resources.getString(R.string.password)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.password),
+                            "your new password"
+                        )
+                    }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.025f))
-                Row {
-                    Icon(
-                        painter = painterResource(id = R.drawable.password),
-                        resources.getString(R.string.repeat_pass)
-                    )
-                    TextField(password2.value, { newValue ->
+                TextField(
+                    password2.value,
+                    { newValue ->
                         password2.value = newValue
                         isPassword2Valid.value = (password2.value == password.value)
-                    }, label = {
+                    },
+                    label = {
                         if (!isPassword2Valid.value) {
                             Text(
                                 resources.getString(R.string.pass_doesnt_match),
@@ -134,8 +143,15 @@ class SignUpScreen(
                                 fontSize = 12.sp
                             )
                         }
-                    }, placeholder = { Text(resources.getString(R.string.repeat_pass)) })
-                }
+                    },
+                    placeholder = { Text(resources.getString(R.string.repeat_pass)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.password),
+                            resources.getString(R.string.repeat_pass)
+                        )
+                    }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),

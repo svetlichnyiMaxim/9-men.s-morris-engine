@@ -75,16 +75,13 @@ class SignInScreen(
                     Text(text = resources.getString(R.string.server_error))
                 }
                 Spacer(modifier = Modifier.fillMaxHeight(0.3f))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.username), "your username"
-                    )
-                    TextField(username.value, { newValue ->
+                TextField(
+                    value = username.value,
+                    onValueChange = { newValue ->
                         username.value = newValue
                         isUsernameValid.value = viewModel.loginValidator(username.value)
-                    }, label = {
+                    },
+                    label = {
                         if (!isUsernameValid.value) {
                             Text(
                                 resources.getString(R.string.invalid_login),
@@ -93,21 +90,24 @@ class SignInScreen(
                                 fontSize = 12.sp
                             )
                         }
-                    }, placeholder = { Text(resources.getString(R.string.username)) })
-                }
+                    },
+                    placeholder = {
+                        Text(resources.getString(R.string.username))
+                    },
+                    leadingIcon = {
+                        Icon(painter = painterResource(id = R.drawable.username), null)
+                    }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.05f))
                 val isPasswordValid = remember { mutableStateOf(false) }
                 val password = remember { mutableStateOf("") }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.password), "your password"
-                    )
-                    TextField(password.value, { newValue ->
+                TextField(
+                    password.value,
+                    { newValue ->
                         password.value = newValue
                         isPasswordValid.value = viewModel.passwordValidator(password.value)
-                    }, label = {
+                    },
+                    label = {
                         if (!isPasswordValid.value) {
                             Text(
                                 resources.getString(R.string.invalid_password),
@@ -116,8 +116,14 @@ class SignInScreen(
                                 fontSize = 12.sp
                             )
                         }
-                    }, placeholder = { Text(resources.getString(R.string.password)) })
-                }
+                    },
+                    placeholder = { Text(resources.getString(R.string.password)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.password), null
+                        )
+                    }
+                )
                 Spacer(modifier = Modifier.fillMaxHeight(0.1f))
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),

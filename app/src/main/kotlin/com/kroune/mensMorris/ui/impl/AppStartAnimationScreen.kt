@@ -35,7 +35,7 @@ class AppStartAnimationScreen(
     /**
      * navigation controller
      */
-    val controller: NavHostController?
+    private val controller: NavHostController?
 ) : ScreenModel {
 
     @Composable
@@ -90,11 +90,16 @@ class AppStartAnimationScreen(
     fun StartButton() {
         val infiniteScale = rememberInfiniteTransition(label = "buttonAnimation")
         val animatedProgress by infiniteScale.animateFloat(
-            initialValue = 1f, targetValue = 0.75f, animationSpec = infiniteRepeatable(
+            initialValue = 1f,
+            targetValue = 0.75f,
+            animationSpec = infiniteRepeatable(
                 animation = tween(
-                    durationMillis = 1500, easing = CubicBezierEasing(0.2f, 0.0f, 0.4f, 1.0f)
-                ), repeatMode = RepeatMode.Reverse
-            ), label = "buttonAnimation"
+                    durationMillis = 1500,
+                    easing = CubicBezierEasing(0.2f, 0.0f, 0.4f, 1.0f)
+                ),
+                repeatMode = RepeatMode.Reverse
+            ),
+            label = "buttonAnimation"
         )
         Box(
             modifier = Modifier
@@ -115,7 +120,7 @@ class AppStartAnimationScreen(
     }
 
     /**
-     * this is basically 1.55*x*a+300*sin(0.006*x)/a
+     * this is basically 1.55*x*a+300*sin(0.005*x)/a
      *
      * @param x - x coordinate
      * @param multi - we use it to make our curve end at the top bottom of the screen

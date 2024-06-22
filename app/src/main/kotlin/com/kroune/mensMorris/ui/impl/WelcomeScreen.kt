@@ -81,7 +81,7 @@ class WelcomeScreen(
         val width = LocalConfiguration.current.screenWidthDp
         val height = LocalConfiguration.current.screenHeightDp
         val scrollState = rememberScrollState(if (!hasSeen) Int.MAX_VALUE else 0)
-        val isTutorialClosed = remember { derivedStateOf { scrollState.value == 0 }}
+        val isTutorialClosed = remember { derivedStateOf { scrollState.value == 0 } }
         val coroutine = rememberCoroutineScope()
         val isWelcome = remember { mutableStateOf(true) }
         if (isTutorialClosed.value) {
@@ -89,42 +89,24 @@ class WelcomeScreen(
         }
         class CustomFlingBehaviour : FlingBehavior {
             override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
+                val progress = scrollState.value.toFloat() / scrollState.maxValue
                 if (isWelcome.value) {
-                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue >= 0.15f) {
-                        isWelcome.value = false
-                        coroutine.launch {
-                            scrollState.animateScrollTo(
-                                scrollState.maxValue,
-                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                            )
-                        }
-                    }
-                    if (isWelcome.value && scrollState.value.toFloat() / scrollState.maxValue < 0.15f) {
-                        isWelcome.value = true
-                        coroutine.launch {
-                            scrollState.animateScrollTo(
-                                0,
-                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                            )
-                        }
+                    val scrollDown = progress >= 0.15f
+                    isWelcome.value = !scrollDown
+                    coroutine.launch {
+                        scrollState.animateScrollTo(
+                            if (scrollDown) scrollState.maxValue else 0,
+                            animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                        )
                     }
                 } else {
-                    if (scrollState.value.toFloat() / scrollState.maxValue <= 0.85f) {
-                        isWelcome.value = true
-                        coroutine.launch {
-                            scrollState.animateScrollTo(
-                                0,
-                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                            )
-                        }
-                    } else {
-                        isWelcome.value = false
-                        coroutine.launch {
-                            scrollState.animateScrollTo(
-                                scrollState.maxValue,
-                                animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                            )
-                        }
+                    val scrollUp = progress <= 0.85f
+                    isWelcome.value = scrollUp
+                    coroutine.launch {
+                        scrollState.animateScrollTo(
+                            if (scrollUp) 0 else scrollState.maxValue,
+                            animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                        )
                     }
                 }
                 return 0f

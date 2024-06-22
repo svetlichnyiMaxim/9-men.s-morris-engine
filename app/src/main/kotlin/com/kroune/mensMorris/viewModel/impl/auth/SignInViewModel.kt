@@ -10,7 +10,8 @@ import javax.inject.Inject
  * This class is responsible for managing the data and UI logic for the sign-in screen.
  */
 @HiltViewModel
-class SignInViewModel @Inject constructor(private val authRepository: AuthRepositoryI) : ViewModelI() {
+class SignInViewModel @Inject constructor(private val authRepository: AuthRepositoryI) :
+    ViewModelI() {
     override val data: SignInData = SignInData()
 
     /**

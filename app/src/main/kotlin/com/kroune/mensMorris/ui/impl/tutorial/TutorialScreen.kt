@@ -65,24 +65,15 @@ class TutorialScreen(
                     (listState.firstVisibleItemIndex < currentScreenIndex.intValue &&
                             listState.firstVisibleItemScrollOffset <= scrollWidth * 0.85) -> {
                         currentScreenIndex.intValue--
-                        coroutine.launch {
-                            listState.animateScrollToItem(currentScreenIndex.intValue)
-                        }
                     }
 
                     (listState.firstVisibleItemScrollOffset > 0 &&
                             listState.firstVisibleItemScrollOffset >= scrollWidth * 0.15) -> {
                         currentScreenIndex.intValue++
-                        coroutine.launch {
-                            listState.animateScrollToItem(currentScreenIndex.intValue)
-                        }
                     }
-
-                    else -> {
-                        coroutine.launch {
-                            listState.animateScrollToItem(currentScreenIndex.intValue)
-                        }
-                    }
+                }
+                coroutine.launch {
+                    listState.animateScrollToItem(currentScreenIndex.intValue)
                 }
                 return 0f
             }
