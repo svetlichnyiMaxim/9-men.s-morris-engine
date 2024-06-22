@@ -29,11 +29,13 @@ class GameAnalyzeDataTest {
     @Test
     fun analyzeWorks() {
         val inst = GameAnalyzeData(MutableStateFlow(gameStartPosition))
+        inst.increaseDepth()
+        inst.increaseDepth()
         // check if it stops
         inst.startAnalyze()
         assert(inst.analyzeJob?.isActive == true)
         runBlocking {
-            delay(4000)
+            delay(15000)
         }
         assert(inst.analyzeJob?.isActive == false)
     }
