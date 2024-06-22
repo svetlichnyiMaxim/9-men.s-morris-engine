@@ -67,6 +67,9 @@ class GameAnalyzeData(
         analyzeJob = CoroutineScope(Dispatchers.Default).launch {
             val newMoves = mutableListOf<Movement>()
             var currentPos = pos.value
+            // see https://github.com/detekt/detekt/issues/3566
+            // however we can't exit repeat with break
+            @Suppress("UnusedPrivateProperty")
             for (i in 1..depthValue) {
                 val move = currentPos.findBestMove(depthValue.toUByte()) ?: break
                 newMoves.add(move)
