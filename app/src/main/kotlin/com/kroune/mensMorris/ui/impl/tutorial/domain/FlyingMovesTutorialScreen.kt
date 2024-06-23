@@ -48,7 +48,6 @@ class FlyingMovesTutorialScreen(private val resources: Resources) : ScreenModel 
 
     @Composable
     override fun InvokeRender() {
-        // TODO: add animations
         gameBoard.viewModel.handleHighLighting()
         val scrollState = rememberScrollState()
         Column(

@@ -1,7 +1,9 @@
 package com.kroune.mensMorris.di
 
-import com.kroune.mensMorris.data.remote.AuthRepositoryI
-import com.kroune.mensMorris.data.remote.AuthRepositoryImpl
+import com.kroune.mensMorris.data.remote.account.AccountInfoRepositoryI
+import com.kroune.mensMorris.data.remote.account.AccountInfoRepositoryImpl
+import com.kroune.mensMorris.data.remote.auth.AuthRepositoryI
+import com.kroune.mensMorris.data.remote.auth.AuthRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,11 +19,21 @@ import javax.inject.Singleton
 class ApplicationModule {
     /**
      * auth repository
-     * @see OnlineGameScreen
+     * @see SignInScreen
      */
     @Provides
     @Singleton
     fun provideAuthRepository(): AuthRepositoryI {
         return AuthRepositoryImpl()
+    }
+
+    /**
+     * general account info
+     * @see ViewAccountScreen
+     */
+    @Provides
+    @Singleton
+    fun provideAccountInfoRepository(): AccountInfoRepositoryI {
+        return AccountInfoRepositoryImpl()
     }
 }

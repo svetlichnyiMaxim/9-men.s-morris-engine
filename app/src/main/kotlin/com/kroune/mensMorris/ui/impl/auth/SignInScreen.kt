@@ -27,7 +27,6 @@ import com.kroune.mensMorris.R
 import com.kroune.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kroune.mensMorris.SIGN_UP_SCREEN
 import com.kroune.mensMorris.common.AppTheme
-import com.kroune.mensMorris.data.remote.AuthRepositoryImpl
 import com.kroune.mensMorris.data.remote.Common.jwtToken
 import com.kroune.mensMorris.data.remote.Common.networkScope
 import com.kroune.mensMorris.ui.interfaces.ScreenModel
@@ -47,8 +46,7 @@ class SignInScreen(
      * resources
      * used for translations
      */
-    private val resources: Resources,
-    private val authRepository: AuthRepositoryImpl = AuthRepositoryImpl()
+    private val resources: Resources
 ) : ScreenModel {
 
     override lateinit var viewModel: SignInViewModel
@@ -131,7 +129,7 @@ class SignInScreen(
                         requestInProcess.value = true
                         CoroutineScope(networkScope).launch {
                             serverResponse.value =
-                                authRepository.login(username.value, password.value)
+                                viewModel.login(username.value, password.value)
                             requestInProcess.value = false
                         }
                     },

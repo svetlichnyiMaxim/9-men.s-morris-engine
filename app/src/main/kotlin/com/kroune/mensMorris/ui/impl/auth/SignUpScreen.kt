@@ -21,12 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.kroune.mensMorris.R
 import com.kroune.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kroune.mensMorris.SIGN_IN_SCREEN
 import com.kroune.mensMorris.common.AppTheme
-import com.kroune.mensMorris.data.remote.AuthRepositoryImpl
 import com.kroune.mensMorris.data.remote.Common.jwtToken
 import com.kroune.mensMorris.data.remote.Common.networkScope
 import com.kroune.mensMorris.ui.interfaces.ScreenModel
@@ -46,14 +46,14 @@ class SignUpScreen(
      * resources
      * used for translations
      */
-    val resources: Resources,
-    /**
-     * auth repository
-     */
-    private val authRepository: AuthRepositoryImpl = AuthRepositoryImpl()
+    val resources: Resources
 ) : ScreenModel {
+
+    override lateinit var viewModel: SignUpViewModel
+
     @Composable
     override fun InvokeRender() {
+        viewModel = hiltViewModel()
         val serverResponse = remember { mutableStateOf<Result<String>?>(null) }
         val password = remember { mutableStateOf("") }
         val isPasswordValid = remember { mutableStateOf(false) }
@@ -159,7 +159,7 @@ class SignUpScreen(
                         requestInProcess.value = true
                         CoroutineScope(networkScope).launch {
                             serverResponse.value =
-                                authRepository.register(username.value, password.value)
+                                viewModel.register(username.value, password.value)
                             requestInProcess.value = false
                         }
                     },
@@ -190,6 +190,4 @@ class SignUpScreen(
             }
         }
     }
-
-    override val viewModel = SignUpViewModel()
 }

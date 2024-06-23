@@ -16,7 +16,7 @@ import com.kroune.mensMorris.data.local.interfaces.GameBoardInterface
 import com.kroune.mensMorris.data.remote.Common.jwtToken
 import com.kroune.mensMorris.data.remote.Common.network
 import com.kroune.mensMorris.data.remote.Common.networkScope
-import com.kroune.mensMorris.data.remote.GameRepository
+import com.kroune.mensMorris.data.remote.game.GameRepository
 import com.kroune.mensMorris.ui.impl.game.GameBoardScreen
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.utils.io.printStack

@@ -3,10 +3,14 @@ package com.kroune.mensMorris.ui.impl
 import android.content.SharedPreferences
 import android.content.res.Resources
 import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animate
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
+import androidx.compose.foundation.gestures.draggable2D
+import androidx.compose.foundation.gestures.rememberDraggable2DState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,25 +34,28 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.kroune.mensMorris.GAME_WITH_BOT_SCREEN
 import com.kroune.mensMorris.GAME_WITH_FRIEND_SCREEN
 import com.kroune.mensMorris.R
 import com.kroune.mensMorris.SEARCHING_ONLINE_GAME_SCREEN
 import com.kroune.mensMorris.SIGN_IN_SCREEN
+import com.kroune.mensMorris.VIEW_ACCOUNT_SCREEN
 import com.kroune.mensMorris.common.AppTheme
-import com.kroune.mensMorris.data.remote.AuthRepositoryImpl
+import com.kroune.mensMorris.common.triangleShape
 import com.kroune.mensMorris.data.remote.Common.jwtToken
 import com.kroune.mensMorris.ui.impl.tutorial.TutorialScreen
 import com.kroune.mensMorris.ui.interfaces.ScreenModel
 import com.kroune.mensMorris.viewModel.impl.WelcomeViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.math.max
 import kotlin.math.min
 
 /**
@@ -61,8 +68,10 @@ class WelcomeScreen(
     val navController: NavHostController?,
     private val sharedPreferences: SharedPreferences?,
     private val resources: Resources,
-    private val authRepository: AuthRepositoryImpl = AuthRepositoryImpl()
 ) : ScreenModel {
+
+    override lateinit var viewModel: WelcomeViewModel
+
     private var hasSeen = sharedPreferences?.getBoolean("hasSeenTutorial", false) ?: false
         set(value) {
             if (field != value) {
@@ -76,6 +85,7 @@ class WelcomeScreen(
     /**
      * draws game modes options
      */
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun DrawGameModesOptions() {
         val width = LocalConfiguration.current.screenWidthDp
@@ -90,24 +100,14 @@ class WelcomeScreen(
         class CustomFlingBehaviour : FlingBehavior {
             override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
                 val progress = scrollState.value.toFloat() / scrollState.maxValue
-                if (isWelcome.value) {
-                    val scrollDown = progress >= 0.15f
-                    isWelcome.value = !scrollDown
-                    coroutine.launch {
-                        scrollState.animateScrollTo(
-                            if (scrollDown) scrollState.maxValue else 0,
-                            animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                        )
-                    }
-                } else {
-                    val scrollUp = progress <= 0.85f
-                    isWelcome.value = scrollUp
-                    coroutine.launch {
-                        scrollState.animateScrollTo(
-                            if (scrollUp) 0 else scrollState.maxValue,
-                            animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                        )
-                    }
+                val scrollUp =
+                    (isWelcome.value && progress < 0.15f) || (!isWelcome.value && progress <= 0.85f)
+                isWelcome.value = scrollUp
+                coroutine.launch {
+                    scrollState.animateScrollTo(
+                        if (scrollUp) 0 else scrollState.maxValue,
+                        animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                    )
                 }
                 return 0f
             }
@@ -124,41 +124,6 @@ class WelcomeScreen(
                 modifier = Modifier
                     .size(width.dp, height.dp),
             ) {
-                Canvas(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    val length = min(size.width / 3f, size.height / 3f)
-                    val path = Path()
-                    path.moveTo(size.width - length, 0f)
-                    path.lineTo(size.width, 0f)
-                    path.lineTo(size.width, length)
-                    drawPath(path, Color(0xFF696969))
-                }
-                Box(
-                    modifier = Modifier
-                        .size(width.dp, height.dp)
-                        .align(Alignment.Center),
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    if (jwtToken != null) {
-                        IconButton(
-                            onClick = {
-                                //navController?.navigate(VIEW_ACCOUNT_SCREEN)
-                            }
-                        ) {
-                            Icon(painterResource(R.drawable.logged_in), "logged in")
-                        }
-                    } else {
-                        IconButton(
-                            onClick = {
-                                navController?.navigate(SIGN_IN_SCREEN)
-                            }
-                        ) {
-                            Icon(painterResource(R.drawable.no_account), "no account found")
-                        }
-                    }
-                }
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -197,7 +162,7 @@ class WelcomeScreen(
                         onClick = {
                             // TODO: rework this
                             runBlocking {
-                                if (jwtToken != null && authRepository.checkJwtToken()
+                                if (jwtToken != null && viewModel.checkJwtToken()
                                         .getOrNull() == true
                                 ) {
                                     navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
@@ -215,6 +180,65 @@ class WelcomeScreen(
                         )
                     }
                 }
+                val offset = remember { mutableStateOf(0f) }
+                val length = min(width, height) / 4f
+                val canDrag = remember { mutableStateOf(true) }
+                Box(
+                    modifier = Modifier
+                        .size((offset.value / 2f + length).dp)
+                        .draggable2D(
+                            state = rememberDraggable2DState { delta ->
+                                offset.value =
+                                    ((-delta.x + delta.y) + offset.value).coerceAtLeast(0f)
+                            },
+                            enabled = canDrag.value,
+                            onDragStopped = {
+                                // if we should animate transition to the start pos or
+                                // continue animation (switch to another screen)
+                                val shouldRollBack =
+                                    offset.value / 2f + length < min(width, height) / 2
+                                val destination = if (shouldRollBack) 0f else (max(
+                                    width,
+                                    height
+                                ).toFloat() - length) * 2
+                                canDrag.value = false
+                                coroutine.launch {
+                                    animate(
+                                        offset.value,
+                                        destination
+                                    ) { value, _ ->
+                                        offset.value = value
+                                    }
+                                    // TODO: finish this animation
+                                    if (!shouldRollBack) {
+                                        // TODO: change id
+                                        navController?.navigate("$VIEW_ACCOUNT_SCREEN/${1L}")
+                                    }
+                                    canDrag.value = true
+                                }
+                            }
+                        )
+                        .background(Color.DarkGray, triangleShape)
+                        .align(Alignment.TopEnd),
+                    contentAlignment = { size, space, layoutDirection ->
+                        IntOffset(
+                            space.width / 2,
+                            space.height / 2 - size.height
+                        )
+                    }
+                ) {
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier
+                            .size((length / 2f).dp)
+                    ) {
+                        if (jwtToken != null) {
+                            Icon(painterResource(R.drawable.logged_in), "logged in")
+                        } else {
+                            Icon(painterResource(R.drawable.no_account), "no account found")
+                        }
+                    }
+                }
             }
             Box(
                 modifier = Modifier
@@ -228,10 +252,9 @@ class WelcomeScreen(
 
     @Composable
     override fun InvokeRender() {
+        viewModel = hiltViewModel()
         AppTheme {
             DrawGameModesOptions()
         }
     }
-
-    override val viewModel = WelcomeViewModel()
 }

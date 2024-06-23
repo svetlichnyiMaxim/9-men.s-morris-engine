@@ -47,6 +47,5 @@ const val LOADING_ANIMATION_SCREEN = "loading_animation_screen"
 
 /**
  * Screen for viewing an account
- * TODO: not implemented yet
  */
 const val VIEW_ACCOUNT_SCREEN = "view_account_screen"

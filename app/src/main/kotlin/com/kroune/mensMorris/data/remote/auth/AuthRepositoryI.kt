@@ -1,4 +1,4 @@
-package com.kroune.mensMorris.data.remote
+package com.kroune.mensMorris.data.remote.auth
 
 /**
  * interface for auth repository

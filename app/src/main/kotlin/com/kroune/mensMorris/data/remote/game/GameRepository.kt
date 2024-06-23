@@ -1,4 +1,4 @@
-package com.kroune.mensMorris.data.remote
+package com.kroune.mensMorris.data.remote.game
 
 import com.kr8ne.mensMorris.move.Movement
 import com.kroune.mensMorris.common.SERVER_ADDRESS
@@ -22,14 +22,10 @@ import java.util.concurrent.ConcurrentLinkedQueue
 
 /**
  * Repository for interacting with server games
+ * TODO: refactor this
  */
-class GameRepository {
-    /**
-     * Starts searching for a game.
-     *
-     * @return [ServerResponse] indicating the success or failure of the search attempt.
-     */
-    fun startSearchingGame() {
+class GameRepository : GameRepositoryI {
+    override fun startSearchingGame() {
         if (searchingForGameJob?.isCompleted == false) {
             return
         }
@@ -61,28 +57,18 @@ class GameRepository {
         }
     }
 
-    /**
-     * waits for game searching result
-     */
-    suspend fun awaitForGameSearchEnd(): Result<Long>? {
+    override suspend fun awaitForGameSearchEnd(): Result<Long>? {
         return searchingForGameJob?.await()
     }
 
     /**
      * job created when searching for a game
      */
-    var searchingForGameJob: Deferred<Result<Long>>? = null
+    private var searchingForGameJob: Deferred<Result<Long>>? = null
 
-    /**
-     * queue of the moves that player performed
-     * TODO: implement pre-moves with this one
-     */
-    val movesQueue = ConcurrentLinkedQueue<Movement>()
+    override val movesQueue = ConcurrentLinkedQueue<Movement>()
 
-    /**
-     * checks if we are currently playing a game
-     */
-    suspend fun isPlaying(): Result<Long?> {
+    override suspend fun isPlaying(): Result<Long?> {
         return runCatching {
             val jwtTokenState = jwtToken
             require(jwtTokenState != null)

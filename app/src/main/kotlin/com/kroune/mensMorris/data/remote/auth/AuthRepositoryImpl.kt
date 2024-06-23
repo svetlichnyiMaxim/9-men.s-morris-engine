@@ -1,4 +1,4 @@
-package com.kroune.mensMorris.data.remote
+package com.kroune.mensMorris.data.remote.auth
 
 import com.kroune.NetworkResponse
 import com.kroune.mensMorris.common.SERVER_ADDRESS

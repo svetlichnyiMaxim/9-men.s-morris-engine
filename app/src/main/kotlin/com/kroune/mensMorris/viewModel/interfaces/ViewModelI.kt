@@ -11,5 +11,5 @@ abstract class ViewModelI : ViewModel() {
     /**
      * data we need
      */
-    abstract val data: DataI
+    open val data: DataI = TODO("not implemented yet")
 }

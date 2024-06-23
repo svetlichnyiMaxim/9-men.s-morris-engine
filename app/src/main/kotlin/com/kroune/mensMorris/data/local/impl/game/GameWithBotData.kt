@@ -38,6 +38,10 @@ class GameWithBotData(
             handleHighLighting()
             botJob = viewModelScope.launch {
                 while (!gameBoard.pos.value.pieceToMove && gameBoard.pos.value.gameState() != GameState.End) {
+                    // TODO: FIX THIS
+                    // this line isn't needed, but for some reason
+                    // without it, this code executes on the main thread
+                    delay(10)
                     launchBot()
                 }
             }
@@ -60,7 +64,7 @@ class GameWithBotData(
      * launches bot actions against player
      */
     private fun launchBot() {
-        val bestMove = gameBoard.pos.value.findBestMove(5u)
+        val bestMove = gameBoard.pos.value.findBestMove(4u)
         gameBoard.viewModel.data.processMove(bestMove!!)
     }
 }

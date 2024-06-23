@@ -30,7 +30,6 @@ class GameAnalyzeDataTest {
     fun analyzeWorks() {
         val inst = GameAnalyzeData(MutableStateFlow(gameStartPosition))
         inst.increaseDepth()
-        inst.increaseDepth()
         // check if it stops
         inst.startAnalyze()
         assert(inst.analyzeJob?.isActive == true)

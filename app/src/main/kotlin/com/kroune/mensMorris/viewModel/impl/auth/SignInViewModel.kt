@@ -1,7 +1,7 @@
 package com.kroune.mensMorris.viewModel.impl.auth
 
 import com.kroune.mensMorris.data.local.impl.auth.SignInData
-import com.kroune.mensMorris.data.remote.AuthRepositoryI
+import com.kroune.mensMorris.data.remote.auth.AuthRepositoryI
 import com.kroune.mensMorris.viewModel.interfaces.ViewModelI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -13,6 +13,13 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(private val authRepository: AuthRepositoryI) :
     ViewModelI() {
     override val data: SignInData = SignInData()
+
+    /**
+     * logins into the account
+     */
+    suspend fun login(login: String, password: String): Result<String> {
+        return authRepository.login(login, password)
+    }
 
     /**
      * login validation function

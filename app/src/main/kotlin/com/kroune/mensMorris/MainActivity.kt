@@ -18,6 +18,7 @@ import com.kroune.mensMorris.ui.impl.AppStartAnimationScreen
 import com.kroune.mensMorris.ui.impl.WelcomeScreen
 import com.kroune.mensMorris.ui.impl.auth.SignInScreen
 import com.kroune.mensMorris.ui.impl.auth.SignUpScreen
+import com.kroune.mensMorris.ui.impl.auth.ViewAccountScreen
 import com.kroune.mensMorris.ui.impl.game.GameEndScreen
 import com.kroune.mensMorris.ui.impl.game.GameWithBotScreen
 import com.kroune.mensMorris.ui.impl.game.GameWithFriendScreen
@@ -102,6 +103,12 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(LOADING_ANIMATION_SCREEN) {
                     AppStartAnimationScreen(navController).InvokeRender()
+                }
+                composable(
+                    "$VIEW_ACCOUNT_SCREEN/{idValue}",
+                    arguments = listOf(navArgument("idValue") { type = NavType.LongType })
+                ) { accountEntry ->
+                    ViewAccountScreen(accountEntry.arguments!!.getLong("idValue")).InvokeRender()
                 }
             }
         }

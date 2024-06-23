@@ -1,5 +1,6 @@
 package com.kroune.mensMorris.data.remote
 
+import com.kroune.mensMorris.data.remote.auth.AuthRepositoryImpl
 import org.junit.jupiter.api.Test
 
 class AuthRepositoryTest {
