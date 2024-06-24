@@ -20,11 +20,11 @@ composeCompiler {
 }
 
 android {
-    namespace = "com.kroune.mensMorris"
+    namespace = "com.kroune.nineMensMorrisApp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.kroune.mensMorris"
+        applicationId = "com.kroune.nineMensMorrisApp"
         minSdk = 25
         targetSdk = 34
         versionCode = 1
@@ -33,8 +33,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 "proguard-rules.pro"
             )
