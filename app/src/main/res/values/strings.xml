@@ -1,6 +1,6 @@
 <!--suppress LongLine -->
 <resources>
-    <string name="app_name">MensMorris</string>
+    <string name="app_name">NineMensMorris</string>
     <string name="back_icon" translatable="false" />
     <string name="tutorial_fly_condition">If you don\'t have any figures to place and your pieces count = 3 you can fly (move to any empty place)</string>
     <string name="tutorial_fly_highlighting">Possible moves are highlighted when you have selected a piece to move</string>
