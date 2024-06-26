@@ -4,7 +4,6 @@ import android.content.res.Resources
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollScope
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
@@ -80,7 +79,7 @@ class TutorialScreen(
         }
         LazyRow(
             modifier = Modifier
-                .fillMaxSize()
+                .height(height.dp)
                 .widthIn(0.dp, width.dp),
             state = listState,
             flingBehavior = CustomFlingBehaviour()

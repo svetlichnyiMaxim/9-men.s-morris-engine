@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -86,11 +85,8 @@ class WelcomeScreen(
     /**
      * draws game modes options
      */
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun DrawGameModesOptions() {
-        val width = LocalConfiguration.current.screenWidthDp
-        val height = LocalConfiguration.current.screenHeightDp
         val scrollState = rememberScrollState(if (!hasSeen) Int.MAX_VALUE else 0)
         val isTutorialClosed = remember { derivedStateOf { scrollState.value == 0 } }
         val coroutine = rememberCoroutineScope()
@@ -121,154 +117,166 @@ class WelcomeScreen(
                     flingBehavior = CustomFlingBehaviour()
                 )
         ) {
-            Box(
+            RenderMainScreen()
+            TutorialScreen(resources).InvokeRender()
+        }
+    }
+
+    /**
+     * renders main screen
+     * where you can choose game mode or go to account settings
+     */
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun RenderMainScreen() {
+        val coroutine = rememberCoroutineScope()
+        val width = LocalConfiguration.current.screenWidthDp
+        val height = LocalConfiguration.current.screenHeightDp
+        Box(
+            modifier = Modifier
+                .size(width.dp, height.dp)
+        ) {
+            Column(
                 modifier = Modifier
-                    .size(width.dp, height.dp),
+                    .fillMaxSize()
+                    .padding(top = (height * 0.2).dp, bottom = (height * 0.2).dp),
+                verticalArrangement = Arrangement.spacedBy(
+                    (height * 0.05).dp,
+                    Alignment.CenterVertically
+                ),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
+                Button(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(top = (height * 0.2).dp, bottom = (height * 0.2).dp),
-                    verticalArrangement = Arrangement.spacedBy(
-                        (height * 0.05).dp,
-                        Alignment.CenterVertically
-                    ),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .align(Alignment.CenterHorizontally),
+                    onClick = {
+                        navController?.navigate(GAME_WITH_FRIEND_SCREEN)
+                    },
+                    shape = RoundedCornerShape(5.dp),
+                    colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
                 ) {
-                    Button(
-                        modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
-                            navController?.navigate(GAME_WITH_FRIEND_SCREEN)
-                        },
-                        shape = RoundedCornerShape(5.dp),
-                        colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
-                    ) {
-                        Text(
-                            text = resources.getString(R.string.play_game_with_friends),
-                            color = Color.White
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            navController?.navigate(GAME_WITH_BOT_SCREEN)
-                        },
-                        shape = RoundedCornerShape(5.dp),
-                        colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
-                    ) {
-                        Text(
-                            text = resources.getString(R.string.play_game_with_bot),
-                            color = Color.White
-                        )
-                    }
-                    Button(
-                        onClick = {
-                            // TODO: rework this
-                            runBlocking {
-                                if (jwtToken != null && viewModel.checkJwtToken()
-                                        .getOrNull() == true
-                                ) {
-                                    navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
-                                } else {
-                                    navController?.navigate(SIGN_IN_SCREEN)
-                                }
-                            }
-                        },
-                        shape = RoundedCornerShape(5.dp),
-                        colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
-                    ) {
-                        Text(
-                            text = resources.getString(R.string.play_online_game),
-                            color = Color.White
-                        )
-                    }
+                    Text(
+                        text = resources.getString(R.string.play_game_with_friends),
+                        color = Color.White
+                    )
                 }
-                val offset = remember { mutableStateOf(0f) }
-                val startTriangleLength = min(width, height) / 4f
-                val offsetToFillRightBottomCorner = height - startTriangleLength
-                val isTriangle = remember {
-                    derivedStateOf {
-                        offset.value < offsetToFillRightBottomCorner
-                    }
-                }
-                val canDrag = remember { mutableStateOf(true) }
-                Box(
-                    modifier = Modifier
-                        .then(
-                            if (isTriangle.value)
-                                Modifier.size((offset.value + startTriangleLength).dp)
-                            else
-                                Modifier.fillMaxSize()
-                        )
-                        .draggable2D(
-                            state = rememberDraggable2DState { delta ->
-                                offset.value =
-                                    ((-delta.x + delta.y) / 2f + offset.value).coerceAtLeast(0f)
-                            },
-                            enabled = canDrag.value,
-                            onDragStopped = {
-                                // if we should animate transition to the start pos or
-                                // continue animation (switch to another screen)
-                                val shouldRollBack =
-                                    offset.value + startTriangleLength < width / 2
-                                val destination =
-                                    if (shouldRollBack) 0f else offsetToFillRightBottomCorner + width
-                                canDrag.value = false
-                                coroutine.launch {
-                                    animate(
-                                        offset.value,
-                                        destination,
-                                        animationSpec = tween(
-                                            durationMillis = 500,
-                                            easing = LinearEasing
-                                        )
-                                    ) { value, _ ->
-                                        offset.value = value
-                                    }
-                                    // TODO: finish this animation
-                                    if (!shouldRollBack) {
-                                        // TODO: change id
-                                        navController?.navigate("$VIEW_ACCOUNT_SCREEN/${1L}")
-                                    }
-                                    canDrag.value = true
-                                }
-                            }
-                        )
-                        .background(
-                            Color.DarkGray,
-                            if (isTriangle.value) triangleShape else ParallelogramShape(
-                                bottomLineLeftOffset = with(LocalDensity.current) { (offset.value - offsetToFillRightBottomCorner).dp.toPx() }
-                            )
-                        )
-                        .align(Alignment.TopEnd),
-                    contentAlignment = if (isTriangle.value) {
-                        Alignment { size, space, _ ->
-                            IntOffset(
-                                space.width / 2,
-                                space.height / 2 - size.height
-                            )
-                        }
-                    } else {
-                        Alignment.Center
-                    }
+                Button(
+                    onClick = {
+                        navController?.navigate(GAME_WITH_BOT_SCREEN)
+                    },
+                    shape = RoundedCornerShape(5.dp),
+                    colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
                 ) {
-                    IconButton(
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier
-                            .size((startTriangleLength / 2f).dp)
-                    ) {
-                        if (jwtToken != null) {
-                            Icon(painterResource(R.drawable.logged_in), "logged in")
-                        } else {
-                            Icon(painterResource(R.drawable.no_account), "no account found")
+                    Text(
+                        text = resources.getString(R.string.play_game_with_bot),
+                        color = Color.White
+                    )
+                }
+                Button(
+                    onClick = {
+                        // TODO: rework this
+                        runBlocking {
+                            if (jwtToken != null && viewModel.checkJwtToken()
+                                    .getOrNull() == true
+                            ) {
+                                navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                            } else {
+                                navController?.navigate(SIGN_IN_SCREEN)
+                            }
                         }
-                    }
+                    },
+                    shape = RoundedCornerShape(5.dp),
+                    colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
+                ) {
+                    Text(
+                        text = resources.getString(R.string.play_online_game),
+                        color = Color.White
+                    )
                 }
             }
+            val offset = remember { mutableStateOf(0f) }
+            val startTriangleLength = min(width, height) / 4f
+            val offsetToFillRightBottomCorner = height - startTriangleLength
+            val isTriangle = remember {
+                derivedStateOf {
+                    offset.value < offsetToFillRightBottomCorner
+                }
+            }
+            val canDrag = remember { mutableStateOf(true) }
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .size(height.dp)
+                    .then(
+                        if (isTriangle.value)
+                            Modifier.size((offset.value + startTriangleLength).dp)
+                        else
+                            Modifier.fillMaxSize()
+                    )
+                    .align(Alignment.TopEnd)
+                    .draggable2D(
+                        state = rememberDraggable2DState { delta ->
+                            offset.value =
+                                ((-delta.x + delta.y) / 2f + offset.value).coerceAtLeast(0f)
+                        },
+                        enabled = canDrag.value,
+                        onDragStopped = {
+                            // if we should animate transition to the start pos or
+                            // continue animation (switch to another screen)
+                            val shouldRollBack =
+                                offset.value + startTriangleLength < width / 2
+                            val destination = if (shouldRollBack) {
+                                0f
+                            } else {
+                                offsetToFillRightBottomCorner + width
+                            }
+                            canDrag.value = false
+                            coroutine.launch {
+                                animate(
+                                    offset.value,
+                                    destination,
+                                    animationSpec = tween(
+                                        durationMillis = 500,
+                                        easing = LinearEasing
+                                    )
+                                ) { value, _ ->
+                                    offset.value = value
+                                }
+                                if (!shouldRollBack) {
+                                    // TODO: change id
+                                    navController?.navigate("$VIEW_ACCOUNT_SCREEN/${1L}")
+                                }
+                                canDrag.value = true
+                            }
+                        }
+                    )
+                    .background(
+                        Color.DarkGray,
+                        if (isTriangle.value) triangleShape else ParallelogramShape(
+                            bottomLineLeftOffset = with(LocalDensity.current) {
+                                (offset.value - offsetToFillRightBottomCorner).dp.toPx()
+                            }
+                        )
+                    ),
+                contentAlignment = { size, space, _ ->
+                    IntOffset(
+                        space.width / 2,
+                        space.height / 2 - size.height
+                    )
+                }
             ) {
-                TutorialScreen(resources).InvokeRender()
+                IconButton(
+                    onClick = {
+                        // TODO: change id
+                        navController?.navigate("$VIEW_ACCOUNT_SCREEN/${1L}")
+                    },
+                    modifier = Modifier
+                        .size((startTriangleLength / 2f).dp)
+                ) {
+                    if (jwtToken != null) {
+                        Icon(painterResource(R.drawable.logged_in), "logged in")
+                    } else {
+                        Icon(painterResource(R.drawable.no_account), "no account found")
+                    }
+                }
             }
         }
     }

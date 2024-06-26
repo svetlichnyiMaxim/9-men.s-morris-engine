@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.LayoutDirection
  * parallelogram shape
  */
 class ParallelogramShape(
-    val bottomLineLeftOffset: Float = 0f
+    private val bottomLineLeftOffset: Float = 0f
 ) : Shape {
     override fun createOutline(
         size: Size,
