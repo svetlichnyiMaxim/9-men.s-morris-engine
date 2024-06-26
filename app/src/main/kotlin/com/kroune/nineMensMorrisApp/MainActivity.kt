@@ -3,6 +3,7 @@ package com.kroune.nineMensMorrisApp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.ui.unit.dp
@@ -61,10 +62,10 @@ class MainActivity : ComponentActivity() {
                 navController = navController,
                 startDestination = LOADING_ANIMATION_SCREEN,
                 enterTransition = {
-                    fadeIn(initialAlpha = 0.1f)
+                    fadeIn(initialAlpha = 0f, animationSpec = tween(800))
                 },
                 exitTransition = {
-                    fadeOut()
+                    fadeOut(animationSpec = tween(800))
                 }) {
                 composable(WELCOME_SCREEN) {
                     WelcomeScreen(navController, sharedPreferences, resources).InvokeRender()

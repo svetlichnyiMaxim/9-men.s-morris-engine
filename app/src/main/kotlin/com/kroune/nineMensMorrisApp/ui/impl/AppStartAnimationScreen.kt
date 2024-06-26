@@ -11,6 +11,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -52,13 +53,15 @@ class AppStartAnimationScreen(
      */
     @Composable
     fun DrawAnimation() {
-        val infiniteScale = rememberInfiniteTransition(label = "backgroundAnimation")
-        val animatedProgress by infiniteScale.animateFloat(
-            initialValue = 1f, targetValue = -1f, animationSpec = infiniteRepeatable(
+        val animatedProgress by rememberInfiniteTransition(label = "").animateFloat(
+            initialValue = 1f,
+            targetValue = -1f,
+            animationSpec = infiniteRepeatable(
                 animation = tween(
                     durationMillis = 7500, easing = LinearEasing
                 ), repeatMode = RepeatMode.Reverse
-            ), label = "backgroundAnimation"
+            ),
+            label = "backgroundAnimation"
         )
         Canvas(
             modifier = Modifier
@@ -73,6 +76,8 @@ class AppStartAnimationScreen(
                 val y = f(x, coef, animatedProgress)
                 lightPath.lineTo(x.toFloat(), size.height - y)
             }
+            val y = f(size.width.toInt(), coef, animatedProgress)
+            lightPath.lineTo(size.width, size.height - y)
             lightPath.lineTo(size.width, size.height)
             lightPath.lineTo(0f, size.height)
             drawPath(
@@ -106,10 +111,18 @@ class AppStartAnimationScreen(
                 .fillMaxSize()
                 .zIndex(2f)
         ) {
-            TextButton({
-                controller?.navigate(WELCOME_SCREEN)
-                println("switching to welcome screen")
-            }, modifier = Modifier.align(Alignment.Center)) {
+            TextButton(
+                {
+                    controller?.navigate(WELCOME_SCREEN)
+                },
+                modifier = Modifier.align(Alignment.Center),
+                colors = ButtonColors(
+                    Color.Transparent,
+                    Color.Transparent,
+                    Color.Transparent,
+                    Color.Transparent
+                )
+            ) {
                 Text(
                     text = "Press to start",
                     modifier = Modifier.alpha(animatedProgress),
