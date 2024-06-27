@@ -1,11 +1,13 @@
 package com.kroune.nineMensMorrisApp.ui.impl.auth
 
+import android.graphics.BitmapFactory
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,9 +19,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,17 +52,47 @@ class ViewAccountScreen(
                         .height(100.dp)
                         .fillMaxWidth()
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.baseline_account_circle_48),
-                        contentDescription = "profile icon",
-                        modifier = Modifier
-                            .size(80.dp)
-                    )
+                    DrawIcon()
                     DrawName()
                 }
-                // TODO: make api calls
-                Text("Account was registered at 27.06.2024", fontSize = 16.sp)
+                DrawAccountCreationDate()
             }
+        }
+    }
+
+    /**
+     * draws account creation date or info about loading
+     */
+    @Composable
+    fun DrawAccountCreationDate() {
+        val date = viewModel.accountCreationDate.collectAsState().value
+        if (date == null) {
+            Text("Account information is loading...")
+        } else {
+            Text("Account was registered at $date", fontSize = 16.sp)
+        }
+    }
+
+    /**
+     * draws user icon or empty icon
+     */
+    @Composable
+    fun DrawIcon() {
+        val file = viewModel.tempPictureFile.collectAsState()
+        if (file.value != null) {
+            Image(
+                bitmap = BitmapFactory.decodeFile(file.value!!.absolutePath).asImageBitmap(),
+                contentDescription = "Profile icon",
+                modifier = Modifier
+                    .size(80.dp)
+            )
+        } else {
+            Icon(
+                painter = painterResource(R.drawable.baseline_account_circle_48),
+                contentDescription = "profile loading icon",
+                modifier = Modifier
+                    .size(80.dp)
+            )
         }
     }
 
@@ -67,8 +101,8 @@ class ViewAccountScreen(
      */
     @Composable
     fun DrawName() {
-        val loadingName = false
-        if (loadingName) {
+        val name = viewModel.accountName.collectAsState().value
+        if (name == null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -95,9 +129,14 @@ class ViewAccountScreen(
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                // TODO: make api calls
-                Text("Mike", fontSize = 20.sp)
+                Text("$name", fontSize = 20.sp)
             }
         }
+    }
+
+    init {
+        viewModel.getProfilePicture(1L)
+        viewModel.getLoginById(1L)
+        viewModel.getProfileName(1L)
     }
 }

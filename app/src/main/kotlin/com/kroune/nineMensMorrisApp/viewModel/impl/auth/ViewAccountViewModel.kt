@@ -1,21 +1,115 @@
 package com.kroune.nineMensMorrisApp.viewModel.impl.auth
 
+import android.text.format.DateFormat
+import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
 import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryI
 import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.Calendar
 import javax.inject.Inject
 
 /**
  * view model for viewing account
  */
 @HiltViewModel
-class ViewAccountViewModel @Inject constructor(private val accountInfoRepositoryI: AccountInfoRepositoryI) :
-    ViewModelI() {
+class ViewAccountViewModel @Inject constructor(
+    private val accountInfoRepositoryI: AccountInfoRepositoryI
+) : ViewModelI() {
 
     /**
-     * gets login by id
+     * account name or null if it is still loading
      */
-    fun getLoginById(id: Long): String {
-        return accountInfoRepositoryI.getAccountLoginById(id)
+    val accountName = MutableStateFlow<String?>(null)
+
+    /**
+     * file with account picture or null if it is still loading
+     */
+    val tempPictureFile = MutableStateFlow<File?>(null)
+
+    /**
+     * account creation date or null if it is still loading
+     */
+    val accountCreationDate = MutableStateFlow<String?>(null)
+
+    /**
+     * updates [accountName]
+     */
+    fun getLoginById(id: Long) {
+        if (accountCreationDate.value != null) {
+            return
+        }
+        CoroutineScope(networkScope).launch {
+            var isSuccessful = false
+            val calendar: Calendar = Calendar.getInstance()
+            @Suppress("UnusedPrivateProperty")
+            for (i in 0..5) {
+                val newBuffer = accountInfoRepositoryI.getAccountDateById(id).getOrNull()
+                if (newBuffer != null) {
+                    isSuccessful = true
+                    calendar.set(newBuffer.third, newBuffer.second, newBuffer.first)
+                    break
+                }
+            }
+            if (!isSuccessful)
+                return@launch
+            val finalString = DateFormat.format("dd-mm-yyyy", calendar).toString()
+            accountCreationDate.value = finalString
+        }
+    }
+
+    /**
+     * updates [tempPictureFile]
+     */
+    fun getProfilePicture(id: Long) {
+        if (tempPictureFile.value != null) {
+            return
+        }
+        CoroutineScope(networkScope).launch {
+            var buffer: ByteArray? = null
+            @Suppress("UnusedPrivateProperty")
+            for (i in 0..5) {
+                val newBuffer = accountInfoRepositoryI.getAccountPictureById(id).getOrNull()
+                if (newBuffer != null) {
+                    buffer = newBuffer
+                    break
+                }
+            }
+            if (buffer == null)
+                return@launch
+            val file = withContext(Dispatchers.IO) {
+                File.createTempFile("profilePicture-$id", ".webp")
+            }
+            file.writeBytes(buffer)
+            tempPictureFile.value = file
+        }
+    }
+
+    /**
+     * updates [accountName]
+     */
+    fun getProfileName(id: Long) {
+        if (accountName.value != null) {
+            return
+        }
+        CoroutineScope(networkScope).launch {
+            var name: String? = null
+            @Suppress("UnusedPrivateProperty")
+            for (i in 0..5) {
+                val newBuffer = accountInfoRepositoryI.getAccountNameById(id).getOrNull()
+                if (newBuffer != null) {
+                    name = newBuffer
+                    break
+                }
+            }
+            if (name == null)
+                return@launch
+            accountName.value = name
+        }
     }
 }
