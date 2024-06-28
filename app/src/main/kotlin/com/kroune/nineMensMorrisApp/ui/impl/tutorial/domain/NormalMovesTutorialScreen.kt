@@ -19,12 +19,12 @@ import com.kr8ne.mensMorris.Position
 import com.kroune.nineMensMorrisApp.BUTTON_WIDTH
 import com.kroune.nineMensMorrisApp.R
 import com.kroune.nineMensMorrisApp.ui.impl.game.GameBoardScreen
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 
 /**
  * this screen tells about information indicators provide
  */
-class NormalMovesTutorialScreen(private val resources: Resources) : ScreenModel {
+class NormalMovesTutorialScreen(private val resources: Resources) : ScreenModelI {
     private val position = Position(
         // @formatter:off
         arrayOf(
@@ -42,9 +42,12 @@ class NormalMovesTutorialScreen(private val resources: Resources) : ScreenModel 
 
     private val gameBoard = GameBoardScreen(
         position,
-        //selectedButton = mutableStateOf(22),
         navController = null
     )
+
+    init {
+        gameBoard.viewModel.onClick(22)
+    }
 
     @Composable
     override fun InvokeRender() {

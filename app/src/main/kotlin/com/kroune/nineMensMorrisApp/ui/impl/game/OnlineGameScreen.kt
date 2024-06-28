@@ -6,15 +6,15 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.game.OnlineGameViewModel
 
 /**
  * Game main screen
  */
 class OnlineGameScreen(
-    id: Long, navContoller: NavHostController
-) : ScreenModel {
+    id: Long, navController: NavHostController
+) : ScreenModelI {
     @Composable
     override fun InvokeRender() {
         AppTheme {
@@ -39,5 +39,5 @@ class OnlineGameScreen(
         }
     }
 
-    override val viewModel = OnlineGameViewModel(navContoller, id)
+    override val viewModel = OnlineGameViewModel(navController, id)
 }

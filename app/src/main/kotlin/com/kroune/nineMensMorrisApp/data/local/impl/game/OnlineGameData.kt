@@ -12,7 +12,6 @@ import com.kroune.nineMensMorrisApp.WELCOME_SCREEN
 import com.kroune.nineMensMorrisApp.common.SERVER_ADDRESS
 import com.kroune.nineMensMorrisApp.common.USER_API
 import com.kroune.nineMensMorrisApp.data.local.interfaces.DataI
-import com.kroune.nineMensMorrisApp.data.local.interfaces.GameBoardInterface
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.network
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
@@ -36,13 +35,17 @@ class OnlineGameData(
     private val gameId: Long,
     private val navController: NavHostController?,
     private val gameRepository: GameRepository = GameRepository()
-) : GameBoardInterface, DataI() {
+) : DataI() {
 
     /**
      * tells if user is green or blue
      */
     var isGreen: MutableState<Boolean?> = mutableStateOf(null)
-    override val gameBoard = GameBoardScreen(
+
+    /**
+     * our game board
+     */
+    val gameBoard = GameBoardScreen(
         pos = gameStartPosition,
         onClick = { index -> this.response(index) },
         navController = null

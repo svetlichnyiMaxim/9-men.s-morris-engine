@@ -52,7 +52,7 @@ import com.kroune.nineMensMorrisApp.common.ParallelogramShape
 import com.kroune.nineMensMorrisApp.common.triangleShape
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.ui.impl.tutorial.TutorialScreen
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.WelcomeViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -68,7 +68,7 @@ class WelcomeScreen(
     val navController: NavHostController?,
     private val sharedPreferences: SharedPreferences?,
     private val resources: Resources,
-) : ScreenModel {
+) : ScreenModelI {
 
     override lateinit var viewModel: WelcomeViewModel
 

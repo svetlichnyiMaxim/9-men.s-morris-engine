@@ -4,7 +4,6 @@ import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.GameState
 import com.kr8ne.mensMorris.gameStartPosition
 import com.kroune.nineMensMorrisApp.data.local.interfaces.DataI
-import com.kroune.nineMensMorrisApp.data.local.interfaces.GameBoardInterface
 import com.kroune.nineMensMorrisApp.ui.impl.game.GameBoardScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -17,11 +16,12 @@ import kotlinx.coroutines.launch
 class GameWithBotData(
     navController: NavHostController?,
     private val viewModelScope: CoroutineScope
-) : DataI(), GameBoardInterface {
+) : DataI() {
+
     /**
-     * current game position
+     * our game board
      */
-    override val gameBoard = GameBoardScreen(
+    val gameBoard = GameBoardScreen(
         pos = gameStartPosition,
         onClick = { index -> this.response(index) },
         handleUndo = { onUndo() },

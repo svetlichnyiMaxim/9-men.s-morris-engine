@@ -35,7 +35,7 @@ import com.kr8ne.mensMorris.gameStartPosition
 import com.kroune.nineMensMorrisApp.BUTTON_WIDTH
 import com.kroune.nineMensMorrisApp.R
 import com.kroune.nineMensMorrisApp.data.local.impl.game.GameBoardData
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.game.GameBoardViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -51,7 +51,7 @@ class GameBoardScreen(
     handleUndo: () -> Unit = {},
     handleRedo: () -> Unit = {},
     navController: NavHostController?
-) : ScreenModel {
+) : ScreenModelI {
 
     override val viewModel = GameBoardViewModel(
         pos = pos,

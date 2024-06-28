@@ -12,7 +12,6 @@ import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.BUTTON_WIDTH
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.ui.interfaces.GameScreenModel
-import com.kroune.nineMensMorrisApp.viewModel.impl.game.GameWithFriendViewModel
 
 /**
  * Game main screen
@@ -35,8 +34,6 @@ class GameWithFriendScreen(
             gameBoard.RenderUndoRedo()
         }
     }
-
-    override val viewModel = GameWithFriendViewModel()
 
     @Composable
     private fun DrawMainPage() {

@@ -23,8 +23,7 @@ import com.kroune.nineMensMorrisApp.ui.impl.tutorial.domain.NormalMovesTutorialS
 import com.kroune.nineMensMorrisApp.ui.impl.tutorial.domain.PlacementTutorialScreen
 import com.kroune.nineMensMorrisApp.ui.impl.tutorial.domain.RemovalMovesTutorialScreen
 import com.kroune.nineMensMorrisApp.ui.impl.tutorial.domain.TriplesTutorialScreen
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
-import com.kroune.nineMensMorrisApp.viewModel.impl.tutorial.TutorialViewModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import kotlinx.coroutines.launch
 
 /**
@@ -32,7 +31,7 @@ import kotlinx.coroutines.launch
  */
 class TutorialScreen(
     resources: Resources
-) : ScreenModel {
+) : ScreenModelI {
     /**
      * stores order of tutorials (used for slider)
      */
@@ -103,6 +102,4 @@ class TutorialScreen(
     override fun InvokeRender() {
         InvokeTutorialRendering()
     }
-
-    override val viewModel = TutorialViewModel()
 }

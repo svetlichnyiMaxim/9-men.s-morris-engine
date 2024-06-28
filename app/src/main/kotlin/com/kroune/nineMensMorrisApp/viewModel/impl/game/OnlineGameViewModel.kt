@@ -8,7 +8,6 @@ import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
  * welcome model
  * called when app is launched
  */
-class OnlineGameViewModel(navController: NavHostController?, id: Long) :
-    ViewModelI() {
+class OnlineGameViewModel(navController: NavHostController?, id: Long) : ViewModelI() {
     override val data = OnlineGameData(id, navController)
 }

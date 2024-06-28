@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kr8ne.mensMorris.Position
 import com.kroune.nineMensMorrisApp.BUTTON_WIDTH
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.game.GameAnalyzeViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
  */
 class GameAnalyzeScreen(
     pos: MutableStateFlow<Position>
-) : ScreenModel {
+) : ScreenModelI {
     override val viewModel = GameAnalyzeViewModel(pos)
 
     @Composable

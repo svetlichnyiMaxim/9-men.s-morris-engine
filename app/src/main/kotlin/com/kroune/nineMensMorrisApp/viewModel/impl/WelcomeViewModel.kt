@@ -1,6 +1,5 @@
 package com.kroune.nineMensMorrisApp.viewModel.impl
 
-import com.kroune.nineMensMorrisApp.data.local.impl.WelcomeData
 import com.kroune.nineMensMorrisApp.data.remote.auth.AuthRepositoryI
 import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,9 +10,9 @@ import javax.inject.Inject
  * called when app is launched
  */
 @HiltViewModel
-class WelcomeViewModel @Inject constructor(private val authRepositoryI: AuthRepositoryI) : ViewModelI() {
-    override val data = WelcomeData()
-
+class WelcomeViewModel @Inject constructor(
+    private val authRepositoryI: AuthRepositoryI
+) : ViewModelI() {
     /**
      * checks if jwt token is valid
      */

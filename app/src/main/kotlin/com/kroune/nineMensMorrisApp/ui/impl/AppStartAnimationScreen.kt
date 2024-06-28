@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.WELCOME_SCREEN
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.AppStartAnimationViewModel
 import kotlin.math.sin
 
@@ -37,7 +37,7 @@ class AppStartAnimationScreen(
      * navigation controller
      */
     private val controller: NavHostController?
-) : ScreenModel {
+) : ScreenModelI {
 
     @Composable
     override fun InvokeRender() {

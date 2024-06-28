@@ -16,7 +16,6 @@ import com.kroune.nineMensMorrisApp.BUTTON_WIDTH
 import com.kroune.nineMensMorrisApp.WELCOME_SCREEN
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.ui.interfaces.GameScreenModel
-import com.kroune.nineMensMorrisApp.viewModel.impl.game.GameEndViewModel
 
 /**
  * screen that is shown at the end
@@ -45,8 +44,6 @@ class GameEndScreen(
             }
         }
     }
-
-    override val viewModel = GameEndViewModel(gameBoard)
 
     /**
      * draws screen after the game has ended

@@ -1,6 +1,5 @@
 package com.kroune.nineMensMorrisApp.viewModel.impl.auth
 
-import com.kroune.nineMensMorrisApp.data.local.impl.auth.SignInData
 import com.kroune.nineMensMorrisApp.data.remote.auth.AuthRepositoryI
 import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,7 +11,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(private val authRepository: AuthRepositoryI) :
     ViewModelI() {
-    override val data: SignInData = SignInData()
 
     /**
      * logins into the account

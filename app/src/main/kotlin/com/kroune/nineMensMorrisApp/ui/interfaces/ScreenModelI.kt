@@ -6,7 +6,7 @@ import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
 /**
  * creates interface for screen creation
  */
-interface ScreenModel {
+interface ScreenModelI {
 
     /**
      * invokes render part

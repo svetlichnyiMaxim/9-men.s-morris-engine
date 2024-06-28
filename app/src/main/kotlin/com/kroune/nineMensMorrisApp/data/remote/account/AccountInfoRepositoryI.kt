@@ -8,12 +8,12 @@ interface AccountInfoRepositoryI {
     /**
      * @return account login (name) by it's id
      */
-    fun getAccountDateById(id: Long): Result<Triple<Int, Int, Int>>
+    suspend fun getAccountDateById(id: Long): Result<Triple<Int, Int, Int>?>
 
     /**
      * @return account login (name) by it's id
      */
-    fun getAccountNameById(id: Long): Result<String>
+    suspend fun getAccountNameById(id: Long): Result<String?>
 
     /**
      * @return account picture by it's id

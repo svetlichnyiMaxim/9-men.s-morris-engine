@@ -6,7 +6,7 @@ import com.kroune.nineMensMorrisApp.ui.impl.game.GameBoardScreen
  * extends game screen model
  * used for screen where board is drown
  */
-interface GameScreenModel : ScreenModel {
+interface GameScreenModel : ScreenModelI {
     /**
      * game board
      * used for drawing main game board

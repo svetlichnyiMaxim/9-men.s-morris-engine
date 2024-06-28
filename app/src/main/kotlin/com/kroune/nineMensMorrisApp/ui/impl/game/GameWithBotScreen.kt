@@ -3,7 +3,7 @@ package com.kroune.nineMensMorrisApp.ui.impl.game
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.common.AppTheme
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.game.GameWithBotViewModel
 
 /**
@@ -11,7 +11,7 @@ import com.kroune.nineMensMorrisApp.viewModel.impl.game.GameWithBotViewModel
  */
 class GameWithBotScreen(
     navController: NavHostController
-) : ScreenModel {
+) : ScreenModelI {
 
     @Composable
     override fun InvokeRender() {

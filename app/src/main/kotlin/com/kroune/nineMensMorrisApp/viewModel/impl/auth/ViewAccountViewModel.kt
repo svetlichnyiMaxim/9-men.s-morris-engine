@@ -1,6 +1,5 @@
 package com.kroune.nineMensMorrisApp.viewModel.impl.auth
 
-import android.text.format.DateFormat
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
 import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryI
 import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
@@ -11,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.Calendar
 import javax.inject.Inject
 
 /**
@@ -45,20 +43,18 @@ class ViewAccountViewModel @Inject constructor(
             return
         }
         CoroutineScope(networkScope).launch {
-            var isSuccessful = false
-            val calendar: Calendar = Calendar.getInstance()
+            var calendar: Triple<Int, Int, Int>? = null
             @Suppress("UnusedPrivateProperty")
             for (i in 0..5) {
                 val newBuffer = accountInfoRepositoryI.getAccountDateById(id).getOrNull()
                 if (newBuffer != null) {
-                    isSuccessful = true
-                    calendar.set(newBuffer.third, newBuffer.second, newBuffer.first)
+                    calendar = newBuffer
                     break
                 }
             }
-            if (!isSuccessful)
+            if (calendar == null)
                 return@launch
-            val finalString = DateFormat.format("dd-mm-yyyy", calendar).toString()
+            val finalString = "${calendar.first}-${calendar.second}-${calendar.third}"
             accountCreationDate.value = finalString
         }
     }
@@ -111,5 +107,11 @@ class ViewAccountViewModel @Inject constructor(
                 return@launch
             accountName.value = name
         }
+    }
+
+    init {
+        getProfilePicture(1L)
+        getLoginById(1L)
+        getProfileName(1L)
     }
 }

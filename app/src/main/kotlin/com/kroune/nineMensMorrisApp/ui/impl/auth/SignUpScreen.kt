@@ -29,7 +29,7 @@ import com.kroune.nineMensMorrisApp.SIGN_IN_SCREEN
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.auth.SignUpViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -47,7 +47,7 @@ class SignUpScreen(
      * used for translations
      */
     val resources: Resources
-) : ScreenModel {
+) : ScreenModelI {
 
     override lateinit var viewModel: SignUpViewModel
 

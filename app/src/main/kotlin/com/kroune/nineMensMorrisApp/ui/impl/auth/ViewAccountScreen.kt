@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.kroune.nineMensMorrisApp.R
 import com.kroune.nineMensMorrisApp.common.AppTheme
-import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.auth.ViewAccountViewModel
 
 /**
@@ -39,7 +39,7 @@ import com.kroune.nineMensMorrisApp.viewModel.impl.auth.ViewAccountViewModel
  */
 class ViewAccountScreen(
     val id: Long
-) : ScreenModel {
+) : ScreenModelI {
     override lateinit var viewModel: ViewAccountViewModel
 
     @Composable
@@ -132,11 +132,5 @@ class ViewAccountScreen(
                 Text("$name", fontSize = 20.sp)
             }
         }
-    }
-
-    init {
-        viewModel.getProfilePicture(1L)
-        viewModel.getLoginById(1L)
-        viewModel.getProfileName(1L)
     }
 }
