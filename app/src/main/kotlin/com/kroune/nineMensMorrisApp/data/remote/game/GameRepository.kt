@@ -19,12 +19,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import java.util.concurrent.ConcurrentLinkedQueue
+import javax.inject.Inject
 
 /**
  * Repository for interacting with server games
  * TODO: refactor this
  */
-class GameRepository : GameRepositoryI {
+class GameRepository @Inject constructor() : GameRepositoryI {
     override fun startSearchingGame() {
         if (searchingForGameJob?.isCompleted == false) {
             return

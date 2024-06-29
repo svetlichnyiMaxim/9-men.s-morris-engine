@@ -36,7 +36,7 @@ class ViewAccountViewModel @Inject constructor(
     val accountCreationDate = MutableStateFlow<String?>(null)
 
     /**
-     * updates [accountName]
+     * updates [accountCreationDate]
      */
     fun getLoginById(id: Long) {
         if (accountCreationDate.value != null) {
@@ -110,8 +110,12 @@ class ViewAccountViewModel @Inject constructor(
     }
 
     init {
+        println("a1")
         getProfilePicture(1L)
+        println("a2")
         getLoginById(1L)
+        println("a3")
         getProfileName(1L)
+        println("a4")
     }
 }

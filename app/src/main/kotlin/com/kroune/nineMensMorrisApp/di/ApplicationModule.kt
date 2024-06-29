@@ -4,6 +4,8 @@ import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryI
 import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryImpl
 import com.kroune.nineMensMorrisApp.data.remote.auth.AuthRepositoryI
 import com.kroune.nineMensMorrisApp.data.remote.auth.AuthRepositoryImpl
+import com.kroune.nineMensMorrisApp.data.remote.game.GameRepository
+import com.kroune.nineMensMorrisApp.data.remote.game.GameRepositoryI
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +37,15 @@ class ApplicationModule {
     @Singleton
     fun provideAccountInfoRepository(): AccountInfoRepositoryI {
         return AccountInfoRepositoryImpl()
+    }
+
+    /**
+     * general account info
+     * @see ViewAccountScreen
+     */
+    @Provides
+    @Singleton
+    fun provideGameRepository(): GameRepositoryI {
+        return GameRepository()
     }
 }
