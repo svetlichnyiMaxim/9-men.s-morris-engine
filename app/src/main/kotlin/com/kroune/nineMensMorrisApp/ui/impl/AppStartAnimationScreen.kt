@@ -73,10 +73,10 @@ class AppStartAnimationScreen(
             val coef = size.height.toInt() / finalPoint
             val lightPath = Path()
             for (x in 0 until size.width.toInt() step 10) {
-                val y = f(x, coef, animatedProgress)
+                val y = f(x, coef, animatedProgress).coerceIn(0f..size.height)
                 lightPath.lineTo(x.toFloat(), size.height - y)
             }
-            val y = f(size.width.toInt(), coef, animatedProgress)
+            val y = f(size.width.toInt(), coef, animatedProgress).coerceIn(0f..size.height)
             lightPath.lineTo(size.width, size.height - y)
             lightPath.lineTo(size.width, size.height)
             lightPath.lineTo(0f, size.height)

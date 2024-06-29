@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -48,6 +50,7 @@ import com.kroune.nineMensMorrisApp.SEARCHING_ONLINE_GAME_SCREEN
 import com.kroune.nineMensMorrisApp.SIGN_IN_SCREEN
 import com.kroune.nineMensMorrisApp.VIEW_ACCOUNT_SCREEN
 import com.kroune.nineMensMorrisApp.common.AppTheme
+import com.kroune.nineMensMorrisApp.common.LoadingCircle
 import com.kroune.nineMensMorrisApp.common.ParallelogramShape
 import com.kroune.nineMensMorrisApp.common.triangleShape
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
@@ -81,46 +84,6 @@ class WelcomeScreen(
                 field = value
             }
         }
-
-    /**
-     * draws game modes options
-     */
-    @Composable
-    private fun DrawGameModesOptions() {
-        val scrollState = rememberScrollState(if (!hasSeen) Int.MAX_VALUE else 0)
-        val isTutorialClosed = remember { derivedStateOf { scrollState.value == 0 } }
-        val coroutine = rememberCoroutineScope()
-        val isWelcome = remember { mutableStateOf(true) }
-        if (isTutorialClosed.value) {
-            hasSeen = true
-        }
-        class CustomFlingBehaviour : FlingBehavior {
-            override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
-                val progress = scrollState.value.toFloat() / scrollState.maxValue
-                val scrollUp =
-                    (isWelcome.value && progress < 0.15f) || (!isWelcome.value && progress <= 0.85f)
-                isWelcome.value = scrollUp
-                coroutine.launch {
-                    scrollState.animateScrollTo(
-                        if (scrollUp) 0 else scrollState.maxValue,
-                        animationSpec = tween(durationMillis = 300, easing = LinearEasing)
-                    )
-                }
-                return 0f
-            }
-        }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(
-                    state = scrollState,
-                    flingBehavior = CustomFlingBehaviour()
-                )
-        ) {
-            RenderMainScreen()
-            TutorialScreen(resources).InvokeRender()
-        }
-    }
 
     /**
      * renders main screen
@@ -241,8 +204,7 @@ class WelcomeScreen(
                                     offset.value = value
                                 }
                                 if (!shouldRollBack) {
-                                    // TODO: change id
-                                    navController?.navigate("$VIEW_ACCOUNT_SCREEN/${1L}")
+                                    viewAccountDataLoadingOverlay.value = true
                                 }
                                 canDrag.value = true
                             }
@@ -265,8 +227,7 @@ class WelcomeScreen(
             ) {
                 IconButton(
                     onClick = {
-                        // TODO: change id
-                        navController?.navigate("$VIEW_ACCOUNT_SCREEN/${1L}")
+                        viewAccountDataLoadingOverlay.value = true
                     },
                     modifier = Modifier
                         .size((startTriangleLength / 2f).dp)
@@ -281,11 +242,65 @@ class WelcomeScreen(
         }
     }
 
+    private val viewAccountDataLoadingOverlay = mutableStateOf(false)
+
     @Composable
     override fun InvokeRender() {
         viewModel = hiltViewModel()
         AppTheme {
-            DrawGameModesOptions()
+            if (viewAccountDataLoadingOverlay.value) {
+                val accountId = viewModel.accountId.collectAsState().value
+                if (accountId != null) {
+                    if (accountId == -1L) {
+                        // no valid account, we need to sign in
+                        navController?.navigate(SIGN_IN_SCREEN)
+                    } else {
+                        navController?.navigate("$VIEW_ACCOUNT_SCREEN/$accountId")
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(Float.MAX_VALUE)
+                        .background(Color(0, 0, 0, 50))
+                ) {
+                    // we shouldn't be stuck on this screen, since network client timeout is 5 s
+                    LoadingCircle()
+                }
+            }
+            val scrollState = rememberScrollState(if (!hasSeen) Int.MAX_VALUE else 0)
+            val isTutorialClosed = remember { derivedStateOf { scrollState.value == 0 } }
+            val coroutine = rememberCoroutineScope()
+            val topScreen = remember { mutableStateOf(true) }
+            if (isTutorialClosed.value) {
+                hasSeen = true
+            }
+            class CustomFlingBehaviour : FlingBehavior {
+                override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
+                    val progress = scrollState.value.toFloat() / scrollState.maxValue
+                    val scrollUp = (topScreen.value && progress < 0.15f) ||
+                            (!topScreen.value && progress <= 0.85f)
+                    topScreen.value = scrollUp
+                    coroutine.launch {
+                        scrollState.animateScrollTo(
+                            if (scrollUp) 0 else scrollState.maxValue,
+                            animationSpec = tween(durationMillis = 300, easing = LinearEasing)
+                        )
+                    }
+                    return 0f
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(
+                        state = scrollState,
+                        flingBehavior = CustomFlingBehaviour()
+                    )
+            ) {
+                RenderMainScreen()
+                TutorialScreen(resources).InvokeRender()
+            }
         }
     }
 }

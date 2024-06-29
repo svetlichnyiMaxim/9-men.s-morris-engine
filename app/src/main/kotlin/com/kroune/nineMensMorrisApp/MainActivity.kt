@@ -38,7 +38,6 @@ val BUTTON_WIDTH = 35.dp
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     /**
      * nav controller for this activity
      */

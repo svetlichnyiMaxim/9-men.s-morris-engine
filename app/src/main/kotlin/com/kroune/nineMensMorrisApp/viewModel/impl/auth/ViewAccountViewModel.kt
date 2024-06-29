@@ -1,24 +1,56 @@
 package com.kroune.nineMensMorrisApp.viewModel.impl.auth
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
 import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryI
 import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import javax.inject.Inject
 
 /**
  * view model for viewing account
  */
-@HiltViewModel
-class ViewAccountViewModel @Inject constructor(
-    private val accountInfoRepositoryI: AccountInfoRepositoryI
+class ViewAccountViewModel @AssistedInject constructor(
+    private val accountInfoRepositoryI: AccountInfoRepositoryI,
+    /**
+     * account id
+     */
+    @Assisted val id: Long
 ) : ViewModelI() {
+
+    /**
+     * factory for [AssistedInject]
+     */
+    @AssistedFactory
+    interface AssistedVMFactory {
+        /**
+         * creates [ViewAccountViewModel] using id
+         */
+        fun create(id: Long): ViewAccountViewModel
+    }
+
+    companion object {
+        /**
+         * provides factory
+         */
+        fun provideFactory(
+            assistedVMFactory: AssistedVMFactory,
+            id: Long
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return assistedVMFactory.create(id) as T
+            }
+        }
+    }
 
     /**
      * account name or null if it is still loading
@@ -38,7 +70,7 @@ class ViewAccountViewModel @Inject constructor(
     /**
      * updates [accountCreationDate]
      */
-    fun getLoginById(id: Long) {
+    fun getLoginById() {
         if (accountCreationDate.value != null) {
             return
         }
@@ -62,7 +94,7 @@ class ViewAccountViewModel @Inject constructor(
     /**
      * updates [tempPictureFile]
      */
-    fun getProfilePicture(id: Long) {
+    fun getProfilePicture() {
         if (tempPictureFile.value != null) {
             return
         }
@@ -89,7 +121,7 @@ class ViewAccountViewModel @Inject constructor(
     /**
      * updates [accountName]
      */
-    fun getProfileName(id: Long) {
+    fun getProfileName() {
         if (accountName.value != null) {
             return
         }
@@ -110,12 +142,8 @@ class ViewAccountViewModel @Inject constructor(
     }
 
     init {
-        println("a1")
-        getProfilePicture(1L)
-        println("a2")
-        getLoginById(1L)
-        println("a3")
-        getProfileName(1L)
-        println("a4")
+        getProfilePicture()
+        getLoginById()
+        getProfileName()
     }
 }

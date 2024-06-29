@@ -1,14 +1,23 @@
 package com.kroune.nineMensMorrisApp.di
 
+import android.app.Activity
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryI
 import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryImpl
 import com.kroune.nineMensMorrisApp.data.remote.auth.AuthRepositoryI
 import com.kroune.nineMensMorrisApp.data.remote.auth.AuthRepositoryImpl
 import com.kroune.nineMensMorrisApp.data.remote.game.GameRepository
 import com.kroune.nineMensMorrisApp.data.remote.game.GameRepositoryI
+import com.kroune.nineMensMorrisApp.ui.impl.auth.SignInScreen
+import com.kroune.nineMensMorrisApp.ui.impl.auth.ViewAccountScreen
+import com.kroune.nineMensMorrisApp.viewModel.impl.auth.ViewAccountViewModel
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -48,4 +57,28 @@ class ApplicationModule {
     fun provideGameRepository(): GameRepositoryI {
         return GameRepository()
     }
+}
+
+/**
+ * used for di
+ * provides factories needed for using [@AssistedInject]
+ */
+@EntryPoint
+@InstallIn(ActivityComponent::class)
+interface ViewModelFactoryProvider {
+    /**
+     * @return [ViewAccountViewModel.AssistedVMFactory]
+     */
+    fun viewAccountViewModelFactory(): ViewAccountViewModel.AssistedVMFactory
+}
+
+/**
+ * provides factories installed in [ActivityComponent]
+ */
+@Composable
+fun factoryProvider(): ViewModelFactoryProvider {
+    return EntryPointAccessors.fromActivity(
+        LocalContext.current as Activity,
+        ViewModelFactoryProvider::class.java
+    )
 }

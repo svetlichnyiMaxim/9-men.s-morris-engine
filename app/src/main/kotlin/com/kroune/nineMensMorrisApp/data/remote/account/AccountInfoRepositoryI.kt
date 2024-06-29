@@ -19,4 +19,9 @@ interface AccountInfoRepositoryI {
      * @return account picture by it's id
      */
     suspend fun getAccountPictureById(id: Long): Result<ByteArray>
+
+    /**
+     * @return account id by it's jwtToken'
+     */
+    suspend fun getIdByJwtToken(jwtToken: String): Result<Long?>
 }

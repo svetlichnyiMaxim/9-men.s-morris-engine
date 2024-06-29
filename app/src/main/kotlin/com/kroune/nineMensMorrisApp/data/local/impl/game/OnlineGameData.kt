@@ -26,7 +26,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import kotlin.random.Random
 
 /**
  * data for online game screen
@@ -64,88 +63,72 @@ class OnlineGameData(
         }
     }
 
-    private val someInt = Random.nextInt()
-
-    // TODO: remove suppression
-    @Suppress("LongMethod")
     override fun invokeBackend() {
-        println("invoke as $someInt")
-        println(gameId.toString())
         CoroutineScope(networkScope).launch {
-            runCatching {
-                val jwtTokenState = jwtToken
-                require(jwtTokenState != null)
-                network.webSocket(
-                    "ws${SERVER_ADDRESS}${USER_API}/game",
+            try {
+                val jwtTokenState = jwtToken ?: error("jwt token cannot be null")
+                network.webSocket("ws${SERVER_ADDRESS}${USER_API}/game",
                     request = {
                         url {
                             parameters["jwtToken"] = jwtTokenState
                             parameters["gameId"] = gameId.toString()
                         }
                     }) {
-                    try {
-                        val isGreenData = (incoming.receive() as Frame.Text).readText()
-                        println("isGreen new value - $isGreenData")
-                        val isGreenText = Json.decodeFromString<NetworkResponse>(isGreenData)
-                        isGreen.value = isGreenText.message.toBoolean()
-                        println("check - ${isGreen}")
+                    val isGreenData = (incoming.receive() as Frame.Text).readText()
+                    val isGreenText = Json.decodeFromString<NetworkResponse>(isGreenData)
+                    isGreen.value = isGreenText.message.toBoolean()
 
-                        val positionServerData = (incoming.receive() as Frame.Text).readText()
-                        println("position new value - $positionServerData")
-                        val positionString =
-                            Json.decodeFromString<NetworkResponse>(positionServerData).message!!
-                        val newPosition = Json.decodeFromString<Position>(positionString)
-                        gameBoard.pos.value = newPosition
-                        while (true) {
-                            // send all our moves one by one
-                            val moveToSend = gameRepository.movesQueue.poll()
-                            if (moveToSend != null) {
-                                val string = Json.encodeToString<Movement>(moveToSend)
-                                // post our move
-                                println(string)
-                                send(string)
-                            }
-                            try {
-                                // receive the server's data
-                                val serverMessage =
-                                    incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
-                                println(serverMessage)
-                                val serverResponse =
-                                    Json.decodeFromString<NetworkResponse>(serverMessage.readText())
-                                when (serverResponse.code) {
-                                    410 -> {
-                                        // game ended
-                                        println("game ended")
-                                        navController?.navigate(WELCOME_SCREEN)
-                                    }
-
-                                    200 -> {
-                                        val movement =
-                                            Json.decodeFromString<Movement>(serverResponse.message!!)
-                                        // apply move
-                                        println("new move")
-                                        gameBoard.viewModel.data.processMove(movement)
-                                    }
-
-                                    else -> {
-                                        // we reload our game
-                                        navController?.navigate("$ONLINE_GAME_SCREEN/$gameId")
-                                        println("smth went wrong, reloading")
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                println("error when receiving move $someInt")
-                                e.printStackTrace()
-                            }
+                    val positionServerData = (incoming.receive() as Frame.Text).readText()
+                    val positionString =
+                        Json.decodeFromString<NetworkResponse>(positionServerData).message!!
+                    val newPosition = Json.decodeFromString<Position>(positionString)
+                    gameBoard.pos.value = newPosition
+                    while (true) {
+                        // send all our moves one by one
+                        val moveToSend = gameRepository.movesQueue.poll()
+                        if (moveToSend != null) {
+                            val string = Json.encodeToString<Movement>(moveToSend)
+                            // post our move
+                            send(string)
                         }
-                    } catch (e: Exception) {
-                        println("crash")
-                        e.printStackTrace()
+                        try {
+                            // receive the server's data
+                            val serverMessage =
+                                incoming.tryReceive().getOrNull() as? Frame.Text ?: continue
+                            val serverResponse =
+                                Json.decodeFromString<NetworkResponse>(serverMessage.readText())
+                            when (serverResponse.code) {
+                                410 -> {
+                                    // game ended
+                                    println("game ended")
+                                    navController?.navigate(WELCOME_SCREEN)
+                                }
+
+                                200 -> {
+                                    val movement =
+                                        Json.decodeFromString<Movement>(serverResponse.message!!)
+                                    // apply move
+                                    println("new move")
+                                    gameBoard.viewModel.data.processMove(movement)
+                                }
+
+                                else -> {
+                                    // we reload our game
+                                    navController?.navigate("$ONLINE_GAME_SCREEN/$gameId")
+                                    println("smth went wrong, reloading")
+                                }
+                            }
+                        } catch (e: Exception) {
+                            println("error when receiving move")
+                            e.printStackTrace()
+                        }
                     }
                 }
-            }.onFailure {
-                println("error accessing ${"${SERVER_ADDRESS}${USER_API}/game; gameId = $gameId"} $someInt")
-                it.printStack()
+            } catch (e: Exception) {
+                println("error accessing ${"${SERVER_ADDRESS}${USER_API}/game; gameId = $gameId"}")
+                e.printStack()
+                // we try to relaunch this shit
+                invokeBackend()
             }
         }
     }

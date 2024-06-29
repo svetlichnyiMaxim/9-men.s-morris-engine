@@ -46,6 +46,21 @@ class AccountInfoRepositoryImpl : AccountInfoRepositoryI {
         }
     }
 
+    override suspend fun getIdByJwtToken(jwtToken: String): Result<Long?> {
+        return runCatching {
+            val request = network.get("http${SERVER_ADDRESS}${USER_API}/get-id-by-jwt-token") {
+                method = HttpMethod.Get
+                url {
+                    parameters["jwtToken"] = jwtToken
+                }
+            }.bodyAsText()
+            Json.decodeFromString<Long?>(request)
+        }.onFailure {
+            println("error getting account id $jwtToken")
+            it.printStackTrace()
+        }
+    }
+
     override suspend fun getAccountPictureById(id: Long): Result<ByteArray> {
         return runCatching<AccountInfoRepositoryImpl, ByteArray> {
             val url = "https://shapka-youtube.ru/wp-content/uploads/2020/08/man-silhouette.jpg"
