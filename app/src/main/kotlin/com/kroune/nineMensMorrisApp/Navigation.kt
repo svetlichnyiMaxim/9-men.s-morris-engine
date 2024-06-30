@@ -59,7 +59,6 @@ sealed class Navigation {
  * used for "type safe compose navigation"
  */
 class PositionNavType : NavType<Position>(false) {
-    // removing this will fuck you up
     override fun serializeAsValue(value: Position): String {
         return Json.encodeToString(value)
     }
@@ -84,7 +83,6 @@ class PositionNavType : NavType<Position>(false) {
  * used for "type safe compose navigation"
  */
 class NavigationNavType : NavType<Navigation>(false) {
-    // removing this will fuck you up
     override fun serializeAsValue(value: Navigation): String {
         return Json.encodeToString(value)
     }
