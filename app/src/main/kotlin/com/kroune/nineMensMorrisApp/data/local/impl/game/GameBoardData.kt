@@ -9,11 +9,10 @@ import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.move.Movement
 import com.kr8ne.mensMorris.move.moveProvider
-import com.kroune.nineMensMorrisApp.GAME_END_SCREEN
+import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.data.local.interfaces.DataI
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import java.util.Stack
 
 /**
@@ -98,8 +97,7 @@ class GameBoardData(
         selectedButton.value = null
         saveMove(pos.value)
         if (pos.value.gameState() == GameState.End) {
-            val positionAsString = Json.encodeToString<Position>(pos.value)
-            navController?.navigate("$GAME_END_SCREEN/$positionAsString")
+            navController?.navigateSingleTopTo(Navigation.GameEnd(pos.value))
         }
     }
 

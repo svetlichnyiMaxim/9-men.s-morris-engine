@@ -23,7 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import com.kroune.nineMensMorrisApp.WELCOME_SCREEN
+import com.kroune.nineMensMorrisApp.Navigation
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.AppStartAnimationViewModel
 import kotlin.math.sin
@@ -36,7 +37,7 @@ class AppStartAnimationScreen(
     /**
      * navigation controller
      */
-    private val controller: NavHostController?
+    private val navController: NavHostController?
 ) : ScreenModelI {
 
     @Composable
@@ -113,7 +114,7 @@ class AppStartAnimationScreen(
         ) {
             TextButton(
                 {
-                    controller?.navigate(WELCOME_SCREEN)
+                    navController?.navigateSingleTopTo(Navigation.Welcome)
                 },
                 modifier = Modifier.align(Alignment.Center),
                 colors = ButtonColors(

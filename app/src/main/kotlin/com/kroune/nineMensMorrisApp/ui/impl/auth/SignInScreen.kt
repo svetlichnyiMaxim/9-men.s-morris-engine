@@ -23,12 +23,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.R
-import com.kroune.nineMensMorrisApp.SEARCHING_ONLINE_GAME_SCREEN
-import com.kroune.nineMensMorrisApp.SIGN_UP_SCREEN
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.auth.SignInViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +42,7 @@ class SignInScreen(
      * navigation controller
      */
     private val navController: NavHostController?,
+    private val nextRoute: Navigation,
     /**
      * resources
      * used for translations
@@ -60,7 +61,26 @@ class SignInScreen(
         val username = remember { mutableStateOf("") }
         serverResponse.value?.onSuccess {
             jwtToken = it
-            navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+            if (nextRoute is Navigation.ViewAccount) {
+                CoroutineScope(networkScope).launch {
+                    val id = viewModel.getIdByJwtToken(it)
+                    if (id.isFailure) {
+                        // this means we got some error, so we can tell user about it
+                        val exception = id.exceptionOrNull()!!
+                        serverResponse.value = Result.failure(exception)
+                        return@launch
+                    }
+                    if (id.getOrThrow() == null) {
+                        // this means some server error occurred
+                        serverResponse.value =
+                            Result.failure(IllegalStateException("server didn't return id for account"))
+                        return@launch
+                    }
+                    navController?.navigateSingleTopTo(ViewAccountScreen(id.getOrThrow()!!))
+                }
+            } else {
+                navController?.navigateSingleTopTo(nextRoute)
+            }
         }
         AppTheme {
             Column(
@@ -148,7 +168,7 @@ class SignInScreen(
                     ) {
                         Text(resources.getString(R.string.no_account_question))
                         TextButton(modifier = Modifier, onClick = {
-                            navController?.navigate(SIGN_UP_SCREEN)
+                            navController?.navigateSingleTopTo(Navigation.SignUp(nextRoute))
                         }) {
                             Text(resources.getString(R.string.sign_up), color = Color.Blue)
                         }

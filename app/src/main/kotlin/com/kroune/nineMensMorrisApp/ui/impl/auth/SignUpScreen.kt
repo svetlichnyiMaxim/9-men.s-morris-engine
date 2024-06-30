@@ -23,12 +23,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.R
-import com.kroune.nineMensMorrisApp.SEARCHING_ONLINE_GAME_SCREEN
-import com.kroune.nineMensMorrisApp.SIGN_IN_SCREEN
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.auth.SignUpViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -41,12 +41,13 @@ class SignUpScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController?,
+    private val navController: NavHostController?,
+    private val nextRoute: Navigation,
     /**
      * resources
      * used for translations
      */
-    val resources: Resources
+    private val resources: Resources
 ) : ScreenModelI {
 
     override lateinit var viewModel: SignUpViewModel
@@ -64,7 +65,7 @@ class SignUpScreen(
         val username = remember { mutableStateOf("") }
         serverResponse.value?.onSuccess {
             jwtToken = it
-            navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+            navController?.navigateSingleTopTo(nextRoute)
         }
         AppTheme {
             Column(
@@ -180,7 +181,7 @@ class SignUpScreen(
                     ) {
                         Text(resources.getString(R.string.have_account_question))
                         TextButton(modifier = Modifier, onClick = {
-                            navController?.navigate(SIGN_IN_SCREEN)
+                            navController?.navigateSingleTopTo(Navigation.SignIn(nextRoute))
                         }) {
                             Text(resources.getString(R.string.sign_in))
                         }

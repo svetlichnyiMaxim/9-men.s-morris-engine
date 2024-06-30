@@ -13,9 +13,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.Position
 import com.kroune.nineMensMorrisApp.BUTTON_WIDTH
-import com.kroune.nineMensMorrisApp.WELCOME_SCREEN
+import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.common.AppTheme
-import com.kroune.nineMensMorrisApp.ui.interfaces.GameScreenModel
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 
 /**
  * screen that is shown at the end
@@ -25,9 +26,9 @@ class GameEndScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController?
-) : GameScreenModel {
-    override val gameBoard: GameBoardScreen =
+    private val navController: NavHostController?
+) : ScreenModelI {
+    private val gameBoard: GameBoardScreen =
         GameBoardScreen(pos = pos, navController = navController)
 
     @Composable
@@ -61,7 +62,7 @@ class GameEndScreen(
                 .padding(0.dp, BUTTON_WIDTH * 6, 0.dp, 0.dp)
         ) {
             Button(onClick = {
-                navController?.navigate(WELCOME_SCREEN)
+                navController?.navigateSingleTopTo(Navigation.Welcome)
             }) {
                 Text("Reset")
             }

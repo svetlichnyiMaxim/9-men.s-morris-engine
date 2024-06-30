@@ -7,8 +7,7 @@ import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.gameStartPosition
 import com.kr8ne.mensMorris.move.Movement
 import com.kroune.NetworkResponse
-import com.kroune.nineMensMorrisApp.ONLINE_GAME_SCREEN
-import com.kroune.nineMensMorrisApp.WELCOME_SCREEN
+import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.common.SERVER_ADDRESS
 import com.kroune.nineMensMorrisApp.common.USER_API
 import com.kroune.nineMensMorrisApp.data.local.interfaces.DataI
@@ -16,6 +15,7 @@ import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.network
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
 import com.kroune.nineMensMorrisApp.data.remote.game.GameRepository
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.impl.game.GameBoardScreen
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.utils.io.printStack
@@ -101,7 +101,7 @@ class OnlineGameData(
                                 410 -> {
                                     // game ended
                                     println("game ended")
-                                    navController?.navigate(WELCOME_SCREEN)
+                                    navController?.navigateSingleTopTo(Navigation.Welcome)
                                 }
 
                                 200 -> {
@@ -114,7 +114,7 @@ class OnlineGameData(
 
                                 else -> {
                                     // we reload our game
-                                    navController?.navigate("$ONLINE_GAME_SCREEN/$gameId")
+                                    navController?.navigateSingleTopTo(Navigation.OnlineGame(gameId))
                                     println("smth went wrong, reloading")
                                 }
                             }

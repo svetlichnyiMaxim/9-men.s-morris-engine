@@ -6,9 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.kroune.nineMensMorrisApp.ONLINE_GAME_SCREEN
+import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.R
 import com.kroune.nineMensMorrisApp.common.AppTheme
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.game.SearchingForGameViewModel
 
@@ -27,7 +28,7 @@ class SearchingForGameScreen(
         viewModel = hiltViewModel()
         val id = viewModel.gameId.collectAsState().value
         if (id != null) {
-            navController.navigate("$ONLINE_GAME_SCREEN/$id")
+            navController.navigateSingleTopTo(Navigation.OnlineGame(id))
         }
         AppTheme {
             Text("${resources.getString(R.string.searching_for_game)}...")

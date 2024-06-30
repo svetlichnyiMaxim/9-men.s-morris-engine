@@ -1,51 +1,105 @@
 package com.kroune.nineMensMorrisApp
 
-/**
- * welcome screen
- */
-const val WELCOME_SCREEN = "welcome_screen"
+import android.os.Bundle
+import androidx.navigation.NavType
+import com.kr8ne.mensMorris.Position
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 /**
- * game with bot screen
+ * suppress every fucking warning produced by detekt & idea
  */
-const val GAME_WITH_BOT_SCREEN = "game_with_bot_screen"
+@Suppress("KDocMissingDocumentation", "UndocumentedPublicProperty", "UndocumentedPublicClass")
+@Serializable
+sealed class Navigation {
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data class SignUp(val nextRoute: Navigation) : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data class SignIn(val nextRoute: Navigation) : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data class GameEnd(val position: Position) : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data class OnlineGame(val id: Long) : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data class ViewAccount(val id: Long) : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data object Welcome : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data object AppStartAnimation : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data object GameWithBot : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data object GameWithFriend : Navigation()
+
+    @Suppress("UndocumentedPublicClass")
+    @Serializable
+    data object SearchingOnlineGame : Navigation()
+}
 
 /**
- * game with friend screen
+ * custom nav type for position
+ * used for "type safe compose navigation"
  */
-const val GAME_WITH_FRIEND_SCREEN = "game_with_friend_screen"
+class PositionNavType : NavType<Position>(false) {
+    // removing this will fuck you up
+    override fun serializeAsValue(value: Position): String {
+        return Json.encodeToString(value)
+    }
+
+    override fun get(bundle: Bundle, key: String): Position? {
+        val posAsJson = bundle.getString(key) ?: return null
+        return Json.decodeFromString<Position>(posAsJson)
+    }
+
+    override fun parseValue(value: String): Position {
+        return Json.decodeFromString<Position>(value)
+    }
+
+    override fun put(bundle: Bundle, key: String, value: Position) {
+        val posAsJson = Json.encodeToString(value)
+        bundle.putString(key, posAsJson)
+    }
+}
 
 /**
- * game end screen
+ * custom nav type for navigation sealed class
+ * used for "type safe compose navigation"
  */
-const val GAME_END_SCREEN = "game_end_screen"
+class NavigationNavType : NavType<Navigation>(false) {
+    // removing this will fuck you up
+    override fun serializeAsValue(value: Navigation): String {
+        return Json.encodeToString(value)
+    }
 
-/**
- * Screen for users to sign in to the app.
- */
-const val SIGN_IN_SCREEN = "sign_in_screen"
+    override fun get(bundle: Bundle, key: String): Navigation? {
+        val posAsJson = bundle.getString(key) ?: return null
+        return Json.decodeFromString<Navigation>(posAsJson)
+    }
 
-/**
- * Screen for users to sign up for a new account.
- */
-const val SIGN_UP_SCREEN = "sign_up_screen"
+    override fun parseValue(value: String): Navigation {
+        return Json.decodeFromString<Navigation>(value)
+    }
 
-/**
- * Screen for searching an online game.
- */
-const val SEARCHING_ONLINE_GAME_SCREEN = "searching_online_game_screen"
-
-/**
- * Screen for playing an online game.
- */
-const val ONLINE_GAME_SCREEN = "online_game_screen"
-
-/**
- * Screen with loading animation
- */
-const val LOADING_ANIMATION_SCREEN = "loading_animation_screen"
-
-/**
- * Screen for viewing an account
- */
-const val VIEW_ACCOUNT_SCREEN = "view_account_screen"
+    override fun put(bundle: Bundle, key: String, value: Navigation) {
+        val posAsJson = Json.encodeToString(value)
+        bundle.putString(key, posAsJson)
+    }
+}

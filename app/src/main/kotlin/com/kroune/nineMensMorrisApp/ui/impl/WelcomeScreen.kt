@@ -43,17 +43,14 @@ import androidx.compose.ui.zIndex
 import androidx.core.content.edit
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.kroune.nineMensMorrisApp.GAME_WITH_BOT_SCREEN
-import com.kroune.nineMensMorrisApp.GAME_WITH_FRIEND_SCREEN
+import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.R
-import com.kroune.nineMensMorrisApp.SEARCHING_ONLINE_GAME_SCREEN
-import com.kroune.nineMensMorrisApp.SIGN_IN_SCREEN
-import com.kroune.nineMensMorrisApp.VIEW_ACCOUNT_SCREEN
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.common.LoadingCircle
 import com.kroune.nineMensMorrisApp.common.ParallelogramShape
 import com.kroune.nineMensMorrisApp.common.triangleShape
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
+import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.impl.tutorial.TutorialScreen
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.WelcomeViewModel
@@ -69,7 +66,7 @@ class WelcomeScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController?,
+    private val navController: NavHostController?,
     private val sharedPreferences: SharedPreferences?,
     private val resources: Resources,
 ) : ScreenModelI {
@@ -100,24 +97,21 @@ class WelcomeScreen(
         val width = LocalConfiguration.current.screenWidthDp
         val height = LocalConfiguration.current.screenHeightDp
         Box(
-            modifier = Modifier
-                .size(width.dp, height.dp)
+            modifier = Modifier.size(width.dp, height.dp)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(top = (height * 0.2).dp, bottom = (height * 0.2).dp),
                 verticalArrangement = Arrangement.spacedBy(
-                    (height * 0.05).dp,
-                    Alignment.CenterVertically
+                    (height * 0.05).dp, Alignment.CenterVertically
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
-                        navController?.navigate(GAME_WITH_FRIEND_SCREEN)
+                        navController?.navigateSingleTopTo(Navigation.GameWithFriend)
                     },
                     shape = RoundedCornerShape(5.dp),
                     colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
@@ -129,14 +123,13 @@ class WelcomeScreen(
                 }
                 Button(
                     onClick = {
-                        navController?.navigate(GAME_WITH_BOT_SCREEN)
+                        navController?.navigateSingleTopTo(Navigation.GameWithBot)
                     },
                     shape = RoundedCornerShape(5.dp),
                     colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
                 ) {
                     Text(
-                        text = resources.getString(R.string.play_game_with_bot),
-                        color = Color.White
+                        text = resources.getString(R.string.play_game_with_bot), color = Color.White
                     )
                 }
                 Button(
@@ -144,9 +137,13 @@ class WelcomeScreen(
                         playOnlineGameOverlay.value = true
                         CoroutineScope(Dispatchers.IO).launch {
                             if (viewModel.checkJwtToken().getOrNull() == true) {
-                                navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
+                                navController?.navigateSingleTopTo(Navigation.SearchingOnlineGame)
                             } else {
-                                navController?.navigate(SIGN_IN_SCREEN)
+                                navController?.navigateSingleTopTo(
+                                    Navigation.SignIn(
+                                        Navigation.SearchingOnlineGame
+                                    )
+                                )
                             }
                         }
                     },
@@ -154,8 +151,7 @@ class WelcomeScreen(
                     colors = ButtonColors(Color.Black, Color.Black, Color.Gray, Color.Gray)
                 ) {
                     Text(
-                        text = resources.getString(R.string.play_online_game),
-                        color = Color.White
+                        text = resources.getString(R.string.play_online_game), color = Color.White
                     )
                 }
             }
@@ -168,71 +164,54 @@ class WelcomeScreen(
                 }
             }
             val canDrag = remember { mutableStateOf(true) }
-            Box(
-                modifier = Modifier
-                    .then(
-                        if (isTriangle.value)
-                            Modifier.size((offset.value + startTriangleLength).dp)
-                        else
-                            Modifier.fillMaxSize()
-                    )
-                    .align(Alignment.TopEnd)
-                    .draggable2D(
-                        state = rememberDraggable2DState { delta ->
-                            offset.value =
-                                ((-delta.x + delta.y) / 2f + offset.value).coerceAtLeast(0f)
-                        },
-                        enabled = canDrag.value,
-                        onDragStopped = {
-                            // if we should animate transition to the start pos or
-                            // continue animation (switch to another screen)
-                            val shouldRollBack =
-                                offset.value + startTriangleLength < width / 2
-                            val destination = if (shouldRollBack) {
-                                0f
-                            } else {
-                                offsetToFillRightBottomCorner + width
-                            }
-                            canDrag.value = false
-                            coroutine.launch {
-                                animate(
-                                    offset.value,
-                                    destination,
-                                    animationSpec = tween(
-                                        durationMillis = 500,
-                                        easing = LinearEasing
-                                    )
-                                ) { value, _ ->
-                                    offset.value = value
-                                }
-                                if (!shouldRollBack) {
-                                    viewAccountDataLoadingOverlay.value = true
-                                }
-                                canDrag.value = true
-                            }
+            Box(modifier = Modifier
+                .then(
+                    if (isTriangle.value) Modifier.size((offset.value + startTriangleLength).dp)
+                    else Modifier.fillMaxSize()
+                )
+                .align(Alignment.TopEnd)
+                .draggable2D(state = rememberDraggable2DState { delta ->
+                    offset.value = ((-delta.x + delta.y) / 2f + offset.value).coerceAtLeast(0f)
+                }, enabled = canDrag.value, onDragStopped = {
+                    // if we should animate transition to the start pos or
+                    // continue animation (switch to another screen)
+                    val shouldRollBack = offset.value + startTriangleLength < width / 2
+                    val destination = if (shouldRollBack) {
+                        0f
+                    } else {
+                        offsetToFillRightBottomCorner + width
+                    }
+                    canDrag.value = false
+                    coroutine.launch {
+                        animate(
+                            offset.value, destination, animationSpec = tween(
+                                durationMillis = 500, easing = LinearEasing
+                            )
+                        ) { value, _ ->
+                            offset.value = value
                         }
-                    )
-                    .background(
-                        Color.DarkGray,
-                        if (isTriangle.value) triangleShape else ParallelogramShape(
-                            bottomLineLeftOffset = with(LocalDensity.current) {
-                                (offset.value - offsetToFillRightBottomCorner).dp.toPx()
-                            }
-                        )
-                    ),
-                contentAlignment = { size, space, _ ->
-                    IntOffset(
-                        space.width / 2,
-                        space.height / 2 - size.height
-                    )
-                }
-            ) {
+                        if (!shouldRollBack) {
+                            viewAccountDataLoadingOverlay.value = true
+                        }
+                        canDrag.value = true
+                    }
+                })
+                .background(
+                    Color.DarkGray,
+                    if (isTriangle.value) triangleShape else ParallelogramShape(bottomLineLeftOffset = with(
+                        LocalDensity.current
+                    ) {
+                        (offset.value - offsetToFillRightBottomCorner).dp.toPx()
+                    })
+                ), contentAlignment = { size, space, _ ->
+                IntOffset(
+                    space.width / 2, space.height / 2 - size.height
+                )
+            }) {
                 IconButton(
                     onClick = {
                         viewAccountDataLoadingOverlay.value = true
-                    },
-                    modifier = Modifier
-                        .size((startTriangleLength / 2f).dp)
+                    }, modifier = Modifier.size((startTriangleLength / 2f).dp)
                 ) {
                     if (jwtToken != null) {
                         Icon(painterResource(R.drawable.logged_in), "logged in")
@@ -257,9 +236,15 @@ class WelcomeScreen(
                 if (accountId != null) {
                     if (accountId == -1L) {
                         // no valid account, we need to sign in
-                        navController?.navigate(SIGN_IN_SCREEN)
+                        navController?.navigateSingleTopTo(
+                            Navigation.SignIn(
+                                Navigation.ViewAccount(
+                                    -1L
+                                )
+                            )
+                        )
                     } else {
-                        navController?.navigate("$VIEW_ACCOUNT_SCREEN/$accountId")
+                        navController?.navigateSingleTopTo(Navigation.ViewAccount(accountId))
                     }
                 }
                 Box(
@@ -293,8 +278,8 @@ class WelcomeScreen(
             class CustomFlingBehaviour : FlingBehavior {
                 override suspend fun ScrollScope.performFling(initialVelocity: Float): Float {
                     val progress = scrollState.value.toFloat() / scrollState.maxValue
-                    val scrollUp = (topScreen.value && progress < 0.15f) ||
-                            (!topScreen.value && progress <= 0.85f)
+                    val scrollUp =
+                        (topScreen.value && progress < 0.15f) || (!topScreen.value && progress <= 0.85f)
                     topScreen.value = scrollUp
                     coroutine.launch {
                         scrollState.animateScrollTo(
@@ -309,8 +294,7 @@ class WelcomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(
-                        state = scrollState,
-                        flingBehavior = CustomFlingBehaviour()
+                        state = scrollState, flingBehavior = CustomFlingBehaviour()
                     )
             ) {
                 RenderMainScreen()

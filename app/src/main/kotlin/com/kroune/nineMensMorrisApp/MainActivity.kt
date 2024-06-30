@@ -7,12 +7,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.kr8ne.mensMorris.Position
 import com.kroune.nineMensMorrisApp.data.remote.Common
 import com.kroune.nineMensMorrisApp.ui.impl.AppStartAnimationScreen
@@ -26,7 +25,7 @@ import com.kroune.nineMensMorrisApp.ui.impl.game.GameWithFriendScreen
 import com.kroune.nineMensMorrisApp.ui.impl.game.OnlineGameScreen
 import com.kroune.nineMensMorrisApp.ui.impl.game.SearchingForGameScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.json.Json
+import kotlin.reflect.typeOf
 
 /**
  * shows how thick our pieces & board will be
@@ -38,11 +37,6 @@ val BUTTON_WIDTH = 35.dp
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    /**
-     * nav controller for this activity
-     */
-    lateinit var navController: NavHostController
-
     /**
      * we initialize all important stuff here
      */
@@ -56,61 +50,73 @@ class MainActivity : ComponentActivity() {
         Common.sharedPreferences = sharedPreferences
         val resources = resources
         setContent {
-            navController = rememberNavController()
+            val navController = rememberNavController()
             NavHost(
                 navController = navController,
-                startDestination = LOADING_ANIMATION_SCREEN,
+                startDestination = Navigation.AppStartAnimation,
                 enterTransition = {
                     fadeIn(initialAlpha = 0f, animationSpec = tween(800))
                 },
                 exitTransition = {
                     fadeOut(animationSpec = tween(800))
                 }) {
-                composable(WELCOME_SCREEN) {
+                composable<Navigation.Welcome> {
                     WelcomeScreen(navController, sharedPreferences, resources).InvokeRender()
                 }
-                composable(GAME_WITH_BOT_SCREEN) {
+                composable<Navigation.GameWithBot> {
                     GameWithBotScreen(navController = navController).InvokeRender()
                 }
-                composable(GAME_WITH_FRIEND_SCREEN) {
+                composable<Navigation.GameWithFriend> {
                     GameWithFriendScreen(navController).InvokeRender()
                 }
-                composable(
-                    "$GAME_END_SCREEN/{posAsString}",
-                    arguments = listOf(navArgument("posAsString") { type = NavType.StringType })
-                ) { posEntry ->
-                    val posAsString = posEntry.arguments!!.getString("posAsString")!!
-                    val pos = Json.decodeFromString<Position>(posAsString)
+                composable<Navigation.GameEnd>(
+                    typeMap = mapOf(typeOf<Position>() to PositionNavType())
+                ) {
+                    val pos = it.toRoute<Navigation.GameEnd>().position
                     GameEndScreen(pos, navController).InvokeRender()
                 }
-                composable(SIGN_UP_SCREEN) {
-                    SignUpScreen(navController, resources).InvokeRender()
+                composable<Navigation.SignUp>(
+                    typeMap = mapOf(typeOf<Navigation>() to NavigationNavType())
+                ) {
+                    val route = it.toRoute<Navigation.SignUp>().nextRoute
+                    println("next sign up route - $route")
+                    SignUpScreen(navController, route, resources).InvokeRender()
                 }
-                composable(SIGN_IN_SCREEN) {
-                    SignInScreen(navController, resources).InvokeRender()
+                composable<Navigation.SignIn>(
+                    typeMap = mapOf(typeOf<Navigation>() to NavigationNavType())
+                ) {
+                    val nextRoute = it.toRoute<Navigation.SignIn>().nextRoute
+                    println("next login route - $nextRoute")
+                    SignInScreen(navController, nextRoute, resources).InvokeRender()
                 }
-                composable(SEARCHING_ONLINE_GAME_SCREEN) {
+                composable<Navigation.SearchingOnlineGame> {
                     SearchingForGameScreen(navController, resources).InvokeRender()
                 }
-                composable(
-                    "$ONLINE_GAME_SCREEN/{idValue}",
-                    arguments = listOf(navArgument("idValue") { type = NavType.LongType })
-                ) { gameEntry ->
+                composable<Navigation.OnlineGame> {
+                    val id = it.toRoute<Navigation.OnlineGame>().id
                     OnlineGameScreen(
-                        gameEntry.arguments!!.getLong("idValue"),
+                        id,
                         navController
                     ).InvokeRender()
                 }
-                composable(LOADING_ANIMATION_SCREEN) {
+                composable<Navigation.AppStartAnimation> {
                     AppStartAnimationScreen(navController).InvokeRender()
                 }
-                composable(
-                    "$VIEW_ACCOUNT_SCREEN/{idValue}",
-                    arguments = listOf(navArgument("idValue") { type = NavType.LongType })
-                ) { accountEntry ->
-                    ViewAccountScreen(accountEntry.arguments!!.getLong("idValue")).InvokeRender()
+                composable<Navigation.ViewAccount> {
+                    val id = it.toRoute<Navigation.ViewAccount>().id
+                    ViewAccountScreen(id).InvokeRender()
                 }
             }
         }
+    }
+}
+
+/**
+ * custom navigation implementation, prevents duplications in backstack entries
+ */
+fun NavController.navigateSingleTopTo(route: Any) {
+    println(route.toString())
+    this.navigate(route) {
+        launchSingleTop = true
     }
 }

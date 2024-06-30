@@ -13,7 +13,8 @@ import com.kroune.nineMensMorrisApp.viewModel.impl.game.OnlineGameViewModel
  * Game main screen
  */
 class OnlineGameScreen(
-    id: Long, navController: NavHostController
+    id: Long,
+    navController: NavHostController
 ) : ScreenModelI {
     @Composable
     override fun InvokeRender() {

@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.BUTTON_WIDTH
 import com.kroune.nineMensMorrisApp.common.AppTheme
-import com.kroune.nineMensMorrisApp.ui.interfaces.GameScreenModel
+import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 
 /**
  * Game main screen
@@ -20,9 +20,9 @@ class GameWithFriendScreen(
     /**
      * navigation controller
      */
-    val navController: NavHostController?,
-    override var gameBoard: GameBoardScreen = GameBoardScreen(navController = navController),
-) : GameScreenModel {
+    private val navController: NavHostController?,
+    private var gameBoard: GameBoardScreen = GameBoardScreen(navController = navController),
+) : ScreenModelI {
 
 
     @Composable
