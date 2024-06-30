@@ -57,8 +57,9 @@ import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.ui.impl.tutorial.TutorialScreen
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.WelcomeViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlin.math.min
 
 /**
@@ -84,6 +85,9 @@ class WelcomeScreen(
                 field = value
             }
         }
+
+
+    private val playOnlineGameOverlay = mutableStateOf(false)
 
     /**
      * renders main screen
@@ -137,11 +141,9 @@ class WelcomeScreen(
                 }
                 Button(
                     onClick = {
-                        // TODO: rework this
-                        runBlocking {
-                            if (jwtToken != null && viewModel.checkJwtToken()
-                                    .getOrNull() == true
-                            ) {
+                        playOnlineGameOverlay.value = true
+                        CoroutineScope(Dispatchers.IO).launch {
+                            if (viewModel.checkJwtToken().getOrNull() == true) {
                                 navController?.navigate(SEARCHING_ONLINE_GAME_SCREEN)
                             } else {
                                 navController?.navigate(SIGN_IN_SCREEN)
@@ -248,7 +250,9 @@ class WelcomeScreen(
     override fun InvokeRender() {
         viewModel = hiltViewModel()
         AppTheme {
-            if (viewAccountDataLoadingOverlay.value) {
+            // we check this to prevent race condition, since if user is searching for game
+            // viewing account gets less priority
+            if (viewAccountDataLoadingOverlay.value && !playOnlineGameOverlay.value) {
                 val accountId = viewModel.accountId.collectAsState().value
                 if (accountId != null) {
                     if (accountId == -1L) {
@@ -258,6 +262,17 @@ class WelcomeScreen(
                         navController?.navigate("$VIEW_ACCOUNT_SCREEN/$accountId")
                     }
                 }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .zIndex(Float.MAX_VALUE)
+                        .background(Color(0, 0, 0, 50))
+                ) {
+                    // we shouldn't be stuck on this screen, since network client timeout is 5 s
+                    LoadingCircle()
+                }
+            }
+            if (playOnlineGameOverlay.value) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()

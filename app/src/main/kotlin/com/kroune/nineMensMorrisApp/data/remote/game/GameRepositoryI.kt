@@ -12,13 +12,7 @@ interface GameRepositoryI {
      *
      * @return [ServerResponse] indicating the success or failure of the search attempt.
      */
-    fun startSearchingGame()
-
-    // TODO: remove this
-    /**
-     * waits for game searching result
-     */
-    suspend fun awaitForGameSearchEnd(): Result<Long>?
+    suspend fun startSearchingGame(): Result<Long>
 
     /**
      * queue of the moves that player performed

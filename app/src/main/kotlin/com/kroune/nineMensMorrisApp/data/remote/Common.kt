@@ -9,12 +9,11 @@ import io.ktor.client.plugins.websocket.WebSockets
 import kotlinx.coroutines.Dispatchers
 
 /**
- * TODO: Move this to remote repository
+ * Common remote data
  */
 object Common {
     /**
      * shared preferences used for storing jwt token and other important things
-     * TODO: move this to repository
      */
     var sharedPreferences: SharedPreferences? = null
 

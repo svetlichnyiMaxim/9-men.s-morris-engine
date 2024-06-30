@@ -32,8 +32,7 @@ class SearchingForGameViewModel @Inject constructor(
                     gameId.value = oldGameId
                     return@launch
                 }
-                gameRepository.startSearchingGame()
-                val newGameId = gameRepository.awaitForGameSearchEnd()?.getOrNull()
+                val newGameId = gameRepository.startSearchingGame().getOrNull()
                 if (newGameId != null) {
                     gameId.value = newGameId
                     break

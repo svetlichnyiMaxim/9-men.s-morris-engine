@@ -42,7 +42,6 @@ class FlyingMovesTutorialScreen(private val resources: Resources) : ScreenModelI
 
     private val gameBoard = GameBoardScreen(
         pos = position,
-        //TODO selectedButton = mutableStateOf(3),
         navController = null
     )
 

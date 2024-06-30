@@ -14,8 +14,6 @@ import kotlinx.serialization.json.Json
  * remote repository implementation
  */
 class AccountInfoRepositoryImpl : AccountInfoRepositoryI {
-    // TODO: implement this on server
-
     override suspend fun getAccountDateById(id: Long): Result<Triple<Int, Int, Int>?> {
         return runCatching {
             val request = network.get("http${SERVER_ADDRESS}${USER_API}/get-creation-date-by-id") {
@@ -61,6 +59,7 @@ class AccountInfoRepositoryImpl : AccountInfoRepositoryI {
         }
     }
 
+    // TODO: implement this on server
     override suspend fun getAccountPictureById(id: Long): Result<ByteArray> {
         return runCatching<AccountInfoRepositoryImpl, ByteArray> {
             val url = "https://shapka-youtube.ru/wp-content/uploads/2020/08/man-silhouette.jpg"

@@ -23,12 +23,12 @@ import javax.inject.Inject
 
 /**
  * Repository for interacting with server games
- * TODO: refactor this
  */
 class GameRepository @Inject constructor() : GameRepositoryI {
-    override fun startSearchingGame() {
+    override suspend fun startSearchingGame(): Result<Long> {
+        // we use this to make sure this function isn't executed in parallel
         if (searchingForGameJob?.isCompleted == false) {
-            return
+            return searchingForGameJob!!.await()
         }
         searchingForGameJob = CoroutineScope(networkScope).async {
             runCatching {
@@ -43,7 +43,6 @@ class GameRepository @Inject constructor() : GameRepositoryI {
                     while (true) {
                         val serverMessage = (incoming.receive() as? Frame.Text)?.readText()
                         if (serverMessage != null) {
-                            println("game id: $serverMessage")
                             gameId = serverMessage
                             close(CloseReason(CloseReason.Codes.NORMAL, "ok"))
                             break
@@ -56,10 +55,7 @@ class GameRepository @Inject constructor() : GameRepositoryI {
                 it.printStack()
             }
         }
-    }
-
-    override suspend fun awaitForGameSearchEnd(): Result<Long>? {
-        return searchingForGameJob?.await()
+        return searchingForGameJob!!.await()
     }
 
     /**
