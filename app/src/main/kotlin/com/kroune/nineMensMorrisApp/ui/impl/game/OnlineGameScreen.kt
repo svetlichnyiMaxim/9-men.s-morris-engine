@@ -3,6 +3,7 @@ package com.kroune.nineMensMorrisApp.ui.impl.game
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
@@ -18,11 +19,12 @@ class OnlineGameScreen(
 ) : ScreenModelI {
     @Composable
     override fun InvokeRender() {
+        val uiState = viewModel.uiState.collectAsState().value
         AppTheme {
-            viewModel.data.gameBoard.RenderPieceCount()
-            viewModel.data.gameBoard.InvokeRender()
+            uiState.gameBoard.RenderPieceCount()
+            uiState.gameBoard.InvokeRender()
             Column {
-                when (viewModel.data.isGreen.value) {
+                when (uiState.isGreen) {
                     true -> {
                         Text("You are green")
                     }

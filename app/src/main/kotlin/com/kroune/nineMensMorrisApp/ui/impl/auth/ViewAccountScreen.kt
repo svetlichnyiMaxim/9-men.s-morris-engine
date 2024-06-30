@@ -39,10 +39,7 @@ class ViewAccountScreen(
     @Composable
     override fun InvokeRender() {
         val factory = factoryProvider().viewAccountViewModelFactory()
-        viewModel =
-            viewModel(
-                factory = ViewAccountViewModel.provideFactory(factory, id)
-            )
+        viewModel = viewModel(factory = ViewAccountViewModel.provideFactory(factory, id))
         AppTheme {
             Column {
                 Row(

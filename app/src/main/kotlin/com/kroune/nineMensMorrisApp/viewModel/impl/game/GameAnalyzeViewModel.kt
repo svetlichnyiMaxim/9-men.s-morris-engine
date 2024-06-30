@@ -22,7 +22,7 @@ class GameAnalyzeViewModel(
     override val data = GameAnalyzeData(pos)
 
     private val _uiState: MutableStateFlow<GameAnalyzeUiState> =
-        MutableStateFlow(GameAnalyzeUiState(mutableListOf(), 3))
+        MutableStateFlow(GameAnalyzeUiState(mutableListOf(), data.dataState.value.depth))
 
     @Suppress("UndocumentedPublicProperty")
     val uiState: StateFlow<GameAnalyzeUiState>

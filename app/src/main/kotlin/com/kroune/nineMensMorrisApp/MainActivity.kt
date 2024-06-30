@@ -79,14 +79,12 @@ class MainActivity : ComponentActivity() {
                     typeMap = mapOf(typeOf<Navigation>() to NavigationNavType())
                 ) {
                     val route = it.toRoute<Navigation.SignUp>().nextRoute
-                    println("next sign up route - $route")
                     SignUpScreen(navController, route, resources).InvokeRender()
                 }
                 composable<Navigation.SignIn>(
                     typeMap = mapOf(typeOf<Navigation>() to NavigationNavType())
                 ) {
                     val nextRoute = it.toRoute<Navigation.SignIn>().nextRoute
-                    println("next login route - $nextRoute")
                     SignInScreen(navController, nextRoute, resources).InvokeRender()
                 }
                 composable<Navigation.SearchingOnlineGame> {
@@ -115,7 +113,6 @@ class MainActivity : ComponentActivity() {
  * custom navigation implementation, prevents duplications in backstack entries
  */
 fun NavController.navigateSingleTopTo(route: Any) {
-    println(route.toString())
     this.navigate(route) {
         launchSingleTop = true
     }

@@ -26,7 +26,6 @@ import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
-import com.kroune.nineMensMorrisApp.viewModel.impl.AppStartAnimationViewModel
 import kotlin.math.sin
 
 /**
@@ -45,8 +44,6 @@ class AppStartAnimationScreen(
         DrawAnimation()
         StartButton()
     }
-
-    override val viewModel = AppStartAnimationViewModel()
 
     /**
      * draw good looking animation

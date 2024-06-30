@@ -13,6 +13,7 @@ import androidx.compose.foundation.gestures.draggable2D
 import androidx.compose.foundation.gestures.rememberDraggable2DState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -90,10 +91,8 @@ class WelcomeScreen(
      * renders main screen
      * where you can choose game mode or go to account settings
      */
-    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     fun RenderMainScreen() {
-        val coroutine = rememberCoroutineScope()
         val width = LocalConfiguration.current.screenWidthDp
         val height = LocalConfiguration.current.screenHeightDp
         Box(
@@ -155,69 +154,86 @@ class WelcomeScreen(
                     )
                 }
             }
-            val offset = remember { mutableStateOf(0f) }
-            val startTriangleLength = min(width, height) / 4f
-            val offsetToFillRightBottomCorner = height - startTriangleLength
-            val isTriangle = remember {
-                derivedStateOf {
-                    offset.value < offsetToFillRightBottomCorner
-                }
+            ViewAccountElement()
+        }
+    }
+
+    /**
+     * view account element
+     *
+     * by default it is a simple triangle
+     * you can drag it down or click on it, to view your own account (you will be prompted to login
+     * screen if you aren't logged in)
+     */
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun BoxScope.ViewAccountElement() {
+        val coroutine = rememberCoroutineScope()
+        val width = LocalConfiguration.current.screenWidthDp
+        val height = LocalConfiguration.current.screenHeightDp
+        val offset = remember { mutableStateOf(0f) }
+        val startTriangleLength = min(width, height) / 4f
+        val offsetToFillRightBottomCorner = height - startTriangleLength
+        val isTriangle = remember {
+            derivedStateOf {
+                offset.value < offsetToFillRightBottomCorner
             }
-            val canDrag = remember { mutableStateOf(true) }
-            Box(modifier = Modifier
-                .then(
-                    if (isTriangle.value) Modifier.size((offset.value + startTriangleLength).dp)
-                    else Modifier.fillMaxSize()
-                )
-                .align(Alignment.TopEnd)
-                .draggable2D(state = rememberDraggable2DState { delta ->
-                    offset.value = ((-delta.x + delta.y) / 2f + offset.value).coerceAtLeast(0f)
-                }, enabled = canDrag.value, onDragStopped = {
-                    // if we should animate transition to the start pos or
-                    // continue animation (switch to another screen)
-                    val shouldRollBack = offset.value + startTriangleLength < width / 2
-                    val destination = if (shouldRollBack) {
-                        0f
-                    } else {
-                        offsetToFillRightBottomCorner + width
+        }
+        val canDrag = remember { mutableStateOf(true) }
+        Box(modifier = Modifier
+            .then(
+                if (isTriangle.value) Modifier.size((offset.value + startTriangleLength).dp)
+                else Modifier.fillMaxSize()
+            )
+            .align(Alignment.TopEnd)
+            .draggable2D(state = rememberDraggable2DState { delta ->
+                offset.value = ((-delta.x + delta.y) / 2f + offset.value).coerceAtLeast(0f)
+            }, enabled = canDrag.value, onDragStopped = {
+                // if we should animate transition to the start pos or
+                // continue animation (switch to another screen)
+                val shouldRollBack = offset.value + startTriangleLength < width / 2
+                val destination = if (shouldRollBack) {
+                    0f
+                } else {
+                    offsetToFillRightBottomCorner + width
+                }
+                canDrag.value = false
+                coroutine.launch {
+                    animate(
+                        offset.value, destination, animationSpec = tween(
+                            durationMillis = 500, easing = LinearEasing
+                        )
+                    ) { value, _ ->
+                        offset.value = value
                     }
-                    canDrag.value = false
-                    coroutine.launch {
-                        animate(
-                            offset.value, destination, animationSpec = tween(
-                                durationMillis = 500, easing = LinearEasing
-                            )
-                        ) { value, _ ->
-                            offset.value = value
-                        }
-                        if (!shouldRollBack) {
-                            viewAccountDataLoadingOverlay.value = true
-                        }
-                        canDrag.value = true
+                    if (!shouldRollBack) {
+                        viewAccountDataLoadingOverlay.value = true
                     }
-                })
-                .background(
-                    Color.DarkGray,
-                    if (isTriangle.value) triangleShape else ParallelogramShape(bottomLineLeftOffset = with(
+                    canDrag.value = true
+                }
+            })
+            .background(
+                Color.DarkGray,
+                if (isTriangle.value) triangleShape else
+                    ParallelogramShape(bottomLineLeftOffset = with(
                         LocalDensity.current
                     ) {
                         (offset.value - offsetToFillRightBottomCorner).dp.toPx()
                     })
-                ), contentAlignment = { size, space, _ ->
-                IntOffset(
-                    space.width / 2, space.height / 2 - size.height
-                )
-            }) {
-                IconButton(
-                    onClick = {
-                        viewAccountDataLoadingOverlay.value = true
-                    }, modifier = Modifier.size((startTriangleLength / 2f).dp)
-                ) {
-                    if (jwtToken != null) {
-                        Icon(painterResource(R.drawable.logged_in), "logged in")
-                    } else {
-                        Icon(painterResource(R.drawable.no_account), "no account found")
-                    }
+            ), contentAlignment = { size, space, _ ->
+            IntOffset(
+                space.width / 2, space.height / 2 - size.height
+            )
+        }) {
+            IconButton(
+                onClick = {
+                    viewAccountDataLoadingOverlay.value = true
+                }, modifier = Modifier.size((startTriangleLength / 2f).dp)
+            ) {
+                if (jwtToken != null) {
+                    Icon(painterResource(R.drawable.logged_in), "logged in")
+                } else {
+                    Icon(painterResource(R.drawable.no_account), "no account found")
                 }
             }
         }
@@ -225,54 +241,61 @@ class WelcomeScreen(
 
     private val viewAccountDataLoadingOverlay = mutableStateOf(false)
 
+    /**
+     * decides where should we be navigated
+     */
+    @Composable
+    fun HandleAccountViewOverlay() {
+        val accountId = viewModel.accountId.collectAsState().value
+        if (accountId != null) {
+            if (accountId == -1L) {
+                // no valid account, we need to sign in
+                navController?.navigateSingleTopTo(
+                    Navigation.SignIn(
+                        Navigation.ViewAccount(
+                            -1L
+                        )
+                    )
+                )
+            } else {
+                navController?.navigateSingleTopTo(Navigation.ViewAccount(accountId))
+            }
+        }
+        HandleOverlay()
+    }
+
+    /**
+     * draw overlay
+     */
+    @Composable
+    fun HandleOverlay() {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .zIndex(Float.MAX_VALUE)
+                .background(Color(0, 0, 0, 50))
+        ) {
+            // we shouldn't be stuck on this screen, since network client timeout is 5 s
+            LoadingCircle()
+        }
+    }
+
     @Composable
     override fun InvokeRender() {
         viewModel = hiltViewModel()
+        val coroutine = rememberCoroutineScope()
         AppTheme {
             // we check this to prevent race condition, since if user is searching for game
             // viewing account gets less priority
             if (viewAccountDataLoadingOverlay.value && !playOnlineGameOverlay.value) {
-                val accountId = viewModel.accountId.collectAsState().value
-                if (accountId != null) {
-                    if (accountId == -1L) {
-                        // no valid account, we need to sign in
-                        navController?.navigateSingleTopTo(
-                            Navigation.SignIn(
-                                Navigation.ViewAccount(
-                                    -1L
-                                )
-                            )
-                        )
-                    } else {
-                        navController?.navigateSingleTopTo(Navigation.ViewAccount(accountId))
-                    }
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .zIndex(Float.MAX_VALUE)
-                        .background(Color(0, 0, 0, 50))
-                ) {
-                    // we shouldn't be stuck on this screen, since network client timeout is 5 s
-                    LoadingCircle()
-                }
+                HandleAccountViewOverlay()
             }
             if (playOnlineGameOverlay.value) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .zIndex(Float.MAX_VALUE)
-                        .background(Color(0, 0, 0, 50))
-                ) {
-                    // we shouldn't be stuck on this screen, since network client timeout is 5 s
-                    LoadingCircle()
-                }
+                HandleOverlay()
             }
             val scrollState = rememberScrollState(if (!hasSeen) Int.MAX_VALUE else 0)
-            val isTutorialClosed = remember { derivedStateOf { scrollState.value == 0 } }
-            val coroutine = rememberCoroutineScope()
             val topScreen = remember { mutableStateOf(true) }
-            if (isTutorialClosed.value) {
+            if (scrollState.value == 0) {
                 hasSeen = true
             }
             class CustomFlingBehaviour : FlingBehavior {

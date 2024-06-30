@@ -1,7 +1,5 @@
 package com.kroune.nineMensMorrisApp.data.local.impl.game
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.navigation.NavHostController
 import com.kr8ne.mensMorris.Position
 import com.kr8ne.mensMorris.gameStartPosition
@@ -23,6 +21,7 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -35,25 +34,33 @@ class OnlineGameData(
     private val navController: NavHostController?,
     private val gameRepository: GameRepository = GameRepository()
 ) : DataI() {
-
     /**
      * tells if user is green or blue
      */
-    var isGreen: MutableState<Boolean?> = mutableStateOf(null)
+    private var isGreen: Boolean? = null
+        set(value) {
+            onlineGameDataState.value = onlineGameDataState.value.copy(second = value)
+            field = value
+        }
 
     /**
      * our game board
      */
-    val gameBoard = GameBoardScreen(
+    private val gameBoard = GameBoardScreen(
         pos = gameStartPosition,
         onClick = { index -> this.response(index) },
         navController = null
     )
 
+    /**
+     * state collected by view model
+     */
+    val onlineGameDataState = MutableStateFlow(Pair(gameBoard, isGreen))
+
     private fun GameBoardData.response(index: Int) {
         // check if we can make this move
         println("isGreen - $isGreen; pieceToMove - ${gameBoard.pos.value.pieceToMove}")
-        if (isGreen.value == gameBoard.pos.value.pieceToMove) {
+        if (isGreen == gameBoard.pos.value.pieceToMove) {
             gameBoard.viewModel.data.getMovement(index)?.let {
                 println("added move")
                 gameRepository.movesQueue.add(it)
@@ -76,7 +83,7 @@ class OnlineGameData(
                     }) {
                     val isGreenData = (incoming.receive() as Frame.Text).readText()
                     val isGreenText = Json.decodeFromString<NetworkResponse>(isGreenData)
-                    isGreen.value = isGreenText.message.toBoolean()
+                    isGreen = isGreenText.message.toBoolean()
 
                     val positionServerData = (incoming.receive() as Frame.Text).readText()
                     val positionString =
