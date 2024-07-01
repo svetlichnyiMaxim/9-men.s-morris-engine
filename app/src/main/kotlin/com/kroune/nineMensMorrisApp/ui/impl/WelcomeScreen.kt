@@ -50,7 +50,6 @@ import com.kroune.nineMensMorrisApp.common.AppTheme
 import com.kroune.nineMensMorrisApp.common.LoadingCircle
 import com.kroune.nineMensMorrisApp.common.ParallelogramShape
 import com.kroune.nineMensMorrisApp.common.triangleShape
-import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.impl.tutorial.TutorialScreen
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
@@ -58,6 +57,7 @@ import com.kroune.nineMensMorrisApp.viewModel.impl.WelcomeViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.min
 
 /**
@@ -136,13 +136,17 @@ class WelcomeScreen(
                         playOnlineGameOverlay.value = true
                         CoroutineScope(Dispatchers.IO).launch {
                             if (viewModel.checkJwtToken().getOrNull() == true) {
-                                navController?.navigateSingleTopTo(Navigation.SearchingOnlineGame)
+                                withContext(Dispatchers.Main) {
+                                    navController?.navigateSingleTopTo(Navigation.SearchingOnlineGame)
+                                }
                             } else {
-                                navController?.navigateSingleTopTo(
-                                    Navigation.SignIn(
-                                        Navigation.SearchingOnlineGame
+                                withContext(Dispatchers.Main) {
+                                    navController?.navigateSingleTopTo(
+                                        Navigation.SignIn(
+                                            Navigation.SearchingOnlineGame
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     },
@@ -230,7 +234,7 @@ class WelcomeScreen(
                     viewAccountDataLoadingOverlay.value = true
                 }, modifier = Modifier.size((startTriangleLength / 2f).dp)
             ) {
-                if (jwtToken != null) {
+                if (viewModel.hasJwtToken()) {
                     Icon(painterResource(R.drawable.logged_in), "logged in")
                 } else {
                     Icon(painterResource(R.drawable.no_account), "no account found")
@@ -247,17 +251,17 @@ class WelcomeScreen(
     @Composable
     fun HandleAccountViewOverlay() {
         val accountId = viewModel.accountId.collectAsState().value
-        if (accountId != null) {
-            if (accountId == -1L) {
-                // no valid account, we need to sign in
-                navController?.navigateSingleTopTo(
-                    Navigation.SignIn(
-                        Navigation.ViewAccount(
-                            -1L
-                        )
+        if (!viewModel.hasJwtToken()) {
+            // no valid account, we need to sign in
+            navController?.navigateSingleTopTo(
+                Navigation.SignIn(
+                    Navigation.ViewAccount(
+                        -1L
                     )
                 )
-            } else {
+            )
+        } else {
+            if (accountId != null) {
                 navController?.navigateSingleTopTo(Navigation.ViewAccount(accountId))
             }
         }

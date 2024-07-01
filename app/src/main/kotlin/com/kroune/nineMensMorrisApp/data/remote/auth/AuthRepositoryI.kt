@@ -8,7 +8,7 @@ interface AuthRepositoryI {
     /**
      * checks if jwt token is valid
      */
-    suspend fun checkJwtToken(): Result<Boolean>
+    suspend fun checkJwtToken(jwtToken: String): Result<Boolean>
 
     /**
      * Attempts to login the user with the provided credentials.

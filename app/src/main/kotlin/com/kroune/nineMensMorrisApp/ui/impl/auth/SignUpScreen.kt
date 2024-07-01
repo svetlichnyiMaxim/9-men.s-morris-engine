@@ -26,7 +26,6 @@ import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.R
 import com.kroune.nineMensMorrisApp.common.AppTheme
-import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
 import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
@@ -64,7 +63,7 @@ class SignUpScreen(
         val isUsernameValid = remember { mutableStateOf(false) }
         val username = remember { mutableStateOf("") }
         serverResponse.value?.onSuccess {
-            jwtToken = it
+            viewModel.updateJwtToken(it)
             navController?.navigateSingleTopTo(nextRoute)
         }
         AppTheme {

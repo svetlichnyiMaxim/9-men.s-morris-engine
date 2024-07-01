@@ -26,13 +26,14 @@ import androidx.navigation.NavHostController
 import com.kroune.nineMensMorrisApp.Navigation
 import com.kroune.nineMensMorrisApp.R
 import com.kroune.nineMensMorrisApp.common.AppTheme
-import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.networkScope
 import com.kroune.nineMensMorrisApp.navigateSingleTopTo
 import com.kroune.nineMensMorrisApp.ui.interfaces.ScreenModelI
 import com.kroune.nineMensMorrisApp.viewModel.impl.auth.SignInViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Represents a screen for signing in to the application.
@@ -60,7 +61,7 @@ class SignInScreen(
         val isUsernameValid = remember { mutableStateOf(false) }
         val username = remember { mutableStateOf("") }
         serverResponse.value?.onSuccess {
-            jwtToken = it
+            viewModel.updateJwtToken(it)
             if (nextRoute is Navigation.ViewAccount) {
                 CoroutineScope(networkScope).launch {
                     val id = viewModel.getIdByJwtToken(it)
@@ -76,7 +77,9 @@ class SignInScreen(
                             Result.failure(IllegalStateException("server didn't return id for account"))
                         return@launch
                     }
-                    navController?.navigateSingleTopTo(ViewAccountScreen(id.getOrThrow()!!))
+                    withContext(Dispatchers.Main) {
+                        navController?.navigateSingleTopTo(Navigation.ViewAccount(id.getOrThrow()!!))
+                    }
                 }
             } else {
                 navController?.navigateSingleTopTo(nextRoute)

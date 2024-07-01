@@ -1,6 +1,7 @@
 package com.kroune.nineMensMorrisApp.viewModel.impl.game
 
-import com.kroune.nineMensMorrisApp.data.remote.game.GameRepository
+import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryI
+import com.kroune.nineMensMorrisApp.data.remote.game.GameRepositoryI
 import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +16,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SearchingForGameViewModel @Inject constructor(
-    private val gameRepository: GameRepository
+    private val gameRepositoryI: GameRepositoryI,
+    private val accountInfoRepositoryI: AccountInfoRepositoryI
 ) : ViewModelI() {
 
     /**
@@ -27,12 +29,16 @@ class SearchingForGameViewModel @Inject constructor(
     init {
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
-                val oldGameId = gameRepository.isPlaying().getOrNull()
+                val oldGameId =
+                    gameRepositoryI.isPlaying(accountInfoRepositoryI.jwtTokenState.value!!)
+                        .getOrNull()
                 if (oldGameId != null) {
                     gameId.value = oldGameId
                     return@launch
                 }
-                val newGameId = gameRepository.startSearchingGame().getOrNull()
+                val newGameId = gameRepositoryI.startSearchingGame(
+                    accountInfoRepositoryI.jwtTokenState.value!!
+                ).getOrNull()
                 if (newGameId != null) {
                     gameId.value = newGameId
                     break

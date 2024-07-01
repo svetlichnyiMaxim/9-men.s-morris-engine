@@ -8,7 +8,7 @@ plugins {
     id("com.google.dagger.hilt.android")
 }
 
-tasks.withType<Test>() {
+tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
@@ -88,7 +88,7 @@ dependencies {
 
     // my own dependencies
     implementation("com.github.kroune:9-men-s-morris-lib:297220e0e1")
-    implementation("com.github.kroune:9-men-s-morris-shared:3c31cf7015")
+    implementation("com.github.kroune:9-men-s-morris-shared:068a583b9b")
 
     // di
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")

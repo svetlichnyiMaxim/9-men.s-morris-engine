@@ -1,5 +1,6 @@
 package com.kroune.nineMensMorrisApp.viewModel.impl.auth
 
+import com.kroune.nineMensMorrisApp.data.remote.account.AccountInfoRepositoryI
 import com.kroune.nineMensMorrisApp.data.remote.auth.AuthRepositoryI
 import com.kroune.nineMensMorrisApp.viewModel.interfaces.ViewModelI
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +11,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val authRepositoryI: AuthRepositoryI
+    private val authRepositoryI: AuthRepositoryI,
+    private val accountInfoRepositoryI: AccountInfoRepositoryI
 ) : ViewModelI() {
     /**
      * registers new account
@@ -31,5 +33,12 @@ class SignUpViewModel @Inject constructor(
      */
     fun passwordValidator(password: String): Boolean {
         return authRepositoryI.passwordValidator(password)
+    }
+
+    /**
+     *
+     */
+    fun updateJwtToken(jwtToken: String?) {
+        accountInfoRepositoryI.updateJwtTokenState(jwtToken)
     }
 }

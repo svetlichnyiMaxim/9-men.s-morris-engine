@@ -12,7 +12,7 @@ interface GameRepositoryI {
      *
      * @return [ServerResponse] indicating the success or failure of the search attempt.
      */
-    suspend fun startSearchingGame(): Result<Long>
+    suspend fun startSearchingGame(jwtToken: String): Result<Long>
 
     /**
      * queue of the moves that player performed
@@ -23,5 +23,5 @@ interface GameRepositoryI {
     /**
      * checks if we are currently playing a game
      */
-    suspend fun isPlaying(): Result<Long?>
+    suspend fun isPlaying(jwtToken: String): Result<Long?>
 }

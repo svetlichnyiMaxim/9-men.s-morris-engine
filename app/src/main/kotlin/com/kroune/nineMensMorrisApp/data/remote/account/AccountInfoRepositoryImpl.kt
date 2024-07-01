@@ -1,5 +1,7 @@
 package com.kroune.nineMensMorrisApp.data.remote.account
 
+import android.util.Log
+import com.kroune.nineMensMorrisApp.StorageManager
 import com.kroune.nineMensMorrisApp.common.SERVER_ADDRESS
 import com.kroune.nineMensMorrisApp.common.USER_API
 import com.kroune.nineMensMorrisApp.data.remote.Common.network
@@ -8,12 +10,73 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 
 /**
  * remote repository implementation
  */
 class AccountInfoRepositoryImpl : AccountInfoRepositoryI {
+    override val accountIdState = MutableStateFlow<Long?>(null)
+
+    override fun updateAccountIdState(value: Long?) {
+        Log.d("AccountId", "account id has changed to $value")
+        StorageManager.putLong("accountId", value)
+        accountIdState.value = value
+    }
+
+    override val jwtTokenState = MutableStateFlow<String?>(null)
+
+    override fun updateJwtTokenState(value: String?) {
+        Log.d("JwtToken", "jwt token has changed to $value")
+        if (jwtTokenState.value == value) {
+            // nothing changed, no need to update anything
+            return
+        }
+        jwtTokenState.value = value
+        StorageManager.putString("jwtToken", value)
+        if (value == null) {
+            updateAccountIdState(null)
+            return
+        }
+        // we don't want to use incorrect account id
+        // it will be null until a new one is received
+        updateAccountIdState(null)
+        CoroutineScope(Dispatchers.IO).launch {
+            var failureCounter = 0
+            while (true) {
+                val idResult = getIdByJwtToken(value)
+                if (idResult.isFailure) {
+                    // error making request
+                    delay(3000L)
+                    continue
+                }
+                val newId = idResult.getOrThrow()
+                if (newId == null) {
+                    failureCounter++
+                    if (failureCounter > 5) {
+                        // some wierd shit is happening, let's just sign out
+                        updateAccountIdState(null)
+                        updateJwtTokenState(null)
+                        Log.e(
+                            "ACCOUNT",
+                            "User successfully logged in, but server could not provide id for this account"
+                        )
+                        return@launch
+                    }
+                    continue
+                }
+                // we were able to update account id
+                updateAccountIdState(newId)
+                break
+            }
+        }
+    }
+
     override suspend fun getAccountDateById(id: Long): Result<Triple<Int, Int, Int>?> {
         return runCatching {
             val request = network.get("http${SERVER_ADDRESS}${USER_API}/get-creation-date-by-id") {

@@ -13,7 +13,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.kr8ne.mensMorris.Position
-import com.kroune.nineMensMorrisApp.data.remote.Common
 import com.kroune.nineMensMorrisApp.ui.impl.AppStartAnimationScreen
 import com.kroune.nineMensMorrisApp.ui.impl.WelcomeScreen
 import com.kroune.nineMensMorrisApp.ui.impl.auth.SignInScreen
@@ -25,6 +24,8 @@ import com.kroune.nineMensMorrisApp.ui.impl.game.GameWithFriendScreen
 import com.kroune.nineMensMorrisApp.ui.impl.game.OnlineGameScreen
 import com.kroune.nineMensMorrisApp.ui.impl.game.SearchingForGameScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.reflect.typeOf
 
 /**
@@ -47,7 +48,7 @@ class MainActivity : ComponentActivity() {
             "com.kr8ne.mensMorris",
             MODE_PRIVATE
         )
-        Common.sharedPreferences = sharedPreferences
+        StorageManager.sharedPreferences = sharedPreferences
         val resources = resources
         setContent {
             val navController = rememberNavController()
@@ -93,8 +94,7 @@ class MainActivity : ComponentActivity() {
                 composable<Navigation.OnlineGame> {
                     val id = it.toRoute<Navigation.OnlineGame>().id
                     OnlineGameScreen(
-                        id,
-                        navController
+                        id
                     ).InvokeRender()
                 }
                 composable<Navigation.AppStartAnimation> {
@@ -112,8 +112,11 @@ class MainActivity : ComponentActivity() {
 /**
  * custom navigation implementation, prevents duplications in backstack entries
  */
-fun NavController.navigateSingleTopTo(route: Any) {
-    this.navigate(route) {
+fun NavController.navigateSingleTopTo(route: Navigation) {
+    val currentScreen = this@navigateSingleTopTo.currentBackStackEntry?.destination?.route
+    val newScreen = Json.encodeToString(route)
+    println("DEBUG: $currentScreen, $newScreen")
+    this@navigateSingleTopTo.navigate(route) {
         launchSingleTop = true
     }
 }

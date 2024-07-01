@@ -3,7 +3,6 @@ package com.kroune.nineMensMorrisApp.data.remote.auth
 import com.kroune.NetworkResponse
 import com.kroune.nineMensMorrisApp.common.SERVER_ADDRESS
 import com.kroune.nineMensMorrisApp.common.USER_API
-import com.kroune.nineMensMorrisApp.data.remote.Common.jwtToken
 import com.kroune.nineMensMorrisApp.data.remote.Common.network
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
@@ -84,10 +83,9 @@ class AuthRepositoryImpl @Inject constructor() : AuthRepositoryI {
         }
     }
 
-    override suspend fun checkJwtToken(): Result<Boolean> {
+    override suspend fun checkJwtToken(jwtToken: String): Result<Boolean> {
         return runCatching {
             val jwtTokenState = jwtToken
-            require(jwtTokenState != null)
             val result = network.get("http$SERVER_ADDRESS$USER_API/check-jwt-token") {
                 method = HttpMethod.Get
                 url {

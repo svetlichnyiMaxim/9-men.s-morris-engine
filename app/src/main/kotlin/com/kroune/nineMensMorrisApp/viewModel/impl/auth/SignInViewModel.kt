@@ -37,6 +37,13 @@ class SignInViewModel @Inject constructor(
     }
 
     /**
+     * updates jwt token
+     */
+    fun updateJwtToken(token: String) {
+        return accountInfoRepository.updateJwtTokenState(token)
+    }
+
+    /**
      * gets account id by jwt token
      */
     suspend fun getIdByJwtToken(jwtToken: String): Result<Long?> {

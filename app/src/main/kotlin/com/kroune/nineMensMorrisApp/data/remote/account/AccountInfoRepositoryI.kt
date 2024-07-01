@@ -1,10 +1,37 @@
 package com.kroune.nineMensMorrisApp.data.remote.account
 
+import kotlinx.coroutines.flow.MutableStateFlow
+
 /**
  * interface for account repository
  * provides information about account
  */
 interface AccountInfoRepositoryI {
+
+    /**
+     * unique identifier of the account
+     * null = account id is loading
+     * -1 = loading failed
+     */
+    val accountIdState: MutableStateFlow<Long?>
+
+    /**
+     * updates account id
+     * this function should be used when updating [accountIdState]
+     */
+    fun updateAccountIdState(value: Long?)
+
+    /**
+     * Jwt token provided by the server
+     */
+    val jwtTokenState: MutableStateFlow<String?>
+
+    /**
+     * updates account jwt token
+     * this function should be used when updating [jwtTokenState]
+     */
+    fun updateJwtTokenState(value: String?)
+
     /**
      * @return account login (name) by it's id
      */

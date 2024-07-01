@@ -12,6 +12,7 @@ import com.kroune.nineMensMorrisApp.data.remote.game.GameRepositoryI
 import com.kroune.nineMensMorrisApp.ui.impl.auth.SignInScreen
 import com.kroune.nineMensMorrisApp.ui.impl.auth.ViewAccountScreen
 import com.kroune.nineMensMorrisApp.viewModel.impl.auth.ViewAccountViewModel
+import com.kroune.nineMensMorrisApp.viewModel.impl.game.OnlineGameViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.EntryPoint
@@ -70,6 +71,11 @@ interface ViewModelFactoryProvider {
      * @return [ViewAccountViewModel.AssistedVMFactory]
      */
     fun viewAccountViewModelFactory(): ViewAccountViewModel.AssistedVMFactory
+
+    /**
+     * @return [OnlineGameViewModel.AssistedVMFactory]
+     */
+    fun onlineGameViewModelFactory(): OnlineGameViewModel.AssistedVMFactory
 }
 
 /**
